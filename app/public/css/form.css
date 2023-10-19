@@ -1,0 +1,126 @@
+.khungtong {
+   text-align: center;
+    display: inline-block;
+    box-shadow:  0px 0px 15px #fffdfd;
+    width: auto;
+    margin-left: 15px;
+    margin-right: 15px;  
+  }
+  
+  a {
+    text-decoration: none;
+  }
+
+  .khung_nd {
+    margin-top: 20px;
+    width: 930px;
+  }
+  
+  .tieude {
+    height: 24px;
+    float: left;
+    width: 100%;
+    border-bottom: solid 1px #b9deff;
+    background-color: #e8f4fc;
+    box-shadow: inset 0 1px 0px #fff;
+  }
+  
+  .divbox {
+    height: 190px;
+    align-self: center;
+    border-left: 1px solid #d8ecff;
+    border-right: 1px solid #d8ecff;
+    border-bottom: 1px solid #d8ecff;
+    padding: 10px;
+  }
+  .ftable {
+    padding: 10px;
+    color: black;
+    font-size: 13px;
+  }
+  
+  .ftd-l {
+    text-align: left !important;
+    vertical-align: middle !important;
+    font-size: 13px !important;
+    
+  }
+  
+  .ftd-r {
+    text-align: right !important;
+    vertical-align: middle !important;
+    font-size: 13px !important;
+  }
+  
+  
+  #bodyP {
+    float: left;
+    width: 100%;
+    text-align: center;
+    position: relative;
+  
+  }
+  .banner {
+    height: 125px;
+    margin: 0 auto;
+  }
+  
+  .dangnhap {
+    width: auto;
+    margin-top: 25px;
+  }
+  
+  .text {
+    font-weight: bold;
+    margin-left: 5px;
+    line-height: 24px;
+  }
+  .button_thue {
+    border-radius: 10px;
+    border: solid 1px #b9deff;
+    box-sizing: content-box;
+    background: -webkit-linear-gradient(#d5eafa, #f1faff);
+    background: -o-linear-gradient(#d5eafa, #f1faff);
+    background: -moz-linear-gradient(#d5eafa, #f1faff);
+    background: linear-gradient(#d5eafa, #f1faff);
+    padding: 4px 10px;
+    margin-left: 10px;
+    font-size: 12px;
+    color: #124977;
+    cursor: pointer;
+  }
+  
+  .menu {
+    width: 930px;
+    height: 30px;
+    margin: 0 auto;
+    background-color: rgb(0, 130, 236);
+    text-align: left;
+    border-radius: 0;
+  
+  }
+  
+  ul#tabmenu
+  {
+      width: 100%;
+      margin: 0 auto;
+      /*If the menu has a width, this "margin:0 auto;" makes the menu center-aligned. You can remove it for left-alignment, or change it to "margin-left:auto; margin-right:0;" for right-alignment.*/
+      text-align: center;
+      list-style: none;
+      padding: 0;
+      padding-left: 10px;
+      font-size: 0;
+      position: relative;
+    background-repeat: no-repeat;
+      background-position: left top;
+  }
+  
+  ul#tabmenu li{
+      background-repeat: no-repeat;
+      background-position: right top;
+      width: auto;
+      float: left;
+      margin-left: -10px;
+      color: #124977;
+      font-weight: bold;
+  }

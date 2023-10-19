@@ -1,0 +1,105 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0px;
+  padding: 0px;
+  font-size: 13px;
+  display: block;
+}
+
+.khungbaologin {
+  margin: 0 auto;
+  display: table;
+  padding-top: 30px;
+  padding-bottom: 100px;
+}
+
+.login_gt {
+  display: table-cell;
+  width: 25%;
+  border-right: solid 1px #ededed;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.login_gt h2 {
+  color: #303030 !important;
+  text-align: left;
+  margin: 0;
+  padding: 0 !important;
+}
+
+.frm_login{
+  width: 100% !important;
+  margin: 0px !important;
+  padding: 0 !important;
+}
+.frm_login_content {
+    color: #fff;
+    margin: 0;
+    margin-left: 15px;
+    margin-right: 15px;
+    border: solid 1px #4cb7da;
+    background: rgb(120, 210, 242);
+    background: -moz-linear-gradient(top, rgb(179, 235, 232) 0%, rgb(103, 174, 216) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgb(140, 227, 232)), color-stop(100%, rgb(82, 189, 189)));
+    background: -webkit-linear-gradient(top, rgb(135, 214, 253) 0%, rgb(126, 238, 238) 100%);
+    background: -o-linear-gradient(top, rgb(135, 195, 247) 0%, rgb(182, 211, 240) 100%);
+    background: -ms-linear-gradient(top, rgb(120, 194, 228) 0%, rgb(70, 168, 229) 100%);
+    background: linear-gradient(to bottom, rgb(71, 227, 255) 0%, rgb(89, 164, 234) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f25e68', endColorstr='#c3232b', GradientType=0 );
+}
+
+.left-conten h2 {
+    border-bottom: 1px solid #000000;
+    margin-bottom: 8px;
+    padding-bottom: 5px;
+	  padding-left: 0;
+    font-size: 25px;
+}
+.frm_login_content {
+  margin-right: 15px;
+  padding: 10px 20px;
+
+}
+.title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding-left: 30px;
+    margin-bottom: 10px;
+	text-align: left;
+}
+.button span {
+    display: block;
+    border-radius: 5px;
+    text-align: center;
+    color: #FFF;
+    margin-bottom: 10px;
+    padding: 10px 0;
+    background: #05428d no-repeat 97% center;
+	text-decoration: none;
+}
+.button a:hover {
+    background-color: #145cb4;
+}
+
+.left_conten {
+  width: 219px;
+  float: right;
+  margin-right: 15px;
+} 
+.frm_login h2 {
+  color: #303030 !important;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+#bodyP {
+  float: left;
+  width: 100%;
+  text-align: center;
+  position: relative;
+
+}
