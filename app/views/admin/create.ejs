@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <%- include('./partials/head') %>
+  </head>
+
+  <body>
+    <div class="preloader">
+      <div class="lds-ripple">
+        <div class="lds-pos"></div>
+        <div class="lds-pos"></div>
+      </div>
+    </div>
+    <div id="main-wrapper" data-layout="vertical" >
+      
+      <header class="topbar" data-navbarbg="skin5">
+        <%- include('./partials/header') %>
+      </header>
+
+      <aside class="left-sidebar" data-sidebarbg="skin5">
+        <div class="scroll-sidebar">
+          <%-include('./partials/sidebar') %>
+        </div>
+      </aside>
+
+      <div class="page-wrapper" style="background-color: white;">
+        <div class="page-breadcrumb">
+          <div class="row">
+            <div class="col-12 d-flex no-block align-items-center">
+              <h4 class="page-title">Create User</h4>
+              <div class="ms-auto text-end">
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      Library
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container-fluid" style="width: 650px;" >
+            <form action="/api/auth/signup" method="post">
+              <!--
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label" >Mã số thuế</label>
+                <input type="text" class="form-control" name="masothue" value=" ">
+              </div>
+              -->
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label" >Họ tên NNT</label>
+                <input type="text" class="form-control" name="fullname" value=" ">
+              </div>
+                <div class="mb-3">
+                    <label class="form-label">Địa chỉ</label>
+                    <input  name="address" type="text" class="form-control" value=" ">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Cơ quan quản lý thuế</label>
+                    <input  name="cqqlthue" type="text" class="form-control" value=" ">
+                  </div>
+                  <div class="mb-3">
+                    <label  class="form-label">Số điện thoại</label>
+                    <input type="text" name="phone" class="form-control" value=" ">
+                  </div>
+                  <div class="mb-3">
+                    <label  class="form-label">Căn cước công dân</label>
+                    <input type="text" name="cccd" class="form-control" value=" ">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label" >Username</label>
+                    <input type="text" class="form-control" name="username" value=" ">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" value=" ">
+                  </div>
+                  <div class="mb-3">
+                    <label  class="form-label">Mật khẩu</label>
+                    <input type="text" class="form-control" name="password" value=" ">
+                  </div>
+                  <div class="mb-3">
+                    <label  class="form-label">Roles</label>
+                    <select name="role" id="">
+                        <option  name="canhan">Cá nhân</option>
+                        <option value="" name="tochuc"> Tổ chức</option>
+                    </select>
+                  </div>
+                <button type="submit" class="btn btn-primary" style="width: 125px;">Create</button>
+              </form>
+        </div>
+  </body>
+</html>
