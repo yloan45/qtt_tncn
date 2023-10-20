@@ -1,0 +1,599 @@
+<html lang="en">
+<head>
+    <head>
+        <%- include('head') %>
+    </head>
+    <style>
+        input.invalid {
+            background-color: #ffdddd
+        }
+
+        .tab {
+            display: none
+        }
+
+        #prevBtn {
+            background-color: #bbbbbb
+        }
+
+        .step {
+            margin: 0 2px;
+            background-color: #bbbbbb;
+            border: none;
+        }
+
+        .step.active {
+            opacity: 1
+        }
+
+        .step.finish {
+            background-color: #4CAF50
+        }
+
+        .all-steps {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="khungtong">
+            <header>
+                <%- include('../partials/header') -%>
+            </header>
+            <nav style="background-color: hsl(204, 49%, 89%); margin-top: 1px;">
+                <span>Kê khai thuế |</span>
+                <span>Nộp tờ khai |</span>
+                <span>Tra cứu tờ khai</span>
+            </nav>
+
+            <form action="" method="">
+                <div class="all-steps" id="all-steps"><span class="step"></span> <span class="step"></span> </div>
+
+                <div class="tab">
+                    <h4>Chọn thông tin tờ khai quyết toán thuế</h4>
+                    <!--ĐỊA CHỈ -->
+                    <div class="input-group">
+                        <span class="thongtintokhai">Tên người gưi
+                            <font style="color: red;">(*)</font>
+                        </span>
+                        <input type="text" oninput="this.className = ''" id="" />
+                    </div>
+                    <!--ĐỊA CHỈ -->
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai">Địa chỉ liên hệ
+                            <font style="color: red;">(*)</font>
+                        </span>
+                        <input type="text" oninput="this.className = ''" id="" />
+                    </div>
+                    <!--ĐIỆN THOẠI LIÊN LẠC-->
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai">Điện thoại liên lạc
+                            <font style="color: red;">(*)</font>
+                        </span>
+                        <input oninput="this.className = ''" type="text" id="" />
+                    </div>
+                    <!--EMAIL LIÊN HỆ-->
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai">Địa chỉ Email
+                            <font style="color: red;">(*)</font>
+                        </span>
+                        <input oninput="this.className = ''" type="text" id="">
+                    </div>
+                    <!--NĂM KÊ KHAI-->
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai">Năm kê khai </span>
+                        <input oninput="this.className = ''" type="text" id="" style="margin-right: 650px;" />
+                    </div>
+                    <!--CHỌN TỜ KHAI-->
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai">Chọn tờ khai</span>
+                        <select class="" style="margin-right: 250px; width: 600px;" name="" id="">
+                            <option value="" name="">--Chọn tờ khai---</option>
+                            <option value="" name=""></option>
+                        </select>
+                    </div>
+
+                    <!--CỤC THUẾ - CHI CỤC THUẾ-->
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai"> Cục thuế</span>
+                        <select class="" style="margin-right: 240px; width: 600px;" name="" id="">
+                            <option value="" disabled></option>
+                        </select>
+                    </div>
+
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai"> Chi cục thuế</span>
+                        <select class="" style="margin-right: 240px; width: 600px;" name="" id="">
+                            <option value="" disabled></option>
+                        </select>
+                    </div>
+
+
+                    <!--LOẠI TỜ KHAI-->
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai">Loại tờ khai</span>
+                        <select class="" style="margin-right: 250px; width: 600px;" name="" id="">
+                            <option value="">Tờ khai chính thức
+                            </option>
+                        </select>
+                    </div>
+
+                    <!--NĂM KÊ KHAI-->
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai">Năm kê khai </span>
+                        <input oninput="this.className = ''" type="text" id="" />
+                    </div>
+
+                </div>
+                <br><br><br>
+
+                <div class="tab">
+                    <div class="input-group">
+                        <span class="thongtintokhai">Tên người gưi
+                            <font style="color: red;">(*)</font>
+                        </span>
+                        <input type="text" oninput="this.className = ''" id="" />
+                    </div>
+                    <!--ĐỊA CHỈ -->
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai">Địa chỉ liên hệ
+                            <font style="color: red;">(*)</font>
+                        </span>
+                        <input type="text" oninput="this.className = ''" id="" />
+                    </div>
+                    <!--ĐIỆN THOẠI LIÊN LẠC-->
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai">Điện thoại liên lạc
+                            <font style="color: red;">(*)</font>
+                        </span>
+                        <input oninput="this.className = ''" type="text" id="" />
+                    </div>
+                    <!--EMAIL LIÊN HỆ-->
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai">Địa chỉ Email
+                            <font style="color: red;">(*)</font>
+                        </span>
+                        <input oninput="this.className = ''" type="text" id="">
+                    </div>
+                    <!--NĂM KÊ KHAI-->
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai">Năm kê khai </span>
+                        <input oninput="this.className = ''" type="text" id="" style="margin-right: 650px;" />
+                    </div>
+                    <!--CHỌN TỜ KHAI-->
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai">Chọn tờ khai</span>
+                        <select class="" style="margin-right: 250px; width: 600px;" name="" id="">
+                            <option value="" name="">--Chọn tờ khai---</option>
+                            <option value="" name=""></option>
+                        </select>
+                    </div>
+
+                    <!--CỤC THUẾ - CHI CỤC THUẾ-->
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai"> Cục thuế</span>
+                        <select class="" style="margin-right: 240px; width: 600px;" name="" id="">
+                            <option value="" disabled></option>
+                        </select>
+                    </div>
+
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai"> Chi cục thuế</span>
+                        <select class="" style="margin-right: 240px; width: 600px;" name="" id="">
+                            <option value="" disabled></option>
+                        </select>
+                    </div>
+
+
+                    <!--LOẠI TỜ KHAI-->
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai">Loại tờ khai</span>
+                        <select class="" style="margin-right: 250px; width: 600px;" name="" id="">
+                            <option value="">Tờ khai chính thức
+                            </option>
+                        </select>
+                    </div>
+
+                    <!--NĂM KÊ KHAI-->
+                    <div class="input-group" style="margin-top: 15px;">
+                        <span class="thongtintokhai">Năm kê khai </span>
+                        <input oninput="this.className = ''" type="text" id="" />
+                    </div>
+
+
+                </div>
+
+
+                <!--NỘI DUNG TỜ KHAI QUYẾT TOÁN THUẾ THU NHẬP CÁ NHÂN => NGƯỜI DÙNG CÁ NHÂN-->
+
+                <div class="tab">
+
+                    <div style="text-align: center;">
+                        <h style="font-size: 18px;">Tờ khai quyết toán thuế thu nhập cá nhân</h3>
+                            <p>(Áp dụng cho cá nhân cư trú có thu nhập từ tiền lương, tiền công)</p>
+                            <p>[01]Kỳ tính thuế:</p>
+                            <p> [02] Lần đầu [03] Bổ sung lần thứ</p>
+                    </div>
+
+                    <div style="margin-left: 30px; font-size: 14px;">
+                        <span>[04] Tên người nộp thuế: </span>
+                    </div>
+
+                    <div style="margin-left: 30px; font-size: 14px;">
+                        <span>[05] Mã số thuế: </span>
+                    </div>
+
+                    <div style="margin-left: 30px; font-size: 14px;">
+                        <span>[06] Địa chỉ: </span>
+                    </div>
+
+                    <div style="margin-left: 30px; font-size: 14px;">
+                        <span>[07] Quận/Huyện: </span>
+                    </div>
+
+                    <div style="margin-left: 30px; font-size: 14px;">
+                        <span>[09] Điện thoại: </span>
+                    </div>
+
+                    <div style="margin-left: 30px; font-size: 14px;">
+                        <span>[11] Email: </span>
+                    </div>
+
+                    <div style="margin-left: 30px; font-size: 14px;">
+                        <span>[12] Số tài khoản ngân hàng (nếu có): </span>
+                    </div>
+
+                    <div style="margin-left: 30px; font-size: 14px;">
+                        <span>[13] Tên đại lý thuế (nếu có): </span>
+                    </div>
+
+                    <div style="margin-left: 30px; font-size: 14px;">
+                        <span>[14] Mã số thuế: </span>
+                    </div>
+                    <div style="margin-left: 30px; font-size: 14px;">
+                        <span>[15] Địa chỉ: </span>
+                    </div>
+                    <div style="margin-left: 30px; font-size: 14px;">
+                        <span>[16] Quận/Huyện</span>
+                    </div>
+                    <div style="margin-left: 30px; font-size: 14px;">
+                        <span>[18] Điện thoại: </span>
+                    </div>
+                    <div style="margin-left: 30px; font-size: 14px;">
+                        <span>[20] Email: </span>
+                    </div>
+                    <div style="margin-left: 30px; font-size: 14px;">
+                        <span>[21] Hợp đồng đại lý thuế, số:</span>
+                    </div>
+                    <br>
+
+
+                    <!-- BẢNG TỜ KHAI QUYẾT TOÁN THUẾ-->
+                    <table class="table table-bordered border-primary"
+                        style="margin-left: 30px; width:95%; text-align: justify">
+                        <tr style="text-align: center; background-color: rgb(71, 122, 242); color: white;">
+                            <th>STT</th>
+                            <th colspan="3">Chỉ tiêu</th>
+                            <th>Mã chỉ tiêu</th>
+                            <th>Đơn vị tính</th>
+                            <th>Số tiền/Số người</th>
+                        </tr>
+                        <tr>
+                            <td rowspan="5">1</td>
+                            <td colspan="3">Tổng thu nhập chịu thuế(TNCN) trong kỳ: [22]=[23]+[26]</td>
+                            <td>[22]</td>
+                            <td>VND</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="3">a</td>
+                            <td colspan="2">Tổng TNCT phát sinh tại Việt Nam</td>
+                            <td>[23]</td>
+                            <td>VND</td>
+                            <td><input name="ct23"></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">Trong đó</td>
+                            <td>Tổng TNCT làm căn cứ tính giảm thuế</td>
+                            <td>[24]</td>
+                            <td> VND</td>
+                            <td><input name="ct24"></td>
+                        </tr>
+                        <tr>
+                            <td>Tổng TNCT được miễn giảm theo Hiệp định </td>
+                            <td>[25]</td>
+                            <td> VND </td>
+                            <td><input value="" name=""></td>
+                        </tr>
+
+
+                        <tr>
+                            <td>b</td>
+                            <td colspan="2">Tổng TNCT phát sinh ngoài Việt Nam</td>
+                            <td>[26]</td>
+                            <td> VND </td>
+                            <td><input name=""></td>
+                        </tr>
+
+
+                        <tr>
+                            <td> 2 </td>
+                            <td colspan="3">Số người phụ thuộc</td>
+                            <td> 27 </td>
+                            <td> Người </td>
+                            <td> <input name=""> </td>
+
+                        </tr>
+
+                        <tr>
+                            <td> 2 </td>
+                            <td colspan="3">Số người phụ thuộc</td>
+                            <td> 27 </td>
+                            <td> Người </td>
+                            <td> <input name=""> </td>
+
+                        </tr>
+
+
+                        <tr>
+                            <td rowspan="6"> 3</td>
+                            <td colspan="3">Các khoản giảm trừ</td>
+                            <td> 28 </td>
+                            <td> VND </td>
+                            <td> <input name=""></td>
+                        </tr>
+
+                        <tr>
+                            <td>a</td>
+                            <td colspan="2">Cho cá nhân bản thân</td>
+                            <td> 29 </td>
+                            <td> VND </td>
+                            <td> </td>
+                        </tr>
+
+                        <tr>
+                            <td>b </td>
+                            <td colspan="2">Số người phụ thuộc</td>
+                            <td> 27 </td>
+                            <td> Người </td>
+                            <td> </td>
+                        </tr>
+
+                        <tr>
+                            <td>c</td>
+                            <td colspan="2">Số người phụ thuộc</td>
+                            <td> 27 </td>
+                            <td> Người </td>
+                            <td> </td>
+                        </tr>
+
+                        <tr>
+                            <td>d</td>
+                            <td colspan="2">Số người phụ thuộc</td>
+                            <td> 27 </td>
+                            <td> Người </td>
+                            <td> </td>
+                        </tr>
+
+                        <tr>
+                            <td>e</td>
+                            <td colspan="2">Số người phụ thuộc</td>
+                            <td> 27 </td>
+                            <td> Người </td>
+                            <td> </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>4</td>
+                            <td colspan="3">Tổng thu nhập tính thuế</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td>5</td>
+                            <td colspan="3">Tổng số thuế TNCN phát sinh trong kỳ</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="6"> 6</td>
+                            <td colspan="3">Các khoản giảm trừ</td>
+                            <td> 28 </td>
+                            <td> VND </td>
+                            <td> <input></td>
+                        </tr>
+
+                        <tr>
+                            <td>a</td>
+                            <td colspan="2">Cho cá nhân bản thân</td>
+                            <td> 29 </td>
+                            <td> VND </td>
+                            <td> </td>
+                        </tr>
+
+                        <tr>
+                            <td>b </td>
+                            <td colspan="2">Số người phụ thuộc</td>
+                            <td> 27 </td>
+                            <td> Người </td>
+                            <td> </td>
+                        </tr>
+
+                        <tr>
+                            <td>c</td>
+                            <td colspan="2">Số người phụ thuộc</td>
+                            <td> 27 </td>
+                            <td> Người </td>
+                            <td> </td>
+                        </tr>
+
+                        <tr>
+                            <td>d</td>
+                            <td colspan="2">Số người phụ thuộc</td>
+                            <td> 27 </td>
+                            <td> Người </td>
+                            <td> </td>
+                        </tr>
+
+                        <tr>
+                            <td>e</td>
+                            <td colspan="2">Số người phụ thuộc</td>
+                            <td> 27 </td>
+                            <td> Người </td>
+                            <td> </td>
+                        </tr>
+
+
+                        <tr>
+                            <td rowspan="3">7</td>
+                            <td colspan="3">Các khoản giảm trừ</td>
+                            <td> 28 </td>
+                            <td> VND </td>
+                            <td> <input></td>
+                        </tr>
+
+                        <tr>
+                            <td>a</td>
+                            <td colspan="2">Cho cá nhân bản thân</td>
+                            <td> 29 </td>
+                            <td> VND </td>
+                            <td> </td>
+                        </tr>
+
+                        <tr>
+                            <td>c </td>
+                            <td colspan="2">Số người phụ thuộc</td>
+                            <td> 27 </td>
+                            <td> Người </td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td>8</td>
+                            <td colspan="3">Tổng số thuế còn phải nộp</td>
+                            <td>[44]</td>
+                            <td>VND</td>
+                            <td>0</td>
+                        </tr>
+                        <!--STT = 9-->
+                        <tr>
+                            <td rowspan="5">9</td>
+                            <td colspan="3">tổng</td>
+                            <td>22</td>
+                            <td>VND</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="3">a</td>
+                            <td colspan="2">Smith</td>
+                            <td>23</td>
+                            <td>VND</td>
+                            <td><input></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">trong đó</td>
+                            <td>giảm thuế</td>
+                            <td>24</td>
+                            <td> VND</td>
+                            <td><input></td>
+                        </tr>
+                        <tr>
+                            <td>Hiệp định </td>
+                            <td>25</td>
+                            <td> VND </td>
+                            <td><input></td>
+                        </tr>
+
+                        <tr>
+                            <td>b</td>
+                            <td colspan="2">phát sinh ngoài</td>
+                            <td>26</td>
+                            <td> VND </td>
+                            <td><INPUT></td>
+                        </tr>
+
+                    </table>
+                </div>
+
+                <!--
+                    <div class="thanks-message text-center" id="text-message">
+                        <h3>Thanks for your Donation!</h3> <span>Your donation has been entered! We will contact you shortly!</span>
+                    </div>
+                -->
+                <div style="overflow:auto;" id="nextprevious">
+                    <div style="text-align: center;"> <button type="button" id="prevBtn"
+                            onclick="nextPrev(-1)">Previous</button> <button type="button" id="nextBtn"
+                            onclick="nextPrev(1)">Next</button> </div>
+                </div>
+
+            </form>
+
+            <br><br><br>
+        </div>
+    </div>
+</body>
+<script>
+    //your javascript goes here
+    var currentTab = 0;
+    document.addEventListener("DOMContentLoaded", function (event) {
+        showTab(currentTab);
+
+    });
+
+    function showTab(n) {
+        var x = document.getElementsByClassName("tab");
+        x[n].style.display = "block";
+        if (n == 0) {
+            document.getElementById("prevBtn").style.display = "none";
+        } else {
+            document.getElementById("prevBtn").style.display = "inline";
+        }
+        if (n == (x.length - 1)) {
+            document.getElementById("nextBtn").innerHTML = "Submit";
+        } else {
+            document.getElementById("nextBtn").innerHTML = "Next";
+        }
+        fixStepIndicator(n)
+    }
+
+
+    function nextPrev(n) {
+        var x = document.getElementsByClassName("tab");
+        if (n == 1 && !validateForm()) return false;
+        x[currentTab].style.display = "none";
+        currentTab = currentTab + n;
+        if (currentTab >= x.length) {
+            document.getElementById("nextprevious").style.display = "none";
+            document.getElementById("all-steps").style.display = "none";
+        }
+        showTab(currentTab);
+    }
+
+    function validateForm() {
+        var x, y, i, valid = true;
+        x = document.getElementsByClassName("tab");
+        y = x[currentTab].getElementsByTagName("input");
+        for (i = 0; i < y.length; i++) {
+            if (y[i].value == "") {
+                y[i].className += " invalid";
+                valid = false;
+            }
+        }
+        if (valid) { document.getElementsByClassName("step")[currentTab].className += " finish"; }
+        return valid;
+    }
+
+    function fixStepIndicator(n) {
+        var i, x = document.getElementsByClassName("step");
+        for (i = 0; i < x.length; i++) { x[i].className = x[i].className.replace(" active", ""); }
+        x[n].className += " active";
+    }
+</script>
+
+</html>
