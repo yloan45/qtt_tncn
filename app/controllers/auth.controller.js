@@ -11,10 +11,10 @@ const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
-const { sendMail } = require("../utils/mailer");
-const { param } = require("../routes/index.routes");
 
-exports.signup = (req, res) => {
+
+
+ const signup = (req, res) => {
   // Save User to Database
   User.create({
     username: req.body.username,
@@ -43,15 +43,15 @@ exports.signup = (req, res) => {
       } else {
         // user role = 1
         user.setRoles([1]).then(() => {
-          res.send({ message: "User registered successfully!" });
+          res.redirect("/list-user")
         });
       }
 
       mailer.sendMail(user.email, "Đăng ký tài khoản thành công",
-      `Hi ${user.fullname} <br>
+      `Xin chao ${user.fullname} <br>
       Bạn vừa được tạo tài khoản Quyết toán thuế TNCN thành công! <br>
-      Tài khoản đăng nhập hệ thống:<br>
-      - username: ${user.fullname} <br>
+      Tài khoản đăng nhập hệ thống cua ban:<br>
+      - username: ${user.username} <br>
       - password: ${req.body.password}`)
     })
     .catch(err => {
@@ -59,7 +59,7 @@ exports.signup = (req, res) => {
     });
 };
 
-exports.signin = (req, res) => {
+const signin = (req, res) => {
   User.findOne({
     where: {
       username: req.body.username
@@ -116,7 +116,7 @@ exports.signin = (req, res) => {
 
 /*
 
-exports.getMST = (req, res, next) => {
+const getMST = (req, res, next) => {
   Masothue.findAll().then((masothue) => {
     res.render("admin/create.ejs", {
       masothue: masothue
@@ -129,7 +129,7 @@ exports.getMST = (req, res, next) => {
 */
 
 // get all mã số thuế
-exports.getAllMST = (req, res) => {
+const getAllMST = (req, res) => {
   Masothue.findAll().then((masothue) => {
     res.render("admin/listMST.ejs",
     { maso: masothue });
@@ -139,7 +139,7 @@ exports.getAllMST = (req, res) => {
 
 
 // xóa mã số thuế
-exports.deleteMST = (req, res) => {
+const deleteUser = (req, res) => {
   User.destroy({
     where: {
       id: req.params.id
@@ -148,14 +148,14 @@ exports.deleteMST = (req, res) => {
   .then(function(rowDeleted){
     if(rowDeleted == 1){
       console.log("deleted!!!");
-      res.redirect('/listall');
+      res.redirect('/list-user');
     }
   })
 }
 
 
 // get all mã số thuế
-exports.getAllUser = (req, res) => {
+const getAllUser = (req, res) => {
   User.findAll().then((users) => {
     res.render("admin/listUser.ejs",
     { user: users });
@@ -167,7 +167,7 @@ exports.getAllUser = (req, res) => {
 
 // get user
 
-exports.findOne = (req, res) => {
+const findOne = (req, res) => {
   const id = req.params.id;
   User.findByPk(id).then((data) => {
     if(data){
@@ -185,4 +185,25 @@ exports.findOne = (req, res) => {
       message: "error"
     });
   })
+}
+
+
+// update user
+const update = (req, res) => {
+  const id = req.params.id;
+  User.update(req.body,{where:{id:id}})
+  .then(num => {
+    if(num ==1) {
+      res.redirect("/list-user");
+    } else {
+      res.send('Unable to update the user') ;
+    }
+  })
+}
+
+module.exports= {
+  signin, signup,
+  update, deleteUser,
+  getAllUser, findOne, getAllMST
+  
 }

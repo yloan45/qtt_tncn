@@ -64,35 +64,71 @@ db.tcUpload.belongsToMany(db.user, {
 
 
 // người dùng - mã số thuế => người dùng có 1 mã số thuế 
-db.mst.hasMany(db.user);
-db.user.belongsTo(db.mst);
-
+db.mst.hasOne(db.user,{
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+db.user.belongsTo(db.mst, {
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 
 // cục thuế - chi cục thuế => cục thuế có nhiều chi cục
-db.cucthue.hasMany(db.chicucthue);
-db.chicucthue.belongsTo(db.cucthue);
+db.cucthue.hasMany(db.chicucthue,
+  {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+db.chicucthue.belongsTo(db.cucthue, {
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+
 
 // user - tờ khai thuế => tờ khai thuế có nhiều người dùng
-db.user.belongsTo(db.tokhaithue);
-db.tokhaithue.hasMany(db.user);
+db.user.belongsTo(db.tokhaithue,{
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+db.tokhaithue.hasMany(db.user,{
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+
 
 // phụ lục - tờ khai thuế => 1 tờ khai thuế chỉ có 1 phụ lục
-db.tokhaithue.belongsTo(db.phuluc);
-db.phuluc.hasMany(db.tokhaithue);
+db.tokhaithue.belongsTo(db.phuluc, {
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+db.phuluc.hasMany(db.tokhaithue, {
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 
-// user - upload tờ khai => cá nhân/ tổ chức 
-//db.user.belongsTo(db.cnUpload);
-//db.cnUpload.hasMany(db.user);
-//db.user.belongsTo(db.tcUpload);
-//db.tcUpload.hasMany(db.user);
 
 // user - phản hồi => cá nhân phản hồi 
-db.phanhoi.hasMany(db.user);
-db.user.belongsTo(db.phanhoi);
+db.phanhoi.hasMany(db.user, {
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+db.user.belongsTo(db.phanhoi, {
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+
+
 
 // tổ chức up load file - nội dung file upload
-db.tcUpload.belongsTo(db.ndkekhai);
-db.ndkekhai.hasMany(db.tcUpload);
+db.tcUpload.belongsTo(db.ndkekhai, {
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+db.ndkekhai.hasMany(db.tcUpload, {
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+
 
 
 db.ROLES = ["canhan", "admin", "tochuc"];

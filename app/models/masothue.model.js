@@ -3,7 +3,13 @@ module.exports = (sequelize, Sequelize) => {
       masothue: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true
+        unique: true,
+        validate: {
+          notEmpty: {
+            msg: "Ma so thue khong the de trong!"
+          }
+        }
+
       }
     });
     return Masothue;
