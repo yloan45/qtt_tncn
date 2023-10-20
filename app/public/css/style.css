@@ -17,6 +17,9 @@
 
 }
 
+.tab {
+  display: none;
+}
 .dangnhap {
   width: auto;
   margin-top: 25px;
