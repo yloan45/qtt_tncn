@@ -15,16 +15,16 @@ verifyToken = (req, res, next) => {
   }
 
   jwt.verify(token,
-            config.secret,
-            (err, decoded) => {
-              if (err) {
-                return res.status(401).send({
-                  message: "Unauthorized!",
-                });
-              }
-              req.userId = decoded.id;
-              next();
-            });
+    config.secret,
+    (err, decoded) => {
+      if (err) {
+        return res.status(401).send({
+          message: "Unauthorized!",
+        });
+      }
+      req.userId = decoded.id;
+      next();
+    });
 };
 
 isAdmin = (req, res, next) => {
@@ -34,50 +34,52 @@ isAdmin = (req, res, next) => {
         if (roles[i].name === "admin") {
           next();
           return;
+          // redirect admin
         }
       }
-
       res.status(403).send({
-        message: "Require Admin Role!"
+        message: "Yêu cầu quyền có quyền admin!"
       });
       return;
     });
   });
 };
 
-isModerator = (req, res, next) => {
+isTochuc = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     user.getRoles().then(roles => {
       for (let i = 0; i < roles.length; i++) {
         if (roles[i].name === "tochuc") {
           next();
           return;
+          // redirect tochuc
         }
       }
       res.status(403).send({
-        message: "Require Moderator Role!"
+        message: "Yêu cầu quyền có quyền tổ chức!"
       });
     });
   });
 };
 
-isModeratorOrAdmin = (req, res, next) => {
+isTochucOrCanhan = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     user.getRoles().then(roles => {
       for (let i = 0; i < roles.length; i++) {
         if (roles[i].name === "tochuc") {
           next();
           return;
+          // redirect tochuc
         }
 
-        if (roles[i].name === "admin") {
+        if (roles[i].name === "canhan") {
           next();
           return;
+          // redirect canhan
         }
       }
-
       res.status(403).send({
-        message: "Require Moderator or Admin Role!"
+        message: "Yêu cầu có quyền tổ chức hoặc quyền cá nhân!"
       });
     });
   });
@@ -86,7 +88,7 @@ isModeratorOrAdmin = (req, res, next) => {
 const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
-  isModerator: isModerator,
-  isModeratorOrAdmin: isModeratorOrAdmin
+  idTochuc: isTochuc,
+  isTochucOrCanhan: isTochucOrCanhan
 };
 module.exports = authJwt;

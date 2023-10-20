@@ -12,9 +12,7 @@ const Op = db.Sequelize.Op;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
-
-
- const signup = (req, res) => {
+const signup = (req, res) => {
   // Save User to Database
   User.create({
     username: req.body.username,
@@ -37,7 +35,6 @@ var bcrypt = require("bcryptjs");
         }).then(roles => {
           user.setRoles(roles).then(() => {
             res.send({ message: "User registered successfully!" });
-           
           });
         });
       } else {
@@ -48,7 +45,7 @@ var bcrypt = require("bcryptjs");
       }
 
       mailer.sendMail(user.email, "Đăng ký tài khoản thành công",
-      `Xin chao ${user.fullname} <br>
+        `Xin chao ${user.fullname} <br>
       Bạn vừa được tạo tài khoản Quyết toán thuế TNCN thành công! <br>
       Tài khoản đăng nhập hệ thống cua ban:<br>
       - username: ${user.username} <br>
@@ -83,27 +80,19 @@ const signin = (req, res) => {
       }
 
       const token = jwt.sign({ id: user.id },
-                              config.secret,
-                              {
-                                algorithm: 'HS256',
-                                allowInsecureKeySizes: true,
-                                expiresIn: 86400, // 24 hours
-                              });
+        config.secret,
+        {
+          algorithm: 'HS256',
+          allowInsecureKeySizes: true,
+          expiresIn: 86400, // 24 hours
+        });
 
       var authorities = [];
       user.getRoles().then(roles => {
         for (let i = 0; i < roles.length; i++) {
           authorities.push("ROLE_" + roles[i].name.toUpperCase());
         }
-        /*
-        res.status(200).send({
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          roles: authorities,
-          accessToken: token
-        });
-*/
+
         return res.render("admin/homepage", {
           user
         })
@@ -114,27 +103,14 @@ const signin = (req, res) => {
     });
 };
 
-/*
-
-const getMST = (req, res, next) => {
-  Masothue.findAll().then((masothue) => {
-    res.render("admin/create.ejs", {
-      masothue: masothue
-    });
-    console.log("mst check: ", masothue);
-  })
-  .catch((err) => console.log(err));
-}
-
-*/
 
 // get all mã số thuế
 const getAllMST = (req, res) => {
   Masothue.findAll().then((masothue) => {
     res.render("admin/listMST.ejs",
-    { maso: masothue });
+      { maso: masothue });
   })
-  .catch((err) => console.log(err));
+    .catch((err) => console.log(err));
 }
 
 
@@ -145,12 +121,12 @@ const deleteUser = (req, res) => {
       id: req.params.id
     }
   })
-  .then(function(rowDeleted){
-    if(rowDeleted == 1){
-      console.log("deleted!!!");
-      res.redirect('/list-user');
-    }
-  })
+    .then(function (rowDeleted) {
+      if (rowDeleted == 1) {
+        console.log("deleted!!!");
+        res.redirect('/list-user');
+      }
+    })
 }
 
 
@@ -158,52 +134,50 @@ const deleteUser = (req, res) => {
 const getAllUser = (req, res) => {
   User.findAll().then((users) => {
     res.render("admin/listUser.ejs",
-    { user: users });
+      { user: users });
   })
-  .catch((err) => console.log(err));
+    .catch((err) => console.log(err));
 }
-
-
 
 // get user
 
 const findOne = (req, res) => {
   const id = req.params.id;
   User.findByPk(id).then((data) => {
-    if(data){
+    if (data) {
       res.render("admin/update.ejs", {
         data: data
       });
-      } else {
-        res.status(404).send({
-          message: "Not found User with id "+id
-        })
+    } else {
+      res.status(404).send({
+        message: "Not found User with id " + id
+      })
     }
   })
-  .catch(err => {
-    res.status(500).send({
-      message: "error"
-    });
-  })
+    .catch(err => {
+      res.status(500).send({
+        message: "error"
+      });
+    })
 }
 
 
 // update user
 const update = (req, res) => {
   const id = req.params.id;
-  User.update(req.body,{where:{id:id}})
-  .then(num => {
-    if(num ==1) {
-      res.redirect("/list-user");
-    } else {
-      res.send('Unable to update the user') ;
-    }
-  })
+  User.update(req.body, { where: { id: id } })
+    .then(num => {
+      if (num == 1) {
+        res.redirect("/list-user");
+      } else {
+        res.send('Unable to update the user');
+      }
+    })
 }
 
-module.exports= {
+module.exports = {
   signin, signup,
   update, deleteUser,
   getAllUser, findOne, getAllMST
-  
+
 }

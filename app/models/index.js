@@ -22,7 +22,7 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.tutorials = require("./excel.model.js")(sequelize, Sequelize);
+db.excelupload = require("./excel.model.js")(sequelize, Sequelize);
 db.user = require("../models/user.model.js")(sequelize, Sequelize);
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
 db.mst = require("../models/masothue.model.js")(sequelize, Sequelize);

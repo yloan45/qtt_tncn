@@ -1,6 +1,9 @@
 const { authJwt } = require("../middleware");
 const controller = require("../controllers/user.controller");
 const { getAllMST, deleteUser, deleteAll, getAllUser, update } = require("../controllers/auth.controller");
+ const upload = require("../middleware/upload");
+ const excelController = require("../controllers/excel.controller");
+
 module.exports = function(app) {
   app.use(function(req, res, next) {
     res.header(
@@ -9,26 +12,6 @@ module.exports = function(app) {
     );
     next();
   });
-
-  app.get("/api/test/all", controller.allAccess);
-
-  app.get(
-    "/api/test/user",
-    [authJwt.verifyToken],
-    controller.userBoard
-  );
-
-  app.get(
-    "/api/test/mod",
-    [authJwt.verifyToken, authJwt.isModerator],
-    controller.moderatorBoard
-  );
-
-  app.get(
-    "/api/test/admin",
-    [authJwt.verifyToken, authJwt.isAdmin],
-    controller.adminBoard
-  );
 
   app.get("/listall", getAllMST);
   app.get("/delete/:id", deleteUser);
@@ -39,12 +22,12 @@ module.exports = function(app) {
   app.get("/tokhai", (req, res) => {
     res.render("nguoidung/tokhai.ejs")
   })
-  /*
+  
   app.get("/upload-file", (req, res) => {
     res.render("tochuc/upload")
   });
-*/
-  //app.get("/send-file", excelController.getTutorials);
+  app.get("/getAll", excelController.getAllExcelFile);
 
-  //app.post("/upload", upload.single("file"), excelController.upload);
+  app.post("/upload", upload.single("file"), excelController.upload);
+  
 };

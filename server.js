@@ -31,9 +31,12 @@ app.use('/', homeRoutes);
 
 db.sequelize.sync();
 
-app.get("/demo", (req, res) => {
-  res.render('login');
+// xóa và tạo lại dữ liệu
+/*
+db.sequelize.sync({ force: true }).then(() => {
+  console.log("Drop and re-sync db.");
 });
+*/
 
 // routes
 require('./app/routes/auth.routes')(app);
