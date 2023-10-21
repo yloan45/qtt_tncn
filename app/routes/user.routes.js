@@ -1,7 +1,7 @@
 const { authJwt } = require("../middleware");
 const controller = require("../controllers/user.controller");
 const { getAllMST, deleteUser, deleteAll, getAllUser, update } = require("../controllers/auth.controller");
- const upload = require("../middleware/upload");
+ const upload = require("../middleware/excelUpload");
  const excelController = require("../controllers/excel.controller");
 
 module.exports = function(app) {
@@ -29,5 +29,5 @@ module.exports = function(app) {
   app.get("/getAll", excelController.getAllExcelFile);
 
   app.post("/upload", upload.single("file"), excelController.upload);
-  
+
 };

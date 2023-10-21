@@ -1,7 +1,5 @@
 var currentTab = 0;
-document.addEventListener("DOMContentLoaded", function(event) {
-
-
+document.addEventListener("DOMContentLoaded", function (event) {
     showTab(currentTab);
 
 });
@@ -17,10 +15,11 @@ function showTab(n) {
     if (n == (x.length - 1)) {
         document.getElementById("nextBtn").innerHTML = "Submit";
     } else {
-        document.getElementById("nextBtn").innerHTML = "Next";
+        document.getElementById("nextBtn").innerHTML = "Tiếp tục";
     }
     fixStepIndicator(n)
 }
+
 
 function nextPrev(n) {
     var x = document.getElementsByClassName("tab");
@@ -28,13 +27,8 @@ function nextPrev(n) {
     x[currentTab].style.display = "none";
     currentTab = currentTab + n;
     if (currentTab >= x.length) {
-        // document.getElementById("regForm").submit();
-        // return false;
-        //alert("sdf");
         document.getElementById("nextprevious").style.display = "none";
         document.getElementById("all-steps").style.display = "none";
-        document.getElementById("register").style.display = "none";
-        document.getElementById("text-message").style.display = "block";
     }
     showTab(currentTab);
 }

@@ -38,34 +38,5 @@ router.get('/homepage', (req, res) => {
   res.render('nguoidung/homepage.ejs')
 });
 
-router.get('/admin-homepage', (req, res) => {
-  res.render('admin/homepage.ejs')
-});
-
-router.get('/tokhaithue', (req, res) => {
-  res.render('nguoidung/tokhaithue.ejs')
-});
-
-router.get('/login-2', (req, res) => {
-  res.render('nguoidung/login-next.ejs')
-});
-
-router.get('/thongtintokhai', (req, res) => {
-  res.render('nguoidung/thongtintokhai.ejs')
-});
-
-router.get('/dulieutokhai', (req, res) => {
-  res.render('nguoidung/dulieutokhai.ejs')
-});
-
-
-router.get('/register-2', (req, res) => {
-  res.render('nguoidung/register-next.ejs')
-});
-
-
-router.get('/guitokhai', (req, res) => {
-  res.render('nguoidung/guitokhai.ejs')
-})
 
 module.exports = router;

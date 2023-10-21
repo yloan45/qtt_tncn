@@ -10,7 +10,7 @@ const upload = async (req, res) => {
     }
 
     let path =
-      __basedir + "/uploads/" + req.file.filename;
+      __basedir + "/uploads/excel/" + req.file.filename;
 
     readXlsxFile(path).then((rows) => {
       rows.shift();

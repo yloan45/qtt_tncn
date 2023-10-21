@@ -1,0 +1,90 @@
+<html lang="en">
+
+<head>
+    <%- include('head') %>
+</head>
+
+<body>
+    <div class="container">
+        <div class="khungtong">
+            <!--phan header-->
+            <header>
+                <%- include('../partials/header') -%>
+            </header>
+            <!--phan header-->
+
+            <!--PHẦN NỘI DUNG-->
+            <div class="container-fluid" style="width: 550px; margin-top: 1pc; margin-bottom: 1pc;">
+                <div class="card bg-glass" style="border-radius: 5px;">
+                    <nav
+                        style="color: #b9deff; background-color: #2886d3; height: 30px; border-radius: 5px; text-align: center;">
+                        <p style="margin-top: 3px;">Đăng nhập hệ thống</p>
+                    </nav>
+                    <div class="card-body px-4 py-5 px-md-5">
+                        <form action="" method="">
+
+                            <div class="all-steps" id="all-steps"><span class="step"></span> <span class="step"></span>
+                            </div>
+
+                            <div class="tab">
+                                <div class="form-outline mb-4" >
+                                    <p style="margin-bottom: 5px;">Mã số thuế</p>
+                                    <input type="text" class="form-control" name="masothue" style="width: 15pc; height: 35px ;"
+                                        oninput="this.className = ''" />
+                                </div>
+
+                                <!-- Password input -->
+                                <div class="row">
+                                    <div class="form-outline mb-4 col-sm-8">
+                                        <p style="margin-bottom: 5px;">Mã kiểm tra</p>
+                                        <input type="password" id="form3Example4" class="" name="captcha"
+                                            oninput="this.className = ''" />
+                                    </div>
+                                    <div class="col-sm-4" style="margin-top: 23px;">
+                                        <!--MÃ KIỂM TRA-->
+                                        <img src="/captcha"
+                                            style="border: 1px solid rgba(169, 204, 238, 0.178); width: 125px; height: 48px; background-color: rgba(169, 204, 238, 0.178);">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab">
+                                <div class="form-outline mb-4">
+                                    <p style="margin-bottom: 5px;">Tên đăng nhập</p>
+                                    <input type="text" id="form3Example3" name="username"
+                                        oninput="this.className = ''" placeholder="enter username"/>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <p style="margin-bottom: 5px;">Mật khẩu</p>
+                                    <input type="text" id="form3Example3" class="" name="password"
+                                        oninput="this.className = ''" placeholder="enter password"/>
+                                </div>
+
+
+                            </div>
+
+                            <div style="overflow:auto;" id="nextprevious">
+                                <div style="text-align: center;"> <button class="btn btn-block col-4"
+                                        type="button" id="prevBtn" onclick="nextPrev(-1)">Quay lại</button> <button
+                                        class="btn btn-primary btn-block col-4" type="button" id="nextBtn"
+                                        onclick="nextPrev(1)">Tiếp tục</button> </div>
+                            </div>
+
+                            <!-- Register buttons -->
+
+                        </form>
+                    </div>
+                </div>
+                <br><br><br>
+                <!--PHẦN NỘI DUNG-->
+            </div>
+        </div>
+        <footer>
+            <%- include('../partials/footer') %>
+        </footer>
+        <script src="js/formwizard.js"></script>
+
+</body>
+
+</html>

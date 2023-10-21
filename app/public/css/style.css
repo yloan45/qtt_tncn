@@ -64,3 +64,34 @@
   color: #3a3333;
   font-weight: bold;
 }
+
+input.invalid {
+  background-color: #ffdddd
+}
+
+input, select{
+  width: 15pc;
+  height: 35px;
+  border: 1px solid rgb(188, 172, 172);
+}
+
+
+.tab {
+  display: none
+}
+
+#prevBtn {
+  background-color: #bbbbbb
+}
+
+.step {
+  background-color: #f1faff;
+}
+
+.step.finish {
+  background-color: #4CAF50
+}
+
+.all-steps {
+  text-align: center;
+}

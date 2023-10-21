@@ -68,10 +68,12 @@ db.mst.hasOne(db.user,{
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
+
 db.user.belongsTo(db.mst, {
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
+
 
 // cục thuế - chi cục thuế => cục thuế có nhiều chi cục
 db.cucthue.hasMany(db.chicucthue,
@@ -79,6 +81,8 @@ db.cucthue.hasMany(db.chicucthue,
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
+
+
 db.chicucthue.belongsTo(db.cucthue, {
   onDelete: "CASCADE",
   onUpdate: "CASCADE",

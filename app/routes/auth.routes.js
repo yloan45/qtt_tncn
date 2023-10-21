@@ -10,7 +10,6 @@ module.exports = function(app) {
     next();
   });
 
-  
   app.post(
     "/api/auth/signup",
     [

@@ -133,7 +133,7 @@ const deleteUser = (req, res) => {
 // get all mã số thuế
 const getAllUser = (req, res) => {
   User.findAll().then((users) => {
-    res.render("admin/listUser.ejs",
+    res.render("admin/listUser",
       { user: users });
   })
     .catch((err) => console.log(err));
