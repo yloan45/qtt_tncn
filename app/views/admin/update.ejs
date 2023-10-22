@@ -44,12 +44,10 @@
 
         <div class="container-fluid" style="width: 650px;" >
             <form action="/update/<%= data.id %>" method="post">
-              <!--
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label" >Mã số thuế</label>
-                <input type="text" class="form-control" name="masothue" value=" ">
+                <input type="text" class="form-control" name="masothue" value="<%= data.masothue %>" disabled>
               </div>
-              -->
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label" >Họ tên NNT</label>
                 <input type="text" class="form-control" name="fullname" value="<%= data.fullname %>">
@@ -60,7 +58,7 @@
                   </div>
                   <div class="mb-3">
                     <label class="form-label">Cơ quan quản lý thuế</label>
-                    <input  name="cqqlthue" type="text" class="form-control" value=" <%= data.cqqlthue %>">
+                    <input  name="cqqtthue" type="text" class="form-control" value=" <%= data.cqqtthue %>">
                   </div>
                   <div class="mb-3">
                     <label  class="form-label">Số điện thoại</label>

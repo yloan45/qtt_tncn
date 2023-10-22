@@ -19,6 +19,10 @@ module.exports = function(app) {
     controller.signup
   );
   
+  app.post("/api/auth/admin", controller.signin);
+
+
+
   app.get("/admin/signin", (req, res) => {
     res.render('admin/auth/login');
   });
@@ -27,7 +31,6 @@ module.exports = function(app) {
     res.render('admin/homepage');
   });
 
-  app.post("/admin", controller.signin);
   
   app.get("/update/:id", controller.findOne);
 

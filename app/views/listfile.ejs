@@ -1,0 +1,53 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('./partials/head') %>
+</head>
+
+<body class="container">
+    <br>
+    <h2>Thông tin file upload</h2>
+    <h2>
+        <a href="/noptokhai"> upload file</a>
+    </h2>
+    <div class="container-fluid">
+        <table class="table table-bordered">
+            <tr>
+                <th>
+                    STT
+                </th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Email</th>
+                <th>Filename</th>
+                <th>Action</th>
+            </tr>
+            <% files.forEach((user, index)=> { %>
+                <tr>
+                    <td>
+                        <%= index+1 %>
+                    </td>
+                    <td>
+                        <%= user.fullname %>
+                    </td>
+                    <td>
+                        <%= user.address %>
+                    </td>
+                    <td>
+                        <%= user.email %>
+                    </td>
+                    <td>
+                        <%= user.filename %>
+                    </td>
+                    <td>
+                        <a class="fa fa-download" href="/download?path=<%= user.filePath %>"></a>
+                    </td>
+                </tr>
+                <% }) %>
+        </table>
+</body>
+
+</html>

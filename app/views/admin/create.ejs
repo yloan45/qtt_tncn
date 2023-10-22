@@ -43,44 +43,42 @@
         </div>
 
         <div class="container-fluid" style="width: 650px;" >
-            <form action="/api/auth/signup" method="post">
-              <!--
+            <form action="/api/auth/signup" method="post"  class="needs-validation">
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label" >Mã số thuế</label>
-                <input type="text" class="form-control" name="masothue" value=" ">
+                <input type="text" class="form-control" name="masothue" value=" " id="validationCustom01" required>
               </div>
-              -->
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label" >Họ tên NNT</label>
-                <input type="text" class="form-control" name="fullname" value=" ">
+                <input type="text" class="form-control" name="fullname" value=" " required>
               </div>
                 <div class="mb-3">
                     <label class="form-label">Địa chỉ</label>
-                    <input  name="address" type="text" class="form-control" value=" ">
+                    <input  name="address" type="text" class="form-control" value=" " required>
                   </div>
                   <div class="mb-3">
                     <label class="form-label">Cơ quan quản lý thuế</label>
-                    <input  name="cqqtthue" type="text" class="form-control" value=" ">
+                    <input  name="cqqtthue" type="text" class="form-control" value=" " required>
                   </div>
                   <div class="mb-3">
                     <label  class="form-label">Số điện thoại</label>
-                    <input type="text" name="phone" class="form-control" value=" ">
+                    <input type="text" name="phone" class="form-control" value=" " required>
                   </div>
                   <div class="mb-3">
                     <label  class="form-label">Căn cước công dân</label>
-                    <input type="text" name="cccd" class="form-control" value=" ">
+                    <input type="text" name="cccd" class="form-control" value=" " required>
                   </div>
                   <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label" >Username</label>
-                    <input type="text" class="form-control" name="username" value=" ">
+                    <input type="text" class="form-control" name="username" value=" " required>
                   </div>
                   <div class="mb-3">
                     <label class="form-label">Email</label>
-                    <input type="email" class="form-control" name="email" value=" ">
+                    <input type="email" class="form-control" name="email" value=" " required>
                   </div>
                   <div class="mb-3">
                     <label  class="form-label">Mật khẩu</label>
-                    <input type="text" class="form-control" name="password" value=" ">
+                    <input type="text" class="form-control" name="password" value=" " required>
                   </div>
                   <div class="mb-3">
                     <label  class="form-label">Roles</label>

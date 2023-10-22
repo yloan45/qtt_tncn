@@ -12,6 +12,9 @@ module.exports = (sequelize, Sequelize) => {
       tokhai: {
         type: Sequelize.STRING
       },
+      loaitokhai: {
+        type : Sequelize.STRING
+      },
       coquanqtt: {
         type: Sequelize.STRING
       },

@@ -1,8 +1,8 @@
 const db = require("../models");
 const config = require("../config/auth.config");
+
 const User = db.user;
 const Role = db.role;
-const Masothue = db.mst;
 
 require('dotenv/config');
 const mailer = require('../utils/mailer');
@@ -17,9 +17,10 @@ const signup = (req, res) => {
   User.create({
     username: req.body.username,
     fullname: req.body.fullname,
+    masothue: req.body.masothue,
     address: req.body.address,
     cqqtthue: req.body.cqqtthue,
-    phone: req.body.phone,
+    phone: req.body.phone, 
     cccd: req.body.cccd,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8)
@@ -45,11 +46,12 @@ const signup = (req, res) => {
       }
 
       mailer.sendMail(user.email, "Đăng ký tài khoản thành công",
-        `Xin chao ${user.fullname} <br>
+        `Xin chào ${user.fullname} <br>
       Bạn vừa được tạo tài khoản Quyết toán thuế TNCN thành công! <br>
-      Tài khoản đăng nhập hệ thống cua ban:<br>
+      Tài khoản đăng nhập hệ thống cua bạn:<br>
       - username: ${user.username} <br>
       - password: ${req.body.password}`)
+
     })
     .catch(err => {
       res.status(500).send({ message: err.message });
@@ -105,6 +107,7 @@ const signin = (req, res) => {
 
 
 // get all mã số thuế
+/*
 const getAllMST = (req, res) => {
   Masothue.findAll().then((masothue) => {
     res.render("admin/listMST.ejs",
@@ -112,9 +115,8 @@ const getAllMST = (req, res) => {
   })
     .catch((err) => console.log(err));
 }
+*/
 
-
-// xóa mã số thuế
 const deleteUser = (req, res) => {
   User.destroy({
     where: {
@@ -129,8 +131,6 @@ const deleteUser = (req, res) => {
     })
 }
 
-
-// get all mã số thuế
 const getAllUser = (req, res) => {
   User.findAll().then((users) => {
     res.render("admin/listUser",
@@ -138,8 +138,6 @@ const getAllUser = (req, res) => {
   })
     .catch((err) => console.log(err));
 }
-
-// get user
 
 const findOne = (req, res) => {
   const id = req.params.id;
@@ -161,8 +159,6 @@ const findOne = (req, res) => {
     })
 }
 
-
-// update user
 const update = (req, res) => {
   const id = req.params.id;
   User.update(req.body, { where: { id: id } })
@@ -178,6 +174,6 @@ const update = (req, res) => {
 module.exports = {
   signin, signup,
   update, deleteUser,
-  getAllUser, findOne, getAllMST
+  getAllUser, findOne,
 
 }

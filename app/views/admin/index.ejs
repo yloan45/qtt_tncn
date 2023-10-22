@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <%- include('./partials/head') %>
+  </head>
+  <body>
+    <div class="preloader">
+      <div class="lds-ripple">
+        <div class="lds-pos"></div>
+        <div class="lds-pos"></div>
+      </div>
+    </div>
+    <div id="main-wrapper" data-layout="vertical" >
+      <header class="topbar" data-navbarbg="skin5">
+        <%- include('./partials/header') %>
+      </header>
+      <aside class="left-sidebar" data-sidebarbg="skin5">
+        <div class="scroll-sidebar">
+          <%-include('./partials/sidebar') %>
+        </div>
+      </aside>
+      <div class="page-wrapper" style="background-color: white;">
+        <div class="page-breadcrumb">
+          <div class="row">
+            <div class="col-12 d-flex no-block align-items-center">
+              <h4 class="page-title">Danh sách người nộp thuế cá nhân</h4>
+              <div class="ms-auto text-end">
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      Library
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid">
+            
+        </div>
+
+  </body>
+</html>

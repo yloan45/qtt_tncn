@@ -1,7 +1,7 @@
 <html lang="en">
 
 <head>
-    <%- include('../partials/head') %>
+    <%- include('./partials/head') %>
 </head>
 
 <body>
@@ -9,33 +9,40 @@
         <div class="khungtong">
             <!--phan header-->
             <header>
-                <%- include('../partials/header') -%>
+                <%- include('./partials/header') -%>
             </header>
             <!--phan header-->
 
             <div class="container-fluid" style="width: 1275px; margin-top: 1pc; margin-bottom: 1pc;">
                 <div class="card" style="border:1px solid rgba(93, 156, 238, 0.437)">
                     <nav
-                        style="color: #b9deff;border:1px solid rgba(93, 156, 238, 0.437);
-                         text-align:center;background-color: #90c3ec76; height: 25px; color: #3a3333; font-weight: bold;">
+                        style="color: #b9deff;border:1px solid rgba(93, 156, 238, 0.437);text-align:center;background-color: #90c3ec76; height: 25px; color: #3a3333; font-weight: bold;">
                         Tải tờ khai QTT
                     </nav>
 
                     <!--CHỌN THÔNG TIN TỜ KHAI QUYẾT TOÁN THUẾ TNCN-->
-                    <form action="" method="post">
+                    <form action="/noptokhai" method="post" enctype="multipart/form-data" >
+                        <div class="input-group" style="margin-top: 15px; display: none;">
+                            <span
+                                style="margin-bottom: 5px; margin-right: 15px; text-align: right; width: 125px; margin-left: 250px;">ID
+                                User <font style="color: red;">(*)</font></span>
+                            <input type="text" id="" name="id" class="form-control" style="margin-right: 250px;" />
+                        </div>
+
                         <!--TÊN NGƯỜI GỬI-->
                         <div class="input-group" style="margin-top: 15px;">
                             <span
                                 style="margin-bottom: 5px; margin-right: 15px; text-align: right; width: 125px; margin-left: 250px;">Tên
                                 người gửi <font style="color: red;">(*)</font></span>
-                            <input type="text" id="" class="form-control" style="margin-right: 250px;" />
+                            <input type="text" id="" name="fullname" class="form-control"
+                                style="margin-right: 250px;" required/>
                         </div>
                         <!--ĐỊA CHỈ -->
                         <div class="input-group" style="margin-top: 15px;">
                             <span
                                 style="margin-bottom: 5px; margin-right: 15px; text-align: right; width: 125px; margin-left: 250px;">Địa
                                 chỉ liên hệ <font style="color: red;">(*)</font></span>
-                            <input type="text" id="" class="form-control" style="margin-right: 250px;" />
+                            <input type="text" id="" name="address" class="form-control" style="margin-right: 250px;" required />
                         </div>
 
                         <!--ĐIỆN THOẠI LIÊN LẠC-->
@@ -43,7 +50,7 @@
                             <span
                                 style="margin-bottom: 5px; margin-right: 15px; text-align: right; width: 125px; margin-left: 250px;">Điện
                                 thoại liên lạc <font style="color: red;">(*)</font></span>
-                            <input type="text" id="" class="form-control" style="margin-right: 250px;" />
+                            <input type="text" id="" name="phone" class="form-control" style="margin-right: 250px;" required/>
                         </div>
 
                         <!--EMAIL LIÊN HỆ-->
@@ -51,7 +58,7 @@
                             <span
                                 style="margin-bottom: 5px; margin-right: 15px; text-align: right; width: 125px; margin-left: 250px;">Địa
                                 chỉ Email <font style="color: red;">(*)</font></span>
-                            <input type="text" id="" class="form-control" style="margin-right: 250px;" />
+                            <input type="email" id="" name="email" class="form-control" style="margin-right: 250px;" required/>
                         </div>
 
                         <!--CHỌN TỜ KHAI-->
@@ -60,7 +67,8 @@
                                 style="margin-bottom: 5px; margin-right: 15px; text-align: right; width: 125px; margin-left: 250px;">Chọn
                                 tờ khai</span>
                             <select class="" style="margin-right: 250px; width: 600px;" name="" id="">
-                                <option value="">02/QTT-TNCN - Tờ khai quyết toán thuế thu nhập cá nhân</option>
+                                <option value="02/QTT-TNCN" name="tokhai02">02/QTT-TNCN - Tờ khai quyết toán thuế thu
+                                    nhập cá nhân</option>
                                 <option value=""></option>
                             </select>
                         </div>
@@ -68,28 +76,28 @@
                             <span
                                 style="margin-bottom: 5px; margin-right: 15px; text-align: right; width: 125px; margin-left: 250px;">Chọn
                                 file dữ liệu <font style="color: red;">(*)</font></span>
-                            <input type="file" id="" class="form-control" style="margin-right: 250px;" />
+                            <input type="file" id="" name="filename" class="form-control"
+                                style="margin-right: 250px;" required/>
                         </div>
 
                         <div class="input-group" style="margin-top: 15px;">
                             <span
                                 style="margin-bottom: 5px; margin-right: 15px; text-align: right; width: 125px; margin-left: 250px;">Xác
                                 nhận thông tin<font style="color: red;">(*)</font></span>
-                            <input type="text" id="" class="form-control" style="margin-right: 20px;" />
+                            <input type="text" id="" class="form-control" style="margin-right: 20px;" required />
                             <img src="/captcha"
                                 style="margin-right: 20pc; border: 1px solid rgba(169, 204, 238, 0.178); width: 145px; height: 38px; background-color: rgba(169, 204, 238, 0.178);">
                         </div>
 
                         <br>
                         <div style="text-align: center;">
-                            <button type="button" style="margin-right: 25px; width: 120px;"
-                                class="btn btn-secondary btn-sm">Gửi tờ khai</button>
+                            <button type="submit" style="margin-right: 25px; width: 120px;"
+                                class="btn btn-secondary btn-sm">Submit</button>
                         </div>
                         <br><br>
                     </form>
 
                 </div>
-
                 <!--CHỌN THÔNG TIN TỜ KHAI QUYẾT TOÁN THUẾ TNCN-->
 
                 <br><br><br>
@@ -97,7 +105,7 @@
         </div>
     </div>
     <footer>
-        <%- include('../partials/footer') %>
+        <%- include('./partials/footer') %>
     </footer>
 </body>
 

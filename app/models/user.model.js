@@ -10,6 +10,17 @@ module.exports = (sequelize, Sequelize) => {
       }
     },
 
+    masothue: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Ma so thue khong duoc de trong!"
+        }
+      }
+    },
+
+
     fullname: {
       type: Sequelize.STRING,
       allowNull: false,

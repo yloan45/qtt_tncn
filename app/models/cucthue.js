@@ -5,7 +5,7 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         validate: {
           notEmpty: {
-            msg: "Username khong duoc de trong!"
+            msg: "Cuc thue khong duoc de trong!"
           }
         }
       }

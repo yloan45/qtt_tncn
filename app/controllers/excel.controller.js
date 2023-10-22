@@ -34,10 +34,12 @@ const upload = async (req, res) => {
 
       Excelupload.bulkCreate(excelupload)
         .then(() => {
-          res.status(200).send({
-            message: "Uploaded the file successfully: " + req.file.originalname,
-            // render dữ liệu
-          });
+          res.redirect('/')
+          //  res.status(200).send({
+          // message: "Uploaded the file successfully: " + req.file.originalname,
+          // render dữ liệu
+
+          //  });
         })
         .catch((error) => {
           res.status(500).send({

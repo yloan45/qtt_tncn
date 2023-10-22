@@ -25,7 +25,7 @@ db.sequelize = sequelize;
 db.excelupload = require("./excel.model.js")(sequelize, Sequelize);
 db.user = require("../models/user.model.js")(sequelize, Sequelize);
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
-db.mst = require("../models/masothue.model.js")(sequelize, Sequelize);
+//db.mst = require("../models/masothue.model.js")(sequelize, Sequelize);
 db.cnUpload = require("../models/cnUpload.js")(sequelize, Sequelize);
 db.tcUpload = require("../models/tcUpload.js")(sequelize, Sequelize);
 db.cucthue = require("../models/cucthue.js")(sequelize, Sequelize);
@@ -35,6 +35,8 @@ db.tokhaithue = require("../models/tokhaithue.js")(sequelize, Sequelize);
 db.phanhoi = require("../models/phanhoi.js")(sequelize, Sequelize);
 db.ndkekhai = require("../models/ndKekhai.js")(sequelize, Sequelize);
 //db.nganhnghe = require("./nganhnghe.js")(sequelize, Sequelize);
+db.file = require("../models/file.js")(sequelize,Sequelize);
+
 
 
 db.role.belongsToMany(db.user, {
@@ -63,7 +65,9 @@ db.tcUpload.belongsToMany(db.user, {
 });
 
 
-// người dùng - mã số thuế => người dùng có 1 mã số thuế 
+// người dùng - mã số thuế => người dùng có 1 mã số thuế
+
+/*
 db.mst.hasOne(db.user,{
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
@@ -73,7 +77,7 @@ db.user.belongsTo(db.mst, {
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
-
+*/
 
 // cục thuế - chi cục thuế => cục thuế có nhiều chi cục
 db.cucthue.hasMany(db.chicucthue,
@@ -82,7 +86,6 @@ db.cucthue.hasMany(db.chicucthue,
     onUpdate: "CASCADE",
   });
 
-
 db.chicucthue.belongsTo(db.cucthue, {
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
@@ -90,26 +93,24 @@ db.chicucthue.belongsTo(db.cucthue, {
 
 
 // user - tờ khai thuế => tờ khai thuế có nhiều người dùng
-db.user.belongsTo(db.tokhaithue,{
+db.user.hasMany(db.tokhaithue,{
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
-db.tokhaithue.hasMany(db.user,{
-  onDelete: "CASCADE",
-  onUpdate: "CASCADE",
-});
-
-
-// phụ lục - tờ khai thuế => 1 tờ khai thuế chỉ có 1 phụ lục
-db.tokhaithue.belongsTo(db.phuluc, {
-  onDelete: "CASCADE",
-  onUpdate: "CASCADE",
-});
-db.phuluc.hasMany(db.tokhaithue, {
+db.tokhaithue.belongsTo(db.user,{
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
 
+// phụ lục - tờ khai thuế => tờ khai có nhiều phụ lục
+db.tokhaithue.hasMany(db.phuluc, {
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+db.phuluc.belongsTo(db.tokhaithue, {
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 
 // user - phản hồi => cá nhân phản hồi 
 db.phanhoi.hasMany(db.user, {
@@ -120,7 +121,6 @@ db.user.belongsTo(db.phanhoi, {
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
-
 
 
 // tổ chức up load file - nội dung file upload
