@@ -1,41 +1,44 @@
 const { verifySignUp } = require("../middleware");
 const controller = require("../controllers/auth.controller");
+const { TCsignup } = require("../controllers/signup.controller");
+const { verifyToken } = require("../middleware/authJwt");
 
-module.exports = function(app) {
-  app.use(function(req, res, next) {
-    res.header(
+module.exports = function (app) {
+app.use(function (req, res, next) {
+  res.header(
       "Access-Control-Allow-Headers",
-      "x-access-token, Origin, Content-Type, Accept"
+      "Origin, Content-Type, Accept"
     );
     next();
-  });
-
-  app.post(
-    "/api/auth/signup",
-    [
-      verifySignUp.checkDuplicateUsernameOrEmail,
-      verifySignUp.checkRolesExisted
-    ],
-    controller.signup
-  );
+});
   
-  app.post("/api/auth/admin", controller.signin);
+app.use((req, res, next) => {
+    if (req.session.user) {
+      res.locals.user = req.session.user;
+    } else {
+      res.locals.user = null;
+    }
+    next();
+});
+
+app.post("/api/auth/signup",[verifySignUp.checkCaNhan, verifySignUp.checkRolesExisted], controller.CaNhanSignup);     // cá nhân
+app.post("/auth/create-tochuc",[verifySignUp.checkToChuc, verifySignUp.checkRolesExisted], controller.ToChucSignup);  // doanh nghiệp
+app.post("/register-admin", controller.AdminSignup);    // admin
+
+
+app.post("/tochuc/login", controller.TochucSignin);     // login doanh nghiệp
+app.post("/login", controller.signin);                  // admin login
+app.post("/canhan/login", controller.CanhanSignin);     // cá nhân login
+app.get("/api/auth/signout", controller.signout);       // đăng xuất tài khoản
+
+
+app.get("/tochuc/login", (req, res) => {                // form login                                
+  res.render("tochuc/login");
+});
 
 
 
-  app.get("/admin/signin", (req, res) => {
-    res.render('admin/auth/login');
-  });
 
-  app.get("/admin/homepage", (req, res) => {
-    res.render('admin/homepage');
-  });
 
-  
-  app.get("/update/:id", controller.findOne);
 
-  app.get("/create-user",  (req, res) =>{
-    res.render('admin/create');
-  })
-  
 };

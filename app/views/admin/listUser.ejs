@@ -38,45 +38,69 @@
           </div>
         </div>
         <div class="container-fluid">
-       <table class="table table-bordered">
-            <tr>
+<div style="text-align: right;">
+  <a href="#" class="btn btn-info" style="color: white;" name="file">Import</a>
+  <a href="#" class="btn btn-danger" style="color: white;">Export</a>
+</div>
+       <table class="table table-bordered mt-3">
+            <tr style="text-align: center;">
                 <th>
                     STT
                 </th>
                 <th>Mã số thuế</th>
                 <th>Họ tên NNT</th>
+                <th>Căn cước công dân</th>
                 <th>Email</th>
                 <th>Địa chỉ</th>
+                <th>Cơ quan quản lý thuế</th>
+                <th>Điện thoại</th>
                 <th>Username</th>
+                <th>Số người phụ thuộc</th>
                 <th>Action</th>
             </tr>
+            <% let totalIndex = 0; %>
                 <% user.forEach((user, index)=> { %>
                  <tr>
                     <td>
                         <%= index+1 %>
                     </td>
                     <td>
-                    <%= user.cccd %>
+                    <%= user.masothue %>
                     </td>
                     <td>
                       <%= user.fullname %>
                       </td>
                       <td>
-                        <%= user.email %>
+                        <%= user.cccd %>
                       </td>
                       <td>
-                        <%= user.address %>
+                        <%= user.email %>
                       </td>
                      <td>
-                        <%= user.username %>
+                        <%= user.dia_chi.tinh_tp %>
                      </td>
+                     <td>
+                    <%= user.cqqtthue%>
+                     </td>
+                     <td>
+                      <%= user.phone %>
+                   </td>
+                   <td>
+                    <%= user.user.username %>
+                 </td>
+                 <td>
+                  <%= user.phuthuoc %>
+               </td>
                     <td>
-                        <a href="/update/<%= user.id %>" class="btn btn-info">Edit</a>
-                        <a href="/delete/<%= user.id %>" class="btn btn-danger">Delete</a>
+                        <a href="/update/<%= user.id %>" ><i class="fas fa-edit"></i></a>
+                        <a href="/deletecn/<%= user.id %>"><i class="fas fa-trash"></i></a>
                         
                     </td>
+                    <% totalIndex++; %>
+                   
                 </tr>
                 <% }) %>
+                <h5>Tổng cộng: <%= totalIndex %></h5>
           </table>
         </div>
 

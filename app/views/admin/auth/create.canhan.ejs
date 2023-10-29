@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <%- include('../partials/head') %>
+  </head>
+  <body>
+    <div class="preloader">
+      <div class="lds-ripple">
+        <div class="lds-pos"></div>
+        <div class="lds-pos"></div>
+      </div>
+    </div>
+    <div id="main-wrapper" data-layout="vertical" >
+      <header class="topbar" data-navbarbg="skin5">
+        <%- include('../partials/header') %>
+      </header>
+      <aside class="left-sidebar" data-sidebarbg="skin5">
+        <div class="scroll-sidebar">
+          <%-include('../partials/sidebar') %>
+        </div>
+      </aside>
+      <div class="page-wrapper" style="background-color: white;">
+        <div class="page-breadcrumb">
+          <div class="row">
+            <div class="col-12 d-flex no-block align-items-center">
+              <h4 class="page-title">Tạo tài khoản Tổ chức/Doanh nghiệp</h4>
+              <div class="ms-auto text-end">
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      Library
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="container-fluid">
+            <form action="/api/auth/signup" method="post" class="row g-3 needs-validation" novalidate>
+                <div class="container-fluid" style="width: 650px;" >
+                    <div class="mb-3">
+                        <label for="validationCustom01" class="form-label">Mã số thuế</label>
+                        <input type="text" class="form-control" id="validationCustom01" name="masothue" value="" required>
+                        <div class="invalid-feedback">
+                          Mã số thuế không được để trống
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="validationCustom02" class="form-label">Họ tên NNT</label>
+                        <input type="text" class="form-control" name="tentochuc" value="" required>
+                        <div class="invalid-feedback">
+                          Tên doanh nghiệp/tổ chức không được để trống
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="validationCustom01" class="form-label">Tỉnh/Thàn phố</label>
+                        <select name="tinh_tp" id="city" class="form-control">
+                            <option value=""></option>
+                          </select>
+                        <div class="invalid-feedback">
+                            Tỉnh thành phố không được để trống
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Quận/Huyện</label>
+                        <select name="" id="district" class="form-control">
+                          <option value=""></option>
+                        </select>
+                      </div>
+                      
+                      <div class="mb-3">
+                        <label class="form-label">Xã/Phường/Thị trấn</label>
+                        <select name="" id="ward" class="form-control">
+                          <option value=""></option>
+                        </select>
+                      </div>
+
+                    <div class="mb-3">
+                        <label for="validationCustom02" class="form-label">Căn cước công dân</label>
+                        <input type="text" class="form-control" id="validationCustom02" value="" name="cccd" required>
+                        <div class="invalid-feedback">
+                          Địa chỉ không được để trống
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="validationCustom01" class="form-label">Cơ quan quyết toán thuế</label>
+                        <input type="text" class="form-control" id="validationCustom01" value="" name="cqqtthue" required>
+                        <div class="invalid-feedback">
+                          Cơ quan quyết toán thuế không được để trống
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="validationCustom02" class="form-label">Email liên hệ</label>
+                        <input type="email" class="form-control" id="validationCustom02" value="" name="email" required>
+                        <div class="invalid-feedback">
+                          Email không được để trống
+                        </div>
+                    </div>
+
+                  <div class="mb-3">
+                      <label for="validationCustom02" class="form-label">Số điện thoại</label>
+                      <input type="text" class="form-control" id="validationCustom02" value="" name="phone" required>
+                      <div class="invalid-feedback">
+                        Số điện thoại không được để trống
+                      </div>
+                  </div>
+
+                    <div class="mb-3">
+                        <label for="validationCustom02" class="form-label">Phụ thuộc</label>
+                        <input type="number" class="form-control" id="validationCustom02" value="" name="phuthuoc" required>
+                        <div class="invalid-feedback">
+                          Số lượng nhân viên không được để trống
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="validationCustom02" class="form-label">Username</label>
+                      <input type="text" class="form-control" id="validationCustom02" value="" name="username" required>
+                      <div class="invalid-feedback">
+                        Số điện thoại không được để trống
+                      </div>
+                  </div>
+
+                </div>
+
+
+                <br>
+                <%# submit %>       
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit" data-toggle="modal" data-target="#myModal">Create Account</button>
+                  </div>
+                </div>
+
+              </form>
+        </div>
+
+  </body>
+  <script>
+(function () {
+  'use strict'
+  var forms = document.querySelectorAll('.needs-validation')
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+  </script>
+</html>

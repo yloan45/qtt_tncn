@@ -1,0 +1,71 @@
+<html lang="en">
+
+<head>
+    <%- include('head') %>
+</head>
+
+<body>
+    <div class="container">
+        <div class="khungtong">
+            <!--phan header-->
+            <header>
+                <img src="https://thuedientu.gdt.gov.vn/etaxnnt/static/images/img_new/thuedientu.png">
+                <div>
+                  <nav class="navbar" style="background-color: #2886d3">
+                      <span style="margin-left: 15px; color: white; font-size: 15px; font-weight: bold;">HOME</span>
+                  </nav>
+              </div>
+              
+              <nav style="background-color: hsl(204, 49%, 89%); margin-top: 1px; padding-left: 15px; padding-bottom: 4px;">
+                <a href="#">Kê khai thếu trực tuyến   |</a>
+                <a href="#">Nộp tờ khai    |</a>
+                <a href="#">Tra cứu tờ khai</a>
+              </nav>
+              
+              
+              <style>
+                   a {
+                    text-decoration: none;
+                 }
+              </style>
+            </header>
+            <!--phan header-->
+
+            <!--PHẦN NỘI DUNG-->
+            <div class="container-fluid" style="width: 550px; margin-top: 1pc; margin-bottom: 1pc;">
+                <div class="card bg-glass" style="border-radius: 5px;">
+                    <nav
+                        style="color: #b9deff; background-color: #2886d3; height: 30px; border-radius: 5px; text-align: center;">
+                        <p style="margin-top: 3px;">Đăng nhập hệ thống</p>
+                    </nav>
+                    <div class="card-body px-4 py-5 px-md-5">
+                        <form action="/tochuc/login" method="post">
+                            <div class="form-outline">
+                                <div class="form-outline mb-4">
+                                    <p style="margin-bottom: 5px;">Tên đăng nhập</p>
+                                    <input type="text" id="" class="form-control" name="username" required/>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <p style="margin-bottom: 5px;">Mật khẩu</p>
+                                    <input type="text" id="" class="form-control" name="password" required/>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                Đăng nhập
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <br><br><br>
+                <!--PHẦN NỘI DUNG-->
+            </div>
+        </div>
+        <footer>
+            <%- include('../partials/footer') %>
+        </footer>
+        <script src="js/formwizard.js"></script>
+
+</body>
+
+</html>

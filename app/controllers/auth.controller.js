@@ -1,179 +1,400 @@
 const db = require("../models");
 const config = require("../config/auth.config");
+require('dotenv/config');
+const mailer = require('../utils/mailer');
+const crypto = require('crypto');
 
 const User = db.user;
 const Role = db.role;
-
-require('dotenv/config');
-const mailer = require('../utils/mailer');
-
 const Op = db.Sequelize.Op;
-
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
-
-const signup = (req, res) => {
-  // Save User to Database
-  User.create({
-    username: req.body.username,
-    fullname: req.body.fullname,
-    masothue: req.body.masothue,
-    address: req.body.address,
-    cqqtthue: req.body.cqqtthue,
-    phone: req.body.phone, 
-    cccd: req.body.cccd,
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8)
-  })
-    .then(user => {
-      if (req.body.roles) {
-        Role.findAll({
-          where: {
-            name: {
-              [Op.or]: req.body.roles
-            }
-          }
-        }).then(roles => {
-          user.setRoles(roles).then(() => {
-            res.send({ message: "User registered successfully!" });
-          });
-        });
-      } else {
-        // user role = 1
-        user.setRoles([1]).then(() => {
-          res.redirect("/list-user")
-        });
-      }
-
-      mailer.sendMail(user.email, "Đăng ký tài khoản thành công",
-        `Xin chào ${user.fullname} <br>
-      Bạn vừa được tạo tài khoản Quyết toán thuế TNCN thành công! <br>
-      Tài khoản đăng nhập hệ thống cua bạn:<br>
-      - username: ${user.username} <br>
-      - password: ${req.body.password}`)
-
-    })
-    .catch(err => {
-      res.status(500).send({ message: err.message });
-    });
-};
-
-const signin = (req, res) => {
-  User.findOne({
-    where: {
-      username: req.body.username
-    }
-  })
-    .then(user => {
-      if (!user) {
-        return res.status(404).send({ message: "User Not found." });
-      }
-
-      var passwordIsValid = bcrypt.compareSync(
-        req.body.password,
-        user.password
-      );
-
-      if (!passwordIsValid) {
-        return res.status(401).send({
-          accessToken: null,
-          message: "Invalid Password!"
-        });
-      }
-
-      const token = jwt.sign({ id: user.id },
-        config.secret,
-        {
-          algorithm: 'HS256',
-          allowInsecureKeySizes: true,
-          expiresIn: 86400, // 24 hours
-        });
-
-      var authorities = [];
-      user.getRoles().then(roles => {
-        for (let i = 0; i < roles.length; i++) {
-          authorities.push("ROLE_" + roles[i].name.toUpperCase());
-        }
-
-        return res.render("admin/homepage", {
-          user
-        })
-      });
-    })
-    .catch(err => {
-      res.status(500).send({ message: err.message });
-    });
-};
+const Canhan = db.canhan;
+const Tochuc = db.tochuc;
+const Admin = db.admin;
+const Diachi = db.diachi;
 
 
-// get all mã số thuế
+const express = require('express');
+const app = express;
+
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const { checkUserRole } = require("../middleware/authJwt");
+
+function generateRandomPassword() {
+  return crypto.randomBytes(6).toString('hex'); // Đây tạo một chuỗi 24 ký tự
+}
 /*
-const getAllMST = (req, res) => {
-  Masothue.findAll().then((masothue) => {
-    res.render("admin/listMST.ejs",
-      { maso: masothue });
-  })
-    .catch((err) => console.log(err));
-}
+exports.CaNhanSignup = async (req, res) => {
+  // Save User to Database
+  try {
+
+    const canhan = await Canhan.create({
+      email: req.body.email,
+      masothue: req.body.masothue,
+      address: req.body.address,
+      cccd: req.body.cccd,
+      phone: req.body.phone,
+      cqqtthue: req.body.cqqtthue,
+      phuthuoc: req.body.phuthuoc,
+      fullname: req.body.fullname,
+    });
+
+    const user = await User.create({
+      username: req.body.username,
+      password: bcrypt.hashSync(req.body.password, 8),
+      canhanId: canhan.id
+    });
+
+    if (req.body.roles) {
+      const roles = await Role.findAll({
+        where: {
+          name: {
+            [Op.or]: req.body.roles,
+          },
+        },
+      });
+
+      const result = user.setRoles(roles);
+      if (result) {
+        mailer.sendMail(canhan.email, "Đăng ký tài khoản thành công",
+          `Xin chào ${canhan.fullname} <br>
+      Bạn vừa được tạo tài khoản Quyết toán thuế TNCN thành công! <br>
+      Tài khoản đăng nhập hệ thống của bạn:<br>
+      - username: ${user.username} <br>
+      - password: ${req.body.password}`);
+        return res.redirect('/');
+      }
+
+
+    }
+
+    else {
+      // user has role = 1
+      const result = user.setRoles([1]);
+      if (result) {
+        mailer.sendMail(canhan.email, "Đăng ký tài khoản thành công",
+          `Xin chào ${canhan.fullname} <br>
+        Bạn vừa được tạo tài khoản Quyết toán thuế TNCN thành công! <br>
+        Tài khoản đăng nhập hệ thống của bạn:<br>
+        - username: ${user.username} <br>
+        - password: ${req.body.password}`);
+        return res.render('admin/success-modal', { showSuccessModal: true });
+      }
+    }
+
+
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
 */
+exports.CaNhanSignup = async (req, res) => {
+  // Save User to Database
+  try {
+    const randomPassword = generateRandomPassword();
 
-const deleteUser = (req, res) => {
-  User.destroy({
-    where: {
-      id: req.params.id
-    }
-  })
-    .then(function (rowDeleted) {
-      if (rowDeleted == 1) {
-        console.log("deleted!!!");
-        res.redirect('/list-user');
-      }
-    })
-}
+    const diachi = await Diachi.create({
+      tinh_tp: req.body.tinh_tp,
+    });
 
-const getAllUser = (req, res) => {
-  User.findAll().then((users) => {
-    res.render("admin/listUser",
-      { user: users });
-  })
-    .catch((err) => console.log(err));
-}
+    const canhan = await Canhan.create({
+      email: req.body.email,
+      masothue: req.body.masothue,
+      cccd: req.body.cccd,
+      phone: req.body.phone,
+      cqqtthue: req.body.cqqtthue,
+      phuthuoc: req.body.phuthuoc,
+      fullname: req.body.fullname,
+      diaChiId: diachi.id,
+    });
 
-const findOne = (req, res) => {
-  const id = req.params.id;
-  User.findByPk(id).then((data) => {
-    if (data) {
-      res.render("admin/update.ejs", {
-        data: data
+    const user = await User.create({
+      username: req.body.username,
+      password: bcrypt.hashSync(randomPassword, 8),
+      caNhanId: canhan.id
+    });
+
+    if (req.body.roles) {
+      const roles = await Role.findAll({
+        where: {
+          name: {
+            [Op.or]: req.body.roles,
+          },
+        },
       });
+
+      const result = user.setRoles(roles);
+      if (result) {
+        mailer.sendMail(canhan.email, "Tạo tài khoản thành công",
+          `Xin chào ${canhan.fullname} <br>
+      Bạn vừa được tạo tài khoản admin trên hệ thống thành công! <br>
+      Tài khoản đăng nhập hệ thống của bạn:<br>
+      - username: ${user.username} <br>
+      - password: ${randomPassword}`);
+        return res.redirect('/');
+      }
+    }
+
+    else {
+      // user has role = 3
+      const result = user.setRoles([3]);
+      if (result) {
+        mailer.sendMail(canhan.email, "Tạo tài khoản thành công",
+          `Xin chào ${canhan.hoten} <br>
+        Bạn vừa được tạo tài khoản Quyết toán thuế TNCN thành công! <br>
+        Tài khoản đăng nhập hệ thống của bạn:<br>
+        - username: ${user.username} <br>
+        - password: ${randomPassword}`);
+        return res.redirect('/list-user');
+      }
+    }
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
+exports.ToChucSignup = async (req, res) => {
+  // Save User to Database: 7 - not null
+  try {
+    const tochuc = await Tochuc.create({
+      masothue: req.body.masothue,
+      email: req.body.email,
+      tentochuc: req.body.tentochuc,
+      address: req.body.address,
+      phone: req.body.phone,
+      cqqtthue: req.body.cqqtthue,
+      nhanvien: req.body.nhanvien,
+      daidien: req.body.daidien,
+    });
+
+    const user = await User.create({
+      username: req.body.username,
+      password: bcrypt.hashSync(req.body.password, 8),
+      toChucId: tochuc.id,
+    });
+
+    if (req.body.roles) {
+      const roles = await Role.findAll({
+        where: {
+          name: {
+            [Op.or]: req.body.roles,
+          },
+        },
+      });
+
+      const result = user.setRoles(roles);
+      if (result) res.send({ message: "User registered successfully!" });
     } else {
-      res.status(404).send({
-        message: "Not found User with id " + id
-      })
+      // user has role = 1
+      const result = user.setRoles([2]);
+      if (result) res.send({ message: "User registered successfully!" });
     }
-  })
-    .catch(err => {
-      res.status(500).send({
-        message: "error"
+
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
+exports.AdminSignup = async (req, res) => {
+  // Save User to Database
+  try {
+    const randomPassword = generateRandomPassword();
+    const admin = await Admin.create({
+      macanbo: req.body.macanbo,
+      masothue: req.body.masothue,
+      hoten: req.body.hoten,
+      coquanthue: req.body.coquanthue,
+      email: req.body.email
+    });
+
+    const user = await User.create({
+      username: req.body.macanbo,
+      password: bcrypt.hashSync(randomPassword, 8),
+      adminId: admin.id
+    });
+
+    if (req.body.roles) {
+      const roles = await Role.findAll({
+        where: {
+          name: {
+            [Op.or]: req.body.roles,
+          },
+        },
       });
-    })
-}
 
-const update = (req, res) => {
-  const id = req.params.id;
-  User.update(req.body, { where: { id: id } })
-    .then(num => {
-      if (num == 1) {
-        res.redirect("/list-user");
-      } else {
-        res.send('Unable to update the user');
+      const result = user.setRoles(roles);
+      if (result) {
+        mailer.sendMail(admin.email, "Tạo tài khoản thành công",
+          `Xin chào ${admin.hoten} <br>
+      Bạn vừa được tạo tài khoản admin trên hệ thống thành công! <br>
+      Tài khoản đăng nhập hệ thống của bạn:<br>
+      - username: ${user.username} <br>
+      - password: ${randomPassword}`);
+        return res.redirect('/');
       }
-    })
-}
+    }
 
-module.exports = {
-  signin, signup,
-  update, deleteUser,
-  getAllUser, findOne,
+    else {
+      // user has role = 3
+      const result = user.setRoles([3]);
+      if (result) {
+        mailer.sendMail(admin.email, "Tạo tài khoản thành công",
+          `Xin chào ${admin.hoten} <br>
+        Bạn vừa được tạo tài khoản Quyết toán thuế TNCN thành công! <br>
+        Tài khoản đăng nhập hệ thống của bạn:<br>
+        - username: ${user.username} <br>
+        - password: ${randomPassword}`);
+        return res.render('admin/success-modal', { showSuccessModal: true });
+      }
+    }
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
 
-}
+
+exports.signin = async (req, res) => {
+  try {
+    const user = await User.findOne({
+      where: {
+        username: req.body.username,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).send({ message: "User Not found." });
+    }
+
+    const passwordIsValid = bcrypt.compareSync(
+      req.body.password,
+      user.password
+    );
+
+    if (!passwordIsValid) {
+      return res.status(401).send({
+        message: "Invalid Password!",
+      });
+    }
+
+    const token = jwt.sign({ id: user.id },
+      config.secret,
+      {
+        algorithm: 'HS256',
+        allowInsecureKeySizes: true,
+        expiresIn: 86400, // 24 hours
+      });
+
+    let authorities = [];
+    const roles = await user.getRoles();
+    for (let i = 0; i < roles.length; i++) {
+      authorities.push("ROLE_" + roles[i].name.toUpperCase());
+    }
+
+    req.session.token = token;
+    req.session.user = {
+      id: user.id,
+      username: user.username
+    };
+
+    return res.redirect("/admin")
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+};
+
+
+exports.TochucSignin = async (req, res) => {
+  try {
+    const user = await User.findOne({
+      where: {
+        username: req.body.username,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).send({ message: "User Not found." });
+    }
+
+    const passwordIsValid = bcrypt.compareSync(
+      req.body.password,
+      user.password
+    );
+
+    if (!passwordIsValid) {
+      return res.status(401).send({
+        message: "Invalid Password!",
+      });
+    }
+
+    const token = jwt.sign({ id: user.id },
+      config.secret,
+      {
+        algorithm: 'HS256',
+        allowInsecureKeySizes: true,
+        expiresIn: 86400, // 24 hours
+      });
+
+    let authorities = [];
+    const roles = await user.getRoles();
+    for (let i = 0; i < roles.length; i++) {
+      authorities.push("ROLE_" + roles[i].name.toUpperCase());
+    }
+
+    req.session.token = token;
+    req.session.user = user;
+    return res.redirect("/tochuc")
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+};
+
+
+exports.CanhanSignin = async (req, res) => {
+  try {
+    const user = await User.findOne({
+      where: {
+        username: req.body.username,
+      },
+    });
+
+    const passwordIsValid = bcrypt.compareSync(
+      req.body.password,
+      user.password
+    );
+
+    if (!user || !passwordIsValid) {
+      return res.status(404).send({ message: "User not found or Invalid password!" });
+    }
+
+    const token = jwt.sign({ id: user.id },
+      config.secret,
+      {
+        algorithm: 'HS256',
+        allowInsecureKeySizes: true,
+        expiresIn: 86400, // 24 hours
+      });
+
+    let authorities = [];
+    const roles = await user.getRoles();
+    for (let i = 0; i < roles.length; i++) {
+      authorities.push("ROLE_" + roles[i].name.toUpperCase());
+    }
+
+    req.session.token = token;
+    req.session.user = user;
+    return res.redirect("/canhan/")
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+};
+
+exports.signout = async (req, res) => {
+  try {
+    req.session.token = null;
+    req.session.user = null;
+    return res.redirect("/")
+  } catch (err) {
+    this.next(err);
+  }
+};
+

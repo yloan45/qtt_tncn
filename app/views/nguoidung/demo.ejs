@@ -1,0 +1,114 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>
+        welcome,
+        <br>
+        <%= user.id %>
+        <br>
+        <%= user.username %>
+        <br>
+        <%= user.ca_nhan.email %>
+    </h1>
+    <head>
+
+    </head>
+    
+    <!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+      <%- include('head') %>
+      <style>
+        /* Đặt lớp CSS hidden */
+        .step.hidden {
+          display: none;
+        }
+    
+        .step {
+          background-color: white;
+        }
+      </style>
+    </head>
+    
+    
+    <body>
+      <div class="container">
+        <div class="khungtong">
+          <header>
+            <%- include('../partials/header') -%>
+          </header>
+          <h1>welcome, <%= user.username %></h1>
+          <div class="container-fluid" style="width: 1275px; margin-top: 1pc; margin-bottom: 1pc;">
+            <div class="card" style="border:1px solid rgba(93, 156, 238, 0.437)">
+              <nav style="color: #b9deff;border:1px solid rgba(93, 156, 238, 0.437);text-align:center;background-color: #90c3ec76; height: 25px; color: #3a3333; font-weight: bold;">
+                Kê khai tờ khai quyết toán thuế trực tuyến
+              </nav>
+              <!-- Tệp EJS: views/formWizard.ejs -->
+              <form id="form-wizard" action="/tokhai" method="POST">
+    <h1><%= user.ca_nhan.email %></h1>
+                <!--STEP 1-->
+                <%- include('tokhaiStep1') -%>
+                <!--STEP 2-->
+                <%- include('tokhaiStep2') -%>
+    
+              </form>
+    
+            </div>
+            <br><br>
+          </div>
+        </div>
+      </div>
+    
+      <%- include('../partials/footer') %>
+    </body>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <%# form wizard with javascript %>
+    <script>
+      $(document).ready(function() {
+        const form = $('#form-wizard');
+        const steps = form.find('.step');
+        const nextButtons = form.find('.next-button');
+        const prevButtons = form.find('.prev-button');
+    
+        nextButtons.click(function(e) {
+          e.preventDefault();
+          const currentStep = $(this).closest('.step');
+          const nextStep = steps.filter(`[data-step="${currentStep.data('step') + 1}"]`);
+          currentStep.hide();
+          nextStep.show();
+        });
+    
+        prevButtons.click(function(e) {
+          e.preventDefault();
+          const currentStep = $(this).closest('.step');
+          const prevStep = steps.filter(`[data-step="${currentStep.data('step') - 1}"]`);
+          currentStep.hide();
+          prevStep.show();
+        });
+      });
+    </script>
+    
+    <script>
+      // cập nhật tháng theo năm được nhập từ bàn phím
+      function updateMonths() {
+        var year = document.getElementById("yearInput").value;
+        var thang1 = "1/" + year;
+        var thang12 = "12/" + year;
+    
+        document.getElementById("month1Input").value = thang1;
+        document.getElementById("month12Input").value = thang12;
+      }
+    </script>
+    
+    <script src="js/tokhai.js"></script>
+    
+    </html>
+</body>
+</html>

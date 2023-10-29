@@ -26,7 +26,7 @@
                         Kê khai tờ khai quyết toán thuế trực tuyến
                     </nav>
 
-                    <form action="" method="">
+                    <form action="/tokhai" method="post" id="tokhaithue">
                         <div class="all-steps" id="all-steps"><span class="step"></span> <span class="step"></span>
                         </div>
 
@@ -34,7 +34,7 @@
                             <%# TÊN NGƯỜI GỬI - NAME="fullname" %>
                                 <br>
                                 <div class="input-group">
-                                    <span class="thongtintokhai">Tên người gưi
+                                    <span class="thongtintokhai">Tên người gửi
                                         <font style="color: red;">(*)</font>
                                     </span>
                                     <input style="width: 600px;" type="text" name="fullname"
@@ -68,132 +68,65 @@
                                                     type="text" id="">
                                             </div>
 
+                                            <!--CHỌN TỜ KHAI-->
+                                            <div class="input-group" style="margin-top: 15px;">
+                                                <span class="thongtintokhai">Chọn tờ khai</span>
+                                                <select class="" style="margin-right: 250px; width: 600px;" name=""
+                                                    id="">
+                                                    <option value="" name="">--Chọn tờ khai---</option>
+                                                    <option value="" name=""></option>
+                                                </select>
+                                            </div>
+
+                                            <!--CỤC THUẾ - CHI CỤC THUẾ-->
+                                            <div class="input-group" style="margin-top: 15px;">
+                                                <span class="thongtintokhai"> Cục thuế</span>
+                                                <select class="" style="margin-right: 240px; width: 600px;" name=""
+                                                    id="">
+                                                    <option value="" disabled></option>
+                                                </select>
+                                            </div>
+
+                                            <div class="input-group" style="margin-top: 15px;">
+                                                <span class="thongtintokhai"> Chi cục thuế</span>
+                                                <select class="" style="margin-right: 240px; width: 600px;" name=""
+                                                    id="">
+                                                    <option value="" disabled></option>
+                                                </select>
+                                            </div>
+
+
+                                            <!--LOẠI TỜ KHAI-->
+                                            <div class="input-group" style="margin-top: 15px;">
+                                                <span class="thongtintokhai">Loại tờ khai</span>
+                                                <select class="" style="margin-right: 250px; width: 600px;" name=""
+                                                    id="">
+                                                    <option value="" name="loaitokhai">Tờ khai chính thức
+                                                    </option>
+                                                </select>
+                                            </div>
+
                                             <%# NAME KÊ KHAI - NAME="year" %>
                                                 <div class="input-group" style="margin-top: 15px;">
-                                                    <span class="thongtintokhai">Năm kê khai
-                                                        <font style="color: red;">(*)</font>
-                                                    </span>
-                                                    <input style="width: 600px;" oninput="this.className = ''"
-                                                        name="year" type="text" id="">
+                                                    <span class="thongtintokhai">Năm kê khai</span>
+                                                    <input style="width: 150px;" name="year" type="text" id="yearInput"
+                                                        oninput="updateMonths()">
                                                 </div>
 
-                                                <!--CHỌN TỜ KHAI-->
-                                                <div class="input-group" style="margin-top: 15px;">
-                                                    <span class="thongtintokhai">Chọn tờ khai</span>
-                                                    <select class="" style="margin-right: 250px; width: 600px;" name=""
-                                                        id="">
-                                                        <option value="" name="">--Chọn tờ khai---</option>
-                                                        <option value="" name=""></option>
-                                                    </select>
-                                                </div>
+                                                <%# NAME KÊ KHAI - NAME="year" %>
+                                                    <div class="input-group" style="margin-top: 15px;">
+                                                        <span class="thongtintokhai">Từ tháng</span>
+                                                        <input style="width: 150px;" oninput="this.className = ''"
+                                                            name="tuthang" type="text" id="month1Input">
 
-                                                <!--CỤC THUẾ - CHI CỤC THUẾ-->
-                                                <div class="input-group" style="margin-top: 15px;">
-                                                    <span class="thongtintokhai"> Cục thuế</span>
-                                                    <select class="" style="margin-right: 240px; width: 600px;" name=""
-                                                        id="">
-                                                        <option value="" disabled></option>
-                                                    </select>
-                                                </div>
+                                                        <span class="thongtintokhai">Đến tháng</span>
+                                                        <input style="width: 150px;" oninput="this.className = ''"
+                                                            name="denthang" type="text" id="month12Input">
+                                                    </div>
 
-                                                <div class="input-group" style="margin-top: 15px;">
-                                                    <span class="thongtintokhai"> Chi cục thuế</span>
-                                                    <select class="" style="margin-right: 240px; width: 600px;" name=""
-                                                        id="">
-                                                        <option value="" disabled></option>
-                                                    </select>
-                                                </div>
-
-
-                                                <!--LOẠI TỜ KHAI-->
-                                                <div class="input-group" style="margin-top: 15px;">
-                                                    <span class="thongtintokhai">Loại tờ khai</span>
-                                                    <select class="" style="margin-right: 250px; width: 600px;" name=""
-                                                        id="">
-                                                        <option value="" name="loaitokhai">Tờ khai chính thức
-                                                        </option>
-                                                    </select>
-                                                </div>
 
                         </div>
                         <br>
-                        <div class="tab">
-                            <div class="input-group">
-                                <span class="thongtintokhai">Tên người gưi
-                                    <font style="color: red;">(*)</font>
-                                </span>
-                                <input style="width: 600px;" type="text" oninput="this.className = ''" name="fullname"
-                                    id="" />
-                            </div>
-                            <!--ĐỊA CHỈ -->
-                            <div class="input-group" style="margin-top: 15px;">
-                                <span class="thongtintokhai">Địa chỉ liên hệ
-                                    <font style="color: red;">(*)</font>
-                                </span>
-                                <input style="width: 600px;" type="text" oninput="this.className = ''" name="address"
-                                    id="" />
-                            </div>
-                            <!--ĐIỆN THOẠI LIÊN LẠC-->
-                            <div class="input-group" style="margin-top: 15px;">
-                                <span class="thongtintokhai">Điện thoại liên lạc
-                                    <font style="color: red;">(*)</font>
-                                </span>
-                                <input style="width: 600px;" oninput="this.className = ''" type="text" name="phone"
-                                    id="" />
-                            </div>
-                            <!--EMAIL LIÊN HỆ-->
-                            <div class="input-group" style="margin-top: 15px;">
-                                <span class="thongtintokhai">Địa chỉ Email
-                                    <font style="color: red;">(*)</font>
-                                </span>
-                                <input style="width: 600px;" oninput="this.className = ''" name="email" type="email"
-                                    id="">
-                            </div>
-                            <!--NĂM KÊ KHAI-->
-                            <div class="input-group" style="margin-top: 15px;">
-                                <span class="thongtintokhai">Năm kê khai
-                                    <font style="color: red;">(*)</font>
-                                </span>
-                                <input style="width: 600px;" oninput="this.className = ''" name="year" type="text"
-                                    id="">
-                            </div>
-
-                            <!--CHỌN TỜ KHAI-->
-                            <div class="input-group" style="margin-top: 15px;">
-                                <span class="thongtintokhai">Chọn tờ khai</span>
-                                <select class="" style="margin-right: 250px; width: 600px;" name="" id="">
-                                    <option value="" name="">--Chọn tờ khai---</option>
-                                    <option value="" name=""></option>
-                                </select>
-                            </div>
-
-                            <!--CỤC THUẾ - CHI CỤC THUẾ-->
-                            <div class="input-group" style="margin-top: 15px;">
-                                <span class="thongtintokhai"> Cục thuế</span>
-                                <select class="" style="margin-right: 240px; width: 600px;" name="" id="">
-                                    <option value="" disabled></option>
-                                </select>
-                            </div>
-
-                            <div class="input-group" style="margin-top: 15px;">
-                                <span class="thongtintokhai"> Chi cục thuế</span>
-                                <select class="" style="margin-right: 240px; width: 600px;" name="" id="">
-                                    <option value="" disabled></option>
-                                </select>
-                            </div>
-
-
-                            <!--LOẠI TỜ KHAI-->
-                            <div class="input-group" style="margin-top: 15px;">
-                                <span class="thongtintokhai">Loại tờ khai</span>
-                                <select class="" style="margin-right: 250px; width: 600px;" name="" id="">
-                                    <option value="" name="loaitokhai">Tờ khai chính thức
-                                    </option>
-                                </select>
-                            </div>
-
-                        </div>
-
 
                         <!--NỘI DUNG TỜ KHAI QUYẾT TOÁN THUẾ THU NHẬP CÁ NHÂN => NGƯỜI DÙNG CÁ NHÂN-->
 
@@ -276,27 +209,27 @@
                                         [22]=[23]+[26]</td>
                                     <td>[22]</td>
                                     <td>VNĐ</td>
-                                    <td><input type="text" name="ct22"></td>
+                                    <td><input type="text" name="ct22" id="ct22" style="border: none;" value="0"></td>
                                 </tr>
                                 <tr>
                                     <td rowspan="3">a</td>
                                     <td colspan="2" style="text-align: justify;">Tổng TNCT phát sinh tại Việt Nam</td>
                                     <td>[23]</td>
                                     <td>VNĐ</td>
-                                    <td><input name="ct23"></td>
+                                    <td><input name="ct23" id="ct23" value="0"></td>
                                 </tr>
                                 <tr>
                                     <td rowspan="2">Trong đó</td>
                                     <td style="text-align: justify;">Tổng TNCT làm căn cứ tính giảm thuế</td>
                                     <td>[24]</td>
                                     <td> VNĐ</td>
-                                    <td><input name="ct24"></td>
+                                    <td><input name="ct24" id="ct24" value="0"></td>
                                 </tr>
                                 <tr>
                                     <td style="text-align: justify;">Tổng TNCT được miễn giảm theo Hiệp định </td>
                                     <td>[25]</td>
                                     <td> VNĐ </td>
-                                    <td><input value="" name="25"></td>
+                                    <td><input name="ct25" id="ct25" value="0"></td>
                                 </tr>
 
                                 <tr>
@@ -304,7 +237,7 @@
                                     <td colspan="2" style="text-align: justify;">Tổng TNCT phát sinh ngoài Việt Nam</td>
                                     <td>[26]</td>
                                     <td> VNĐ </td>
-                                    <td><input name="26"></td>
+                                    <td><input name="ct26" id="ct26" value="0"></td>
                                 </tr>
 
 
@@ -313,7 +246,7 @@
                                     <td colspan="3" style="text-align: justify;">Số người phụ thuộc</td>
                                     <td> [27] </td>
                                     <td> Người </td>
-                                    <td> <input name="ct27"> </td>
+                                    <td> <input name="ct27" value="0" id="ct27" style="border: none;" disabled> </td>
 
                                 </tr>
 
@@ -324,7 +257,7 @@
                                         <td colspan="3" style="text-align: justify;">Các khoản giảm trừ</td>
                                         <td>[28]</td>
                                         <td> VNĐ </td>
-                                        <td> <input name="ct28"></td>
+                                        <td> <input name="ct28" id="ct28" style="border: none;" disabled></td>
                                     </tr>
 
                                     <tr>
@@ -332,7 +265,8 @@
                                         <td colspan="2" style="text-align: justify;">Cho cá nhân bản thân</td>
                                         <td> [29] </td>
                                         <td> VNĐ </td>
-                                        <td> <input type="text" name="ct29"> </td>
+                                        <td> <input type="text" name="ct29" id="ct29" value="0" style="border: none;"
+                                                disabled> </td>
                                     </tr>
 
                                     <tr>
@@ -341,7 +275,8 @@
                                             trừ</td>
                                         <td> [30] </td>
                                         <td> Người </td>
-                                        <td> <input type="text" name="ct30"></td>
+                                        <td> <input type="text" name="ct30" id="ct30" value="0" style="border: none;"
+                                                disabled></td>
                                     </tr>
 
                                     <tr>
@@ -349,7 +284,7 @@
                                         <td colspan="2" style="text-align: justify;">Từ thiện, nhân đạo, khuyến học</td>
                                         <td> [31] </td>
                                         <td> Người </td>
-                                        <td> <input type="text" name="ct31" id=""> </td>
+                                        <td> <input type="text" name="ct31" id="ct31" value="0"> </td>
                                     </tr>
 
                                     <tr>
@@ -358,7 +293,7 @@
                                         </td>
                                         <td> [32] </td>
                                         <td> Người </td>
-                                        <td><input type="text" name="ct32" id=""> </td>
+                                        <td><input type="text" name="ct32" id="ct32" value="0"> </td>
                                     </tr>
 
                                     <tr>
@@ -367,7 +302,7 @@
                                             được trừ</td>
                                         <td> [33] </td>
                                         <td> Người </td>
-                                        <td> <input type="text" name="ct33" id=""></td>
+                                        <td> <input type="text" name="ct33" id="ct33" value="0"></td>
                                     </tr>
 
                                     <tr>
@@ -377,7 +312,8 @@
                                         </td>
                                         <td>[34]</td>
                                         <td>VNĐ</td>
-                                        <td><input type="text" name="ct34" id=""></td>
+                                        <td><input type="text" name="ct34" id="ct34" style="border: none;" value="0"
+                                                disabled></td>
                                     </tr>
 
                                     <tr>
@@ -386,7 +322,7 @@
                                             (TNCN) phát sinh trong kỳ</td>
                                         <td>[35]</td>
                                         <td>VNĐ</td>
-                                        <td><input type="text" name="ct35" id=""></td>
+                                        <td><input type="text" name="ct35" id="ct35" value="0"></td>
                                     </tr>
 
                                     <tr>
@@ -397,7 +333,8 @@
                                         </td>
                                         <td> [36]</td>
                                         <td> VNĐ </td>
-                                        <td> <input type="text" name="ct36" id=""></td>
+                                        <td> <input type="text" name="ct36" id="ct36" style="border: none;" value="0"
+                                                disabled></td>
                                     </tr>
 
                                     <tr>
@@ -405,7 +342,7 @@
                                         <td colspan="2" style="text-align: justify;">Đã khấu trừ</td>
                                         <td> [37] </td>
                                         <td> VNĐ </td>
-                                        <td> <input type="text" name="ct37" id=""> </td>
+                                        <td> <input type="text" name="ct37" id="ct37" value="0"> </td>
                                     </tr>
 
                                     <tr>
@@ -413,7 +350,7 @@
                                         <td colspan="2" style="text-align: justify;">Đã tạm nộp</td>
                                         <td> [38] </td>
                                         <td> VNĐ</td>
-                                        <td> <input type="text" name="ct38" id=""> </td>
+                                        <td> <input type="text" name="ct38" id="ct38" value="0"> </td>
                                     </tr>
 
                                     <tr>
@@ -422,7 +359,7 @@
                                             trừ(nếu có)</td>
                                         <td> [39] </td>
                                         <td> VNĐ </td>
-                                        <td><input type="text" name="ct39" id=""> </td>
+                                        <td><input type="text" name="ct39" id="ct39" value="0"> </td>
                                     </tr>
 
                                     <tr>
@@ -431,7 +368,7 @@
                                             quyết toán vất năm</td>
                                         <td> [40] </td>
                                         <td> VNĐ </td>
-                                        <td> <input type="text" name="ct40" id=""> </td>
+                                        <td> <input type="text" name="ct40" id="ct40" value="0"> </td>
                                     </tr>
 
                                     <tr>
@@ -441,7 +378,8 @@
                                             [41]=[35]-[36]+[43]</td>
                                         <td> [41] </td>
                                         <td> VNĐ </td>
-                                        <td> <input type="text" name="ct44" id=""></td>
+                                        <td> <input type="text" name="ct41" id="ct41" style="border: none;" value="0"
+                                                disabled></td>
                                     </tr>
 
                                     <tr>
@@ -450,16 +388,17 @@
                                             việc trogn khu kinh tế</td>
                                         <td> [42] </td>
                                         <td> VNĐ </td>
-                                        <td> <input type="text" name="ct42" id=""> </td>
+                                        <td> <input type="text" name="ct42" id="ct42" style="border: none;" value="0"
+                                                disabled> </td>
                                     </tr>
 
                                     <tr>
                                         <td>b</td>
                                         <td colspan="2" style="text-align: justify;">Tổng số thuế TNCN được giảm trừ
                                             khác</td>
-                                        <td> [47] </td>
+                                        <td> [43] </td>
                                         <td> VNĐ </td>
-                                        <td> <input type="text" name="ct47" id=""></td>
+                                        <td> <input type="text" name="ct43" value="0" id="ct43"></td>
                                     </tr>
 
                                     <%# STT 9%>
@@ -471,7 +410,8 @@
                                             </td>
                                             <td>[44]</td>
                                             <td>VNĐ</td>
-                                            <td><input type="text" name="ct44" id=""></td>
+                                            <td><input type="text" name="ct44" id="ct44" style="border: none;" value="0"
+                                                    disabled></td>
                                         </tr>
 
                                         <%# STT 9%>
@@ -483,7 +423,8 @@
                                                 </td>
                                                 <td>[45]</td>
                                                 <td>VNĐ</td>
-                                                <td><input type="text" name="ct45" id=""></td>
+                                                <td><input type="text" name="ct45" id="ct45" style="border: none;"
+                                                        value="0" disabled></td>
                                             </tr>
                                             <tr>
                                                 <td rowspan="3">a</td>
@@ -493,7 +434,8 @@
                                                 </td>
                                                 <td>[46]</td>
                                                 <td>VNĐ</td>
-                                                <td><input type="text" name="ct46" id=""></td>
+                                                <td><input type="text" name="ct46" id="ct46" style="border: none;"
+                                                        value="0" disabled></td>
                                             </tr>
                                             <tr>
                                                 <td rowspan="2">Trong đó</td>
@@ -501,14 +443,14 @@
                                                     nộp thuế</td>
                                                 <td>[47]</td>
                                                 <td> VNĐ</td>
-                                                <td><input type="text" name="ct47" id=""></td>
+                                                <td><input type="text" name="ct47" id="ct47" value="0"></td>
                                             </tr>
                                             <tr>
                                                 <td style="text-align: justify;">Số thuế bù trừ cho khoản phải nộp Ngân
                                                     sách nhà nước khác</td>
                                                 <td>[48]</td>
                                                 <td> VNĐ </td>
-                                                <td><input type="text" name="ct48" id=""></td>
+                                                <td><input type="text" name="ct48" id="ct48" value="0"></td>
                                             </tr>
 
                                             <tr>
@@ -519,7 +461,8 @@
                                                 </td>
                                                 <td>[49]</td>
                                                 <td> VNĐ </td>
-                                                <td><input type="text" name="ct49" id=""></td>
+                                                <td><input type="text" name="ct49" id="ct49" style="border: none;"
+                                                        value="0" disabled></td>
                                             </tr>
 
                             </table>
@@ -527,8 +470,10 @@
                         <br>
                         <div style="overflow:auto;" id="nextprevious">
                             <div style="text-align: center;"> <button class="btn" type="button" id="prevBtn"
-                                    onclick="nextPrev(-1)">Quay lại</button> <button type="button" id="nextBtn"
-                                    class="btn btn-primary " onclick="nextPrev(1)">Tiếp tục</button> </div>
+                                    onclick="nextPrev(-1)">Quay lại</button>
+                                <button type="button" id="nextBtn" class="btn btn-primary " onclick="nextPrev(1)">Tiếp
+                                    tục</button>
+                            </div>
                         </div>
                         <br>
                     </form>
@@ -538,7 +483,179 @@
         </div>
     </div>
     <%- include('../partials/footer') %>
-    <script src="js/formwizard.js"></script>
+        <script src="js/formwizard.js"></script>
+        <script>
+            function updateMonths() {
+                var year = document.getElementById("yearInput").value;
+                var thang1 = "1/" + year;
+                var thang12 = "12/" + year;
+
+                document.getElementById("month1Input").value = thang1;
+                document.getElementById("month12Input").value = thang12;
+            }
+
+            // chỉ tiêu [22]=[23]+[26]
+            var numct23 = document.getElementById("ct23");
+            var numct26 = document.getElementById("ct26");
+            var resultct22 = document.getElementById("ct22");
+
+            numct23.addEventListener("input", sumct22);
+            numct26.addEventListener("input", sumct22);
+
+            function sumct22() {
+                var ct23 = parseFloat(numct23.value) || 0;
+                var ct26 = parseFloat(numct26.value) || 0;
+                var sum = ct23 + ct26;
+                resultct22.value = sum;
+            }
+
+            // chỉ tiêu [28]=[29]+[30] +31 + 32 +33
+            var numct29 = document.getElementById("ct29");
+            var numct30 = document.getElementById("ct30");
+            var numct31 = document.getElementById("ct31");
+            var numct32 = document.getElementById("ct32");
+            var numct33 = document.getElementById("ct33");
+            var resultct28 = document.getElementById("ct28");
+
+            numct29.addEventListener("input", sumct28);
+            numct30.addEventListener("input", sumct28);
+            numct31.addEventListener("input", sumct28);
+            numct32.addEventListener("input", sumct28);
+            numct33.addEventListener("input", sumct28);
+
+            function sumct28() {
+                var ct29 = parseFloat(numct29.value) || 0;
+                var ct30 = parseFloat(numct30.value) || 0;
+                var ct31 = parseFloat(numct31.value) || 0;
+                var ct32 = parseFloat(numct32.value) || 0;
+                var ct33 = parseFloat(numct33.value) || 0;
+                var sum = ct29 + ct30 + ct31 + ct32 + ct33;
+                resultct38.value = sum;
+            }
+
+            // chỉ tiêu [34]=[22]-[25]-[28]
+            var numct22 = document.getElementById("ct22");
+            var numct25 = document.getElementById("ct25");
+            var numct28 = document.getElementById("ct28");
+            var resultct34 = document.getElementById("ct34");
+
+            numct22.addEventListener("input", chitieu34);
+            numct25.addEventListener("input", chitieu34);
+            numct28.addEventListener("input", chitieu34);
+
+            function chitieu34() {
+                var ct22 = parseFloat(numct22.value) || 0;
+                var ct25 = parseFloat(numct25.value) || 0;
+                var ct28 = parseFloat(numct28.value) || 0;
+                var sum = ct22 - ct25 - ct28;
+                resultct34.value = sum;
+            }
+
+            // chỉ tiêu [36]=[37]+[38]+[39]-[40]
+            var numct37 = document.getElementById("ct37");
+            var numct38 = document.getElementById("ct38");
+            var numct39 = document.getElementById("ct39");
+            var numct40 = document.getElementById("ct40");
+            var resultct36 = document.getElementById("ct36");
+
+            numct37.addEventListener("input", chitieu36);
+            numct38.addEventListener("input", chitieu36);
+            numct39.addEventListener("input", chitieu36);
+            numct40.addEventListener("input", chitieu36);
+
+            function chitieu36() {
+                var ct37 = parseFloat(numct37.value) || 0;
+                var ct38 = parseFloat(numct38.value) || 0;
+                var ct39 = parseFloat(numct39.value) || 0;
+                var ct40 = parseFloat(numct40.value) || 0;
+                var ct36 = ct37 + ct38 + ct39 - ct40;
+                resultct36.value = ct36;
+            }
+
+            // chỉ tiêu 41 = 42 +43 
+            var numct42 = document.getElementById("ct42");
+            var numct43 = document.getElementById("ct43");
+            var resultct41 = document.getElementById("ct41");
+
+            numct42.addEventListener("input", sumct41);
+            numct43.addEventListener("input", sumct41);
+
+            function sumct41() {
+                var ct42 = parseFloat(numct42.value) || 0;
+                var ct43 = parseFloat(numct43.value) || 0;
+                var sum = ct42 + ct43;
+                resultct41.value = sum;
+            }
+
+            // chỉ tiêu 44 = 35 - 36 -41 >= 0
+            var numct35 = document.getElementById("ct35");
+            var numct36 = document.getElementById("ct36");
+            var numct41 = document.getElementById("ct41");
+            var resultct44 = document.getElementById("ct44");
+
+            numct35.addEventListener("input", sumct44);
+            numct36.addEventListener("input", sumct44);
+            numct41.addEventListener("input", sumct44);
+
+            function sumct44() {
+                var ct35 = parseFloat(numct35.value) || 0;
+                var ct36 = parseFloat(numct36.value) || 0;
+                var ct41 = parseFloat(numct41.value) || 0;
+                var ct44 = ct35 - ct36 - ct41;
+                resultct44.value = ct44;
+            }
+
+
+            // chỉ tiêu 45 = 35 - 36 -41 < 0 
+            var numct35 = document.getElementById("ct35");
+            var numct36 = document.getElementById("ct36");
+            var numct41 = document.getElementById("ct41");
+            var resultct45 = document.getElementById("ct45");
+
+            numct35.addEventListener("input", sumct45);
+            numct36.addEventListener("input", sumct45);
+            numct41.addEventListener("input", sumct45);
+
+            function sumct45() {
+                var ct35 = parseFloat(numct35.value) || 0;
+                var ct36 = parseFloat(numct36.value) || 0;
+                var ct41 = parseFloat(numct41.value) || 0;
+                var ct45 = ct35 - ct36 - ct41;
+                resultct45.value = ct45;
+            }
+
+            // chỉ tiêu 46  = 47 + 48
+            var numct47 = document.getElementById("ct47");
+            var numct48 = document.getElementById("ct48");
+            var resultct46 = document.getElementById("ct46");
+
+            numct47.addEventListener("input", sumct46);
+            numct48.addEventListener("input", sumct46);
+
+            function sumct46() {
+                var ct47 = parseFloat(numct42.value) || 0;
+                var ct48 = parseFloat(numct43.value) || 0;
+                var sum = ct47 + ct48;
+                resultct46.value = sum;
+            }
+
+
+            // chỉ tiêu 49  = 45 - 46
+            var numct45 = document.getElementById("ct45");
+            var numct46 = document.getElementById("ct46");
+            var resultct49 = document.getElementById("ct49");
+
+            numct45.addEventListener("input", sumct49);
+            numct46.addEventListener("input", sumct49);
+
+            function sumct49() {
+                var ct45 = parseFloat(numct45.value) || 0;
+                var ct46 = parseFloat(numct46.value) || 0;
+                var ct49 = ct45 - ct46;
+                resultct49.value = ct49;
+            }
+
+        </script>
 </body>
 
 

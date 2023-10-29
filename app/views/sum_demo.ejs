@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tính Tổng Tự Động trong HTML</title>
+</head>
+<body>
+    <h1>Tính Tổng Tự Động</h1>
+    <input type="text" id="number1" placeholder="Số thứ nhất">
+    <input type="text" id="number2" placeholder="Số thứ hai">
+    <p>Tổng: <span id="result">0</span></p>
+
+    <script>
+        // Lấy các phần tử DOM
+        var number1Input = document.getElementById("number1");
+        var number2Input = document.getElementById("number2");
+        var resultSpan = document.getElementById("result");
+
+        // Gán sự kiện "input" cho các ô nhập
+        number1Input.addEventListener("input", calculateSum);
+        number2Input.addEventListener("input", calculateSum);
+
+        // Hàm tính tổng
+        function calculateSum() {
+            var num1 = parseFloat(number1Input.value) || 0;
+            var num2 = parseFloat(number2Input.value) || 0;
+            var sum = num1 + num2;
+            resultSpan.textContent = sum;
+        }
+    </script>
+</body>
+</html>

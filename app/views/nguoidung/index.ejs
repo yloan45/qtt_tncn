@@ -1,0 +1,47 @@
+<html lang="en">
+
+<head>
+    <%- include('head') %>
+</head>
+
+<body>
+    <div class="container">
+        <div class="khungtong">
+            <!--phan header-->
+            <header>
+                <%- include('../partials/header') -%>
+            </header>
+            <!--phan header-->
+                    <h3>welcome, <%= user.username %></h3>
+            <!--PHẦN NỘI DUNG-->
+            <div class="container-fluid" style="width: 650px; margin-top: 1pc; margin-bottom: 1pc;">
+                <div class="card bg-glass" style="border-radius: 5px;">
+                    <nav
+                        style="color: #b9deff; background-color: #2886d3; height: 30px; border-radius: 5px; text-align: center;">
+                        <p style="margin-top: 3px; font-size: 16px; color: white;">Thông tin người dùng</p>
+                    </nav>
+
+                    <div class="card-body px-4 py-5 px-md-5">
+                        <h5>Bạn đã đăng nhập hệ thống thành công </h5>
+                        <h5>Mã số thuế</h5>
+                        <h5>Tên tổ chức</h5>
+                        <h5>Đại diện</h5>
+                        <h5>Cơ quan quản lý thuế</h5>
+                        <h5>Địa chỉ</h5>
+                        <h5>Email liên hệ</h5>
+                        <h5>Điện thoại</h5>
+                        <h5></h5> 
+                    </div>
+                </div>
+                <br><br><br>
+                <!--PHẦN NỘI DUNG-->
+            </div>
+        </div>
+        <footer>
+            <%- include('../partials/footer') %>
+        </footer>
+        <script src="js/formwizard.js"></script>
+
+</body>
+
+</html>

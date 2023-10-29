@@ -1,31 +1,30 @@
 <html lang="en">
 
 <head>
-    <%- include('head') %>
+  <%- include('head') %>
 </head>
 
 <body>
-    <div class="container">
-        <div class="khungtong">
-            <!--phan header-->
-            <header>
-                <%- include('../partials/header') -%>
-            </header>
-            <!--phan header-->
+  <div class="container">
+    <div class="khungtong">
+      <!--phan header-->
+      <header>
+        <%- include('../partials/header') -%>
+      </header>
+      <!--phan header-->
 
-            <!--PHẦN NỘI DUNG-->
-            <div class="container-fluid" style="width: 550px; margin-top: 1pc; margin-bottom: 1pc;">
-                <div class="card bg-glass" style="border-radius: 5px;">
-                    <nav
-                        style="color: #b9deff; background-color: #2886d3; height: 30px; border-radius: 5px; text-align: center;">
-                        <p style="margin-top: 3px;">Đăng nhập hệ thống</p>
-                    </nav>
-                    <div class="card-body px-4 py-5 px-md-5">
-                        <form action="" method="">
+      <!--PHẦN NỘI DUNG-->
+      <div class="container-fluid" style="width: 550px; margin-top: 1pc; margin-bottom: 1pc;">
+        <div class="card bg-glass" style="border-radius: 5px;">
+          <nav style="color: #b9deff; background-color: #2886d3; height: 30px; border-radius: 5px; text-align: center;">
+            <p style="margin-top: 3px;">Đăng nhập hệ thống</p>
+          </nav>
+          <div class="card-body px-4 py-5 px-md-5">
+            <form action="/canhan/login" method="post">
 
-                            <div class="all-steps" id="all-steps"><span class="step"></span> <span class="step"></span>
-                            </div>
-
+              <div class="all-steps" id="all-steps"><span class="step"></span> <span class="step"></span>
+              </div>
+              <!--
                             <div class="tab">
                                 <div class="form-outline mb-4" >
                                     <p style="margin-bottom: 5px;">Mã số thuế</p>
@@ -33,7 +32,6 @@
                                         oninput="this.className = ''" />
                                 </div>
 
-                                <!-- Password input -->
                                 <div class="row">
                                     <div class="form-outline mb-4 col-sm-8">
                                         <p style="margin-bottom: 5px;">Mã kiểm tra</p>
@@ -41,29 +39,29 @@
                                             oninput="this.className = ''" />
                                     </div>
                                     <div class="col-sm-4" style="margin-top: 23px;">
-                                        <!--MÃ KIỂM TRA-->
                                         <img src="/captcha"
                                             style="border: 1px solid rgba(169, 204, 238, 0.178); width: 125px; height: 48px; background-color: rgba(169, 204, 238, 0.178);">
                                     </div>
                                 </div>
                             </div>
+                            -->
+              <div class="form-outline">
+                <div class="form-outline mb-4">
+                  <p style="margin-bottom: 5px;">Tên đăng nhập</p>
+                  <input type="text" id="" class="form-control" name="username" required />
+                </div>
 
-                            <div class="tab">
-                                <div class="form-outline mb-4">
-                                    <p style="margin-bottom: 5px;">Tên đăng nhập</p>
-                                    <input type="text" id="form3Example3" name="username"
-                                        oninput="this.className = ''" placeholder="enter username"/>
-                                </div>
+                <div class="form-outline mb-4">
+                  <p style="margin-bottom: 5px;">Mật khẩu</p>
+                  <input type="text" id="" class="form-control" name="password" required />
+                </div>
 
-                                <div class="form-outline mb-4">
-                                    <p style="margin-bottom: 5px;">Mật khẩu</p>
-                                    <input type="text" id="form3Example3" class="" name="password"
-                                        oninput="this.className = ''" placeholder="enter password"/>
-                                </div>
-
-
-                            </div>
-
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Đăng nhập
+              </button>
+              <!-- 
+    
                             <div style="overflow:auto;" id="nextprevious">
                                 <div style="text-align: center;"> <button class="btn btn-block col-4"
                                         type="button" id="prevBtn" onclick="nextPrev(-1)">Quay lại</button> <button
@@ -71,19 +69,19 @@
                                         onclick="nextPrev(1)">Tiếp tục</button> </div>
                             </div>
 
-                            <!-- Register buttons -->
+                            Register buttons -->
 
-                        </form>
-                    </div>
-                </div>
-                <br><br><br>
-                <!--PHẦN NỘI DUNG-->
-            </div>
+            </form>
+          </div>
         </div>
-        <footer>
-            <%- include('../partials/footer') %>
-        </footer>
-        <script src="js/formwizard.js"></script>
+        <br><br><br>
+        <!--PHẦN NỘI DUNG-->
+      </div>
+    </div>
+    <footer>
+      <%- include('../partials/footer') %>
+    </footer>
+    <script src="js/formwizard.js"></script>
 
 </body>
 

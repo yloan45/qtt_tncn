@@ -1,11 +1,7 @@
 const db = require("../models");
-const express = require('express');
-
 const multer = require('multer');
-
 const path = require('path');
-const File = db.file;
-
+const Noptokhai = db.noptokhai;
 
 // Cấu hình Multer để lưu tệp tải lên vào thư mục 'public/uploads'
 const storage = multer.diskStorage({

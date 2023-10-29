@@ -1,38 +1,80 @@
 const db = require("../models");
 const ROLES = db.ROLES;
 const User = db.user;
+const Canhan = db.canhan;
+const Tochuc = db.tochuc;
 
-checkDuplicateUsernameOrEmail = (req, res, next) => {
-  // Username
-  User.findOne({
-    where: {
-      username: req.body.username
-    }
-  }).then(user => {
+checkCaNhan = async (req, res, next) => {
+  try {
+
+    // Username
+    let user = await User.findOne({
+      where: {
+        username: req.body.username
+      }
+    });
+
     if (user) {
-      res.status(400).send({
+      return res.status(400).send({
         message: "Failed! Username is already in use!"
       });
-      return;
     }
 
     // Email
-    User.findOne({
+    let canhan = await Canhan.findOne({
       where: {
         email: req.body.email
       }
-    }).then(user => {
-      if (user) {
-        res.status(400).send({
-          message: "Failed! Email is already in use!"
-        });
-        return;
-      }
-
-      next();
     });
-  });
+
+    if (canhan) {
+      return res.status(400).send({
+        message: "Failed! Email is already in use!"
+      });
+    }
+
+
+    next();
+  } catch (error) {
+    return res.status(500).send({
+      message: error.message
+    });
+  }
 };
+
+checkToChuc = async (req, res, next) => {
+  try {
+    // Username
+    let user = await User.findOne({
+      where: {
+        username: req.body.username
+      }
+    });
+    if (user) {
+      return res.status(400).send({
+        message: "Failed! Username is already in use!"
+      });
+    }
+    // Email
+    let tochuc = await Tochuc.findOne({
+      where: {
+        email: req.body.email
+      }
+    });
+
+    if (tochuc) {
+      return res.status(400).send({
+        message: "Failed! Email is already in use!"
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).send({
+      message: error.message
+    });
+  }
+}
+
 
 checkRolesExisted = (req, res, next) => {
   if (req.body.roles) {
@@ -50,8 +92,8 @@ checkRolesExisted = (req, res, next) => {
 };
 
 const verifySignUp = {
-  checkDuplicateUsernameOrEmail: checkDuplicateUsernameOrEmail,
-  checkRolesExisted: checkRolesExisted
+  checkCaNhan, checkToChuc,
+  checkRolesExisted
 };
 
 module.exports = verifySignUp;

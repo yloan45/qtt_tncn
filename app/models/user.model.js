@@ -3,77 +3,10 @@ module.exports = (sequelize, Sequelize) => {
     username: {
       type: Sequelize.STRING,
       allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: "Username khong duoc de trong!"
-        }
-      }
-    },
-
-    masothue: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: "Ma so thue khong duoc de trong!"
-        }
-      }
-    },
-
-
-    fullname: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: "Fullname khong duoc de trong"
-        }
-      }
-    },
-
-    cccd: {
-      type: Sequelize.STRING,
-      allowNull: false,
       unique: true,
       validate: {
         notEmpty: {
-          msg: "Can cuoc cong dan khong duoc de trong"
-        }
-      }
-    },
-    address: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: "Dia chi khong duoc de trong"
-        }
-      }
-    },
-    phone: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: "So dien thoai khong duoc de trong"
-        }
-      }
-    },
-    email: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: "Email khong duoc de trong"
-        }
-      }
-    },
-    cqqtthue: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: "Co quan quyet toan thue khong duoc de trong"
+          msg: "username khong duoc de trong!"
         }
       }
     },
@@ -82,10 +15,10 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "Mat khau khong duoc de trong"
+          msg: "password khong duoc de trong"
         }
       }
-    }
+    },
   });
   return User;
 };

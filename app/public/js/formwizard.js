@@ -13,11 +13,14 @@ function showTab(n) {
         document.getElementById("prevBtn").style.display = "inline";
     }
     if (n == (x.length - 1)) {
-        document.getElementById("nextBtn").innerHTML = "Submit";
+        document.getElementById("nextBtn").innerHTML = "Submit"; // Thay đổi nút "Tiếp tục" thành "Submit"
+        document.getElementById("nextBtn").onclick = function() {
+            document.getElementById("tokhaithue").submit(); // Khi nhấn "Submit", submit form
+        };
     } else {
         document.getElementById("nextBtn").innerHTML = "Tiếp tục";
     }
-    fixStepIndicator(n)
+    fixStepIndicator(n);
 }
 
 

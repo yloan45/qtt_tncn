@@ -7,11 +7,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js"
   },
-  "author": "bezkoder",
+  "author": "b1910094",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "connect-session-sequelize": "^7.1.7",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "exceljs": "^4.3.0",
@@ -22,8 +26,11 @@
     "mysql2": "^2.3.3",
     "nodemailer": "^6.9.6",
     "nodemon": "^3.0.1",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
     "read-excel-file": "^5.7.1",
     "sequelize": "^6.32.1",
+    "sequelize-pagination": "^1.1.0",
     "svg-captcha": "^1.4.0"
   }
 }

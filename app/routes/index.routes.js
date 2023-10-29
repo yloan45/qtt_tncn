@@ -1,42 +1,37 @@
 const express = require('express');
+const { getAllToChuc, deleteToChuc } = require('../controllers/tochuc.controller');
+const { authJwt } = require('../middleware');
 const router = express.Router();
-// test
+
+// public content
 router.get('/', (req, res) => {
     res.render('index')
 });
 
-router.get('/demo', (req, res) => {
-  res.render('demo')
-});
 
-router.get('/nguoidung', (req, res) => {
-    res.render('nguoidung/index')
-});
-
-router.get('/nd-login', (req, res) => {
-    res.render('nguoidung/login')
-});
-
-router.get('/nd-register', (req, res) => {
-    res.render('nguoidung/register')
-});
-
-
-router.get('/doanhnghiep', (req, res) => {
-    res.render('doanhnghiep/index')
-});
-
-router.get('/admin', (req, res) => {
-    res.render('admin/index.ejs')
-});
-
+// ADMIN
 router.get('/admin-login', (req, res) => {
   res.render('admin/auth/login.ejs')
 });
 
+
+
+// CÁ NHÂN 
+router.get('/canhan/login', (req, res) => {
+    res.render('nguoidung/login')
+});
+router.get('/nd-register', (req, res) => {
+    res.render('nguoidung/register')
+});
 router.get('/homepage', (req, res) => {
   res.render('nguoidung/homepage.ejs')
 });
+
+
+
+
+// TỔ CHỨC - DOANH NGHIỆP
+
 
 
 module.exports = router;

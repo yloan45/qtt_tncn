@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <%- include('./partials/head') %>
+  </head>
+  <body>
+    <div class="preloader">
+      <div class="lds-ripple">
+        <div class="lds-pos"></div>
+        <div class="lds-pos"></div>
+      </div>
+    </div>
+    <div id="main-wrapper" data-layout="vertical" >
+      <header class="topbar" data-navbarbg="skin5">
+        <%- include('./partials/header') %>
+      </header>
+      <aside class="left-sidebar" data-sidebarbg="skin5">
+        <div class="scroll-sidebar">
+          <%-include('./partials/sidebar') %>
+        </div>
+      </aside>
+      <div class="page-wrapper" style="background-color: white;">
+        <div class="page-breadcrumb">
+          <div class="row">
+            <div class="col-12 d-flex no-block align-items-center">
+              <h4 class="page-title">Thông tin Doanh nghiệp/Tổ chức</h4>
+              <div class="ms-auto text-end">
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      Library
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid">
+
+<div style="text-align: right;">
+  
+  <a href="#" class="btn btn-info" style="color: white;" name="file">Import</a>
+  <a href="#" class="btn btn-danger" style="color: white;">Export</a>
+</div>
+       <table class="table table-bordered mt-3">
+            <tr style="text-align: center;">
+                <th>
+                    STT
+                </th>
+                <th>Mã số thuế</th>
+                <th>Tên Doanh nghiệp/Tổ chức</th>
+                <th>Đại diện</th>
+                <th>Địa chỉ</th>
+                <th>Email liên hệ</th>
+                <th>Cơ quan quản lý thuế</th>
+                <th>Điện thoại</th>
+                <th>Nhân viên<br>(Người)</th>
+                <th>Action</th>
+            </tr>
+            <% let totalIndex = 0; %>
+            <% user.forEach((user, index)=> { %>
+             <tr>
+                <td>
+                    <%= index+1 %>
+                </td>
+                <td>
+                <%= user.masothue %>
+                </td>
+                <td>
+                  <%= user.tentochuc %>
+                  </td>
+                  <td>
+                    <%= user.daidien %>
+                  </td>
+                  <td>
+                    <%= user.email %>
+                  </td>
+                 <td>
+                    <%= user.address %>
+                 </td>
+                 <td>
+                <%= user.cqqtthue%>
+                 </td>
+                 <td>
+                  <%= user.phone %>
+               </td>
+               <td>
+                <%= user.nhanvien %>
+             </td>
+                <td>
+                    <a href="/update/<%= user.id %>" ><i class="fas fa-edit"></i></a>
+                    <a href="/delete/<%= user.id %>"><i class="fas fa-trash"></i></a>
+                    
+                </td>
+                <% totalIndex++; %>
+               
+            </tr>
+            <% }) %>
+            <h5>Tổng cộng: <%= totalIndex %></h5>
+          </table>
+        </div>
+
+  </body>
+</html>

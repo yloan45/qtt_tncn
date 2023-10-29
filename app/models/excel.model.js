@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const Excelupload = sequelize.define("upload_excel", {
+  const Tochuckekhaithue = sequelize.define("upload_excel", {
     tennv: {
       type: Sequelize.STRING,
       allowNull: false,
@@ -35,7 +35,22 @@ module.exports = (sequelize, Sequelize) => {
           msg: "Luong khong duoc de trong"
         }
       }
-    }
+    },
+    donvitraluong: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Don vi tra luong khong duoc de trong"
+        }
+      }
+    },
+    ngaycapnhat: {
+      type: Sequelize.DATEONLY
+    },
+    bienche: {
+      type: Sequelize.BOOLEAN
+    },
   });
-  return Excelupload;
+  return Tochuckekhaithue;
 };

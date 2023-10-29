@@ -2,16 +2,12 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config.js");
 const db = require("../models");
 const User = db.user;
-const Masothue = db.mst;
-
 
 verifyToken = (req, res, next) => {
-  let token = req.headers["x-access-token"];
+  let token = req.session.token;
 
   if (!token) {
-    return res.status(403).send({
-      message: "No token provided!"
-    });
+    return res.redirect('/admin-login');
   }
 
   jwt.verify(token,
@@ -27,68 +23,67 @@ verifyToken = (req, res, next) => {
     });
 };
 
-isAdmin = (req, res, next) => {
-  User.findByPk(req.userId).then(user => {
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "admin") {
-          next();
-          return;
-          // redirect admin
-        }
+isAdmin = async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.userId);
+    const roles = await user.getRoles();
+
+    for (let i = 0; i < roles.length; i++) {
+      if (roles[i].name === "admin") {
+        return next();
       }
-      res.status(403).send({
-        message: "Yêu cầu quyền có quyền admin!"
-      });
-      return;
+    }
+
+    return res.status(403).send({
+      message: "Require Admin Role!",
     });
-  });
+  } catch (error) {
+    return res.status(500).send({
+      message: "Unable to validate User role!",
+    });
+  }
 };
 
-isTochuc = (req, res, next) => {
-  User.findByPk(req.userId).then(user => {
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "tochuc") {
-          next();
-          return;
-          // redirect tochuc
-        }
+isTochuc = async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.userId);
+    const roles = await user.getRoles();
+
+    for (let i = 0; i < roles.length; i++) {
+      if (roles[i].name === "tochuc") {
+        return next();
       }
-      res.status(403).send({
-        message: "Yêu cầu quyền có quyền tổ chức!"
-      });
+    }
+
+    return res.status(403).send({
+      message: "Require Admin Tochuc!",
     });
-  });
+  } catch (error) {
+    return res.status(500).send({
+      message: "Unable to validate User role!",
+    });
+  }
 };
 
-isTochucOrCanhan = (req, res, next) => {
-  User.findByPk(req.userId).then(user => {
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "tochuc") {
-          next();
-          return;
-          // redirect tochuc
-        }
+function checkUserRole(role) {
+  return (req, res, next) => {
+    const user = req.session.user; // Lấy thông tin người dùng từ phiên
 
-        if (roles[i].name === "canhan") {
-          next();
-          return;
-          // redirect canhan
-        }
-      }
-      res.status(403).send({
-        message: "Yêu cầu có quyền tổ chức hoặc quyền cá nhân!"
-      });
-    });
-  });
-};
+    // Kiểm tra quyền của người dùng
+    if (user && user.authorities.includes(role)) {
+      // Người dùng có quyền, tiếp tục xử lý
+      next();
+    } else {
+      // Người dùng không có quyền, đưa họ đến trang lỗi hoặc trang yêu cầu quyền
+      res.redirect('/error'); // Hoặc trang lỗi
+    }
+  };
+}
 
 const authJwt = {
-  verifyToken: verifyToken,
-  isAdmin: isAdmin,
-  idTochuc: isTochuc,
-  isTochucOrCanhan: isTochucOrCanhan
+  verifyToken,
+  isAdmin,
+  isTochuc,
+  checkUserRole
 };
 module.exports = authJwt;

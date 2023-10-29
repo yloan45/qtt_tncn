@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const File = sequelize.define("File", {
+    const Noptokhai = sequelize.define("nop_to_khai", {
         fullname: {
             type: Sequelize.STRING,
         },
@@ -19,5 +19,5 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
         }
     });
-    return File;
+    return Noptokhai;
 };

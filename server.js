@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const configViewEngine = require('./app/config/view.engine');
 const app = express();
+const session = require("express-session");
 
 global.__basedir = __dirname + "/.";
 
@@ -26,7 +27,7 @@ const Role = db.role;
 
 
 const homeRoutes = require('./app/routes/index.routes');
-const session = require("express-session");
+
 app.use('/', homeRoutes);
 
 
@@ -58,13 +59,12 @@ app.get("/captcha", function (req, res) {
 
 });
 
-
-
 require('./app/routes/auth.routes')(app);
 require('./app/routes/user.routes')(app);
 
 // set port, listen for requests
-const PORT = process.env.PORT || 7000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
+

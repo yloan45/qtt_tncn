@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <%- include('./partials/head') %>
+  </head>
+  <body>
+    <div class="preloader">
+      <div class="lds-ripple">
+        <div class="lds-pos"></div>
+        <div class="lds-pos"></div>
+      </div>
+    </div>
+    <div id="main-wrapper" data-layout="vertical" >
+      <header class="topbar" data-navbarbg="skin5">
+        <%- include('./partials/header') %>
+      </header>
+      <aside class="left-sidebar" data-sidebarbg="skin5">
+        <div class="scroll-sidebar">
+          <%-include('./partials/sidebar') %>
+        </div>
+      </aside>
+      <div class="page-wrapper" style="background-color: white;">
+        <div class="page-breadcrumb">
+          <div class="row">
+            <div class="col-12 d-flex no-block align-items-center">
+              <h4 class="page-title">Danh sách tổng hợp thông tin người được trả thuế</h4>
+              <div class="ms-auto text-end">
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      Library
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid">
+            <table class="table table-bordered">
+                <tr>
+                    <th>
+                        STT
+                    </th>
+                    <th>Tên nhân viên</th>
+                    <th>Mã số thuế</th>
+                    <th>Năm sinh</th>
+                    <th>Vị trí</th>
+                    <th>Địa chỉ</th>
+                    <th>Điện thoại</th>
+                    <th>Email</th>
+                    <th>Lương</th> <%#  phụ lục - minh chứng - tờ khai ??? %>
+                    <th>toChucId</th>
+                </tr>
+                <% let totalIndex = 0; %>
+                <% data.forEach((user, index)=> { %>
+                    <tr>
+                        <td>
+                            <%= index+1 %>
+                        </td>
+                        <td>
+                            <%= user.tennv %>
+                        </td>
+                        <td>
+                            <%= user.masothue %>
+                        </td>
+                        <td>
+                            <%= user.namsinh %>
+                        </td>
+                        <td>
+                            <%= user.vitri %>
+                        </td>
+                        <td>
+                            <%= user.diachi %>
+                        </td>
+                        <td>
+                            <%= user.dienthoai %>
+                        </td>
+                        <td>
+                            <%= user.email %>
+                        </td>
+                        <td></td>
+                        <td><%= user.toChucId %></td>
+                        
+                        <td>
+                           
+                        </td>
+                    </tr>
+                    <% totalIndex++; %>
+                    <% }) %>
+                    <h5>Tổng cộng: <%= totalIndex %></h5>
+                    <!-- Nút phân trang -->
+
+            </table>
+             <!-- Phân trang Bootstrap -->
+  <!-- Phân trang Bootstrap -->
+ 
+</div>
+  </body>
+</html>
