@@ -4,6 +4,7 @@ const User = db.user;
 const Tokhai = db.tokhaithue;
 const Op = db.Sequelize.Op;
 const Loaitokhai = db.loaitokhai;
+const Trangthaixuli = db.trangthaixuli;
 
 // create tờ khai quyết toán thuế thu nhập cá nhân
 
@@ -14,7 +15,7 @@ const createTokhai = async (req, res) => {
             tenloai: 'Tờ khai chính thức'
         }
     });
-
+    
     const tokhai = await Tokhai.create({
         fullname: req.body.fullname,
         address: req.body.address,
@@ -57,10 +58,13 @@ const createTokhai = async (req, res) => {
         ct49: req.body.ct49,
         caNhanId: req.session.user.caNhanId,
         loaiToKhaiId: loaitokhai.id,
+        trangThaiXuLiId: 1,
     }).then(tokhai => {
         console.log(tokhai);
         res.send("tạo tờ khai thành công!");
     });
+    // kết xuất xml
+
 }
 
 
