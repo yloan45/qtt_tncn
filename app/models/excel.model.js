@@ -5,7 +5,7 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "Luong khong duoc de trong"
+          msg: "Tên nhân viên không được để trống"
         }
       }
     },
@@ -51,6 +51,9 @@ module.exports = (sequelize, Sequelize) => {
     bienche: {
       type: Sequelize.BOOLEAN
     },
+    ghichu: {
+      type: Sequelize.STRING
+    }
   });
   return Tochuckekhaithue;
 };

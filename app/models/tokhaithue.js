@@ -28,88 +28,88 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING
       },
       ct22: {
-        type: Sequelize.DECIMAL(10,2),
+        type: Sequelize.STRING
       },
       ct23: {
-        type: Sequelize.DECIMAL(10,2),
+        type: Sequelize.STRING
       },
       ct24: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct25: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct26: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct27: {
         type: Sequelize.INTEGER
       },
       ct28: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct29: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct30: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct31: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct32: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct33: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct34: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct35: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct36: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct37: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct38: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct39: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct40: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct41: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct42: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct43: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct44: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct45: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct46: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct47: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct48: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
       ct49: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.STRING
       },
     });
     return Tokhaithue;
