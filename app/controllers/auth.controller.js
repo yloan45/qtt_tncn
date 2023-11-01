@@ -137,7 +137,7 @@ exports.CaNhanSignup = async (req, res) => {
 
     else {
       // user has role = 3
-      const result = user.setRoles([3]);
+      const result = user.setRoles([1]);
       if (result) {
         mailer.sendMail(canhan.email, "Tạo tài khoản thành công",
           `Xin chào ${canhan.hoten} <br>

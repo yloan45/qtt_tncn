@@ -69,8 +69,9 @@ body{
     font-weight: bold;
     margin-bottom: 10px;
     padding-left: 30px;
+    background: url(../images/iconLock.png) no-repeat left;
     margin-bottom: 10px;
-	text-align: left;
+	  text-align: left;
 }
 .button span {
     display: block;
