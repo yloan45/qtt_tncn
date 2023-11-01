@@ -4,7 +4,7 @@
                   <span class="thongtintokhai">Tên người gửi
                     <font style="color: red;">(*)</font>
                   </span>
-                  <input style="width: 600px;" ype="text" name="fullname" id="" value="<%= user.ca_nhan.fullname %>"/>
+                  <input  style="width: 600px;" ype="text" name="fullname" id="" value="<%= user.ca_nhan.fullname %>"/>
                 </div>
   
                 <%# ĐỊA CHỈ LIÊN HỆ - NAME="address" %>
@@ -35,20 +35,19 @@
                 <div class="input-group" style="margin-top: 15px;">
                   <span class="thongtintokhai">Chọn tờ khai</span>
                   <select class="" style="margin-right: 250px; width: 600px;" name="tokhai" id="">
-                    <option value="" name="">Tờ khai 02/QTT-TNCN</option>
-                    <option value="" name=""></option>
+                    <option value="" name="">02/QTT-TNCN- Tờ khai quyết toán thuế thu nhập cá nhân(TT92/2015)</option>
                   </select>
                 </div>
   
                 <!--CỤC THUẾ - CHI CỤC THUẾ-->
-                <div class="input-group" style="margin-top: 15px;">
+                <div class="input-group" style="margin-top: 15px; display: none;">
                   <span class="thongtintokhai">Cục thuế</span>
                   <select class="" style="margin-right: 240px; width: 600px;" name="cucthue" id="">
                     <option value="" disabled></option>
                   </select>
                 </div>
   
-                <div class="input-group" style="margin-top: 15px;">
+                <div class="input-group" style="margin-top: 15px; display: none">
                   <span class="thongtintokhai"> Chi cục thuế</span>
                   <select class="" style="margin-right: 240px; width: 600px;" name="chicucthue" id="">
                     <option value="" disabled></option>
@@ -74,10 +73,11 @@
                 <%# NAME KÊ KHAI - NAME="year" %>
                 <div class="input-group" style="margin-top: 15px;">
                   <span class="thongtintokhai">Từ tháng</span>
-                  <input style="width: 150px;" name="tungay" type="text" id="month1Input">
+                  <input style="width: 150px;" name="tungay" type="text" id="fromMonth">
   
                   <span class="thongtintokhai">Đến tháng</span>
-                  <input style="width: 150px;" name="denngay" type="text" id="month12Input">
+                  <input style="width: 150px;" name="denngay" type="text" id="toMonth">
+                  <input style="width: 150px; display: none;" name="numMonths" type="text" id="numMonths">
                 </div>
                 <br>
                 <button class="next-button btn btn-primary" style="width: 150px; margin-left: 35pc;" data-step="2">Tiếp tục</button>

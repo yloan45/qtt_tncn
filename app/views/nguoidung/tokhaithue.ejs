@@ -7,7 +7,7 @@
 
 <head>
   <%- include('head') %>
-  <style>
+  <style scoped>
     /* Đặt lớp CSS hidden */
     .step.hidden {
       display: none;
@@ -26,21 +26,20 @@
       <header>
         <%- include('../partials/header') -%>
       </header>
-      <h1>welcome, <%= user.username %></h1>
       <div class="container-fluid" style="width: 1275px; margin-top: 1pc; margin-bottom: 1pc;">
         <div class="card" style="border:1px solid rgba(93, 156, 238, 0.437)">
-          <nav style="color: #b9deff;border:1px solid rgba(93, 156, 238, 0.437);text-align:center;background-color: #90c3ec76; height: 25px; color: #3a3333; font-weight: bold;">
+          <nav style="color: #b9deff;border:1px solid rgba(93, 156, 238, 0.437);text-align:center;
+                      background-color: #90c3ec76; height: 25px; color: #3a3333; font-weight: bold;">
             Kê khai tờ khai quyết toán thuế trực tuyến
           </nav>
           <!-- Tệp EJS: views/formWizard.ejs -->
           <form id="form-wizard" action="/tokhai" method="POST">
-<h1><%= user.ca_nhan.email %></h1>
             <!--STEP 1-->
             <%- include('tokhaiStep1') -%>
             <!--STEP 2-->
             <%- include('tokhaiStep2') -%>
-
           </form>
+          <br><br>
 
         </div>
         <br><br>
@@ -79,16 +78,65 @@
   });
 </script>
 
+<%# định dạng dấu , cho input : 2,000,000  %>
 <script>
-  // cập nhật tháng theo năm được nhập từ bàn phím
-  function updateMonths() {
-    var year = document.getElementById("yearInput").value;
-    var thang1 = "1/" + year;
-    var thang12 = "12/" + year;
+  const numberInputs = document.querySelectorAll(".number-input");
+  numberInputs.forEach(input => {
+      input.addEventListener("input", function() {
+          let value = input.value.replace(/[^0-9]/g, '');
+          const formattedValue = parseInt(value).toLocaleString("en-US");
+          input.value = formattedValue;
 
-    document.getElementById("month1Input").value = thang1;
-    document.getElementById("month12Input").value = thang12;
-  }
+          // Thêm giá trị đã chuyển đổi vào biến numberValue
+          const numberValue = parseInt(value);
+
+          // Gọi hàm createTokhai và chuyển giá trị đã chuyển đổi
+          createTokhai(req, res, numberValue);
+      });
+  });
+</script>
+
+
+<%# định dạng năm ke khai cho tờ khai thuế %>
+<script>
+        const yearInput = document.getElementById("yearInput");
+        const fromMonth = document.getElementById("fromMonth");
+        const toMonth = document.getElementById("toMonth");
+        const numMonths = document.getElementById("numMonths");
+
+        yearInput.addEventListener("input", updateMonths);
+        fromMonth.addEventListener("input", updateNumMonths);
+        toMonth.addEventListener("input", updateNumMonths);
+
+        function updateMonths() {
+            const year = parseInt(yearInput.value);
+
+            if (!isNaN(year)) {
+                fromMonth.value = "1/" + year;
+                toMonth.value = "12/" + year;
+                updateNumMonths();
+            } else {
+                fromMonth.value = "";
+                toMonth.value = "";
+                numMonths.value = "";
+            }
+        }
+
+        function updateNumMonths() {
+            const fromDate = fromMonth.value.split("/");
+            const toDate = toMonth.value.split("/");
+
+            const fromYear = parseInt(fromDate[1]);
+            const toYear = parseInt(toDate[1]);
+
+            if (!isNaN(fromYear) && !isNaN(toYear) && toYear >= fromYear) {
+                const num = (toYear - fromYear) * 12 + parseInt(toDate[0]) - parseInt(fromDate[0]) + 1;
+                numMonths.value = num;
+            } else {
+                numMonths.value = "";
+            }
+        }ment.getElementById("month12Input").value = thang12;
+  
 </script>
 
 <script src="js/tokhai.js"></script>
