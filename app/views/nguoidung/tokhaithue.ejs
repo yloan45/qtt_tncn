@@ -64,6 +64,22 @@
       e.preventDefault();
       const currentStep = $(this).closest('.step');
       const nextStep = steps.filter(`[data-step="${currentStep.data('step') + 1}"]`);
+      
+      const fullnameInputValue = currentStep.find('input[name="fullname"]').val();
+      nextStep.find('#displayFullname').text(fullnameInputValue);
+
+      const masothueInputValue = currentStep.find('input[name="masothue"]').val();
+      nextStep.find('#displayMST').text(masothueInputValue);
+
+      const yearInputValue = currentStep.find('input[name="year"]').val();
+      nextStep.find('#displayYear').text(yearInputValue);
+
+      const fromMonthInputValue = currentStep.find('input[name="tungay"]').val();
+      nextStep.find('#displayFromMonth').text(fromMonthInputValue);
+
+      const toMonthInputValue = currentStep.find('input[name="denngay"]').val();
+      nextStep.find('#displayToMonth').text(toMonthInputValue);
+
       currentStep.hide();
       nextStep.show();
     });

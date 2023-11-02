@@ -11,7 +11,9 @@ const Canhan = db.canhan;
 const Tochuc = db.tochuc;
 const Admin = db.admin;
 const Diachi = db.diachi;
-
+const Tokhaithue =  db.tokhaithue;
+const Loaitokhai = db.loaitokhai;
+const Trangthaixuly = db.trangthaixuly;
 
 const express = require('express');
 const app = express;
@@ -397,4 +399,27 @@ exports.signout = async (req, res) => {
     this.next(err);
   }
 };
+
+
+exports.getAllTokhai = async (req, res) => {
+  Tokhaithue.findAll({
+    include: [{
+      model: Loaitokhai, as: 'loai_to_khai'
+    },
+    {
+      model: Canhan, as: 'ca_nhan'
+    },
+    {
+      model: Trangthaixuly, as: 'trang_thai_xu_li'
+    }
+  ]
+  }
+  ).then((tokhai) => {
+    console.log(tokhai);
+    
+    res.render("admin/duyettokhai",
+      { tokhai: tokhai});
+  })
+  .catch((err) => console.log(err));
+}
 

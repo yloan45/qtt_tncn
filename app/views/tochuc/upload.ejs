@@ -1,20 +1,87 @@
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <%- include('head') %>
+    <style scoped>
+        .upload {
+            margin-bottom: 5px;
+            margin-right: 15px; 
+            text-align: right; 
+            width: 125px; 
+            margin-left: 210px;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Welcome, <%= user.username %></h1>
-    <h4><%= user.id %></h4>
-    <h1>
-        Upload file excel
-    </h1>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <span>Tên tổ chức</span>
-        <input type="text" name="tentochuc">
-        <input type="file" name="file" id="">
-        <button>submit</button>
-    </form>
+    <div class="container">
+        <div class="khungtong">
+            <!--phan header-->
+            <header>
+                <%- include('./partials/header') -%>
+            </header>
+            <!--phan header-->
+            <div class="container-fluid" style="width: 1000px; margin-top: 1pc; margin-bottom: 1pc;">
+                <div class="card" style="border:1px solid rgba(93, 156, 238, 0.437)">
+                    <nav
+                        style="color: #b9deff;border:1px solid rgba(93, 156, 238, 0.437);
+                         text-align:center;background-color: #90c3ec76; height: 25px; color: black; font-weight: bold;">
+                        Upload thông tin trả tiền lương, tiền công của doanh nghiệp/tổ chức
+                    </nav>
+                    <!--CHỌN THÔNG TIN TỜ KHAI QUYẾT TOÁN THUẾ TNCN-->
+                    <form action="/upload" method="post" enctype="multipart/form-data">
+                        <!--TÊN NGƯỜI GỬI-->
+                        <div class="input-group mt-4" style="margin-top: 15px;">
+                            <span class="upload">Tên
+                                người gửi <font style="color: red;">(*)</font></span>
+                            <input type="text" id="" class="form-control" style="margin-right: 250px;" />
+                        </div>
+                        <!--ĐỊA CHỈ -->
+                        <div class="input-group" style="margin-top: 15px;">
+                            <span
+                                class="upload">Địa
+                                chỉ liên hệ <font style="color: red;">(*)</font></span>
+                            <input type="text" id="" class="form-control" style="margin-right: 250px;" />
+                        </div>
+
+                        <!--ĐIỆN THOẠI LIÊN LẠC-->
+                        <div class="input-group" style="margin-top: 15px;">
+                            <span
+                                class="upload">Điện
+                                thoại<font style="color: red;">(*)</font></span>
+                            <input type="text" id="" class="form-control" style="margin-right: 250px;" />
+                        </div>
+
+                        <!--EMAIL LIÊN HỆ-->
+                        <div class="input-group" style="margin-top: 15px;">
+                            <span
+                                class="upload">Địa
+                                chỉ Email <font style="color: red;">(*)</font></span>
+                            <input type="text" id="" class="form-control" style="margin-right: 250px;" />
+                        </div>
+
+        
+                        <div class="input-group" style="margin-top: 15px;">
+                            <span
+                                class="upload">Chọn
+                                file<font style="color: red;">(*)</font></span>
+                            <input type="file" id="" name="file" class="form-control" style="margin-right: 250px;" />
+                        </div>
+
+                        <br>
+                        <div style="text-align: center;">
+                            <button type="submit" style="margin-right: 25px; width: 120px;"
+                                class="btn btn-primary btn-sm" >Upload dữ liệu</button>
+                        </div>
+                        <br><br>
+                    </form>
+            </div>
+        </div>
+        <footer>
+            <%- include('../partials/footer') %>
+        </footer>
+        <script src="js/formwizard.js"></script>
+
 </body>
+
 </html>

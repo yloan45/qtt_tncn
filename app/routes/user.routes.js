@@ -9,7 +9,7 @@ const db = require("../models");
 const userController = require("../controllers/upload.controller");
 const { uploaduser } = require("../controllers/upload.user");
 const { getAllToChuc, deleteToChuc } = require("../controllers/tochuc.controller");
-const { signin } = require("../controllers/auth.controller");
+const { signin, getAllTokhai } = require("../controllers/auth.controller");
 const { checkUserRole, isAdmin } = require("../middleware/authJwt");
 const File = db.noptokhai;
 
@@ -33,21 +33,20 @@ module.exports = function (app) {
   app.get("/deletecn/:id",[authJwt.verifyToken, authJwt.isAdmin], deleteUser);    // xóa cá nhân
   app.get("/list-user",[authJwt.verifyToken,authJwt.isAdmin], getAllUser);        // lấy danh sách tất cả người dùng cá nhân
   app.get("/list-dn",[authJwt.verifyToken, authJwt.isAdmin], getAllToChuc);       // lấy all danh sách doanh nghiệp/tổ chức
-  app.get('/tokhaithue',[authJwt.verifyToken], getUser);         // tờ khai quyết toán thuế 02/qtt-tncn của cá nhân có thu nhập từ tiền lương/tiền công 
+  app.get('/tokhaithue',[authJwt.verifyTokenCanhan], getUser);                    // tờ khai quyết toán thuế 02/qtt-tncn của cá nhân có thu nhập từ tiền lương/tiền công 
   app.post("/update/:id", [authJwt.verifyToken, authJwt.isAdmin],update);         // update cá nhân
   app.get("/delete/:id",[authJwt.verifyToken, authJwt.isAdmin], deleteToChuc);    // xóa 1 tổ chức/doanh nghiệp
   app.get("/getAll", excelController.getAllExcelFile);                            // read data từ form excel doanh nghiệp/tổ chức kê khai trả tiền lương/ tiền công cho cá nhân/tổ chức
 
-
   // upload file excel
-  app.get("/upload-file", [authJwt.verifyToken, authJwt.isTochuc], (req, res)=>{
+  app.get("/tochuc/upload-file", [authJwt.verifyTokenTochuc, authJwt.isTochuc], (req, res)=>{
     const user = req.session.user;
     console.log(user);
     res.render('tochuc/upload', {user: user});
   });
   
   // homepage tổ chức/doanh nghiệp 
-  app.get('/tochuc/', [authJwt.verifyToken, authJwt.isTochuc], (req, res)=>{
+  app.get('/tochuc/', [authJwt.verifyTokenTochuc, authJwt.isTochuc], (req, res)=>{
     const user = req.session.user;
     console.log(user);
     res.render('tochuc/index', {user: user});
@@ -55,11 +54,7 @@ module.exports = function (app) {
   
 
   // dữ liệu file excel được upload
-  app.get('/tochuc/upload', [authJwt.verifyToken, authJwt.isTochuc], (req, res)=>{
-    const user = req.session.user;
-    console.log(user);
-    res.render('tochuc/table', {user: user});
-  });
+  app.get('/tochuc/upload', [authJwt.verifyTokenTochuc, authJwt.isTochuc], excelController.getToChucUploadFile);
 
 
   // danh sách các file được cá nhân upload
@@ -75,15 +70,7 @@ module.exports = function (app) {
     res.download(filePath);                   // Gửi tệp về trình duyệt để tải về
   });
 
-
-/*
-  // tờ khai quyết toán thuế mẫu  02/qtt-tncn
-  app.get("/tokhai", (req, res) => {
-    res.render("nguoidung/tokhai.ejs")
-  })
-*/
-
-  app.get('/canhan', (req, res) => {          // homepage cá nhân
+  app.get('/canhan',[authJwt.verifyTokenCanhan], (req, res) => {          // homepage cá nhân
     res.render("nguoidung/index.ejs");    
   })
 
@@ -124,6 +111,7 @@ app.post('/noptokhai', uploadTokhai.single('filename'), (req, res) => {
   });
 });
 
+app.get("/duyet-to-khai", [authJwt.verifyToken, authJwt.isAdmin], getAllTokhai);
 
 app.get("/create-user", [authJwt.verifyToken, authJwt.isAdmin], (req, res) => {
   res.render("admin/create");                           // form create cá nhân

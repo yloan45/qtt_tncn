@@ -8,66 +8,199 @@
   .form-control {
     background-color: white;
   }
+  .span {
+    font-size: 15px;
+    margin-bottom: 10px;
+    margin-left: 30px;
+  }
+  .input-group {
+    margin-bottom: 10px;
+  }
 </style>
+
 <div class="step hidden" data-step="2">
     <div style="text-align: center;">
-      <h style="font-size: 18px;">Tờ khai quyết toán thuế thu nhập cá nhân</h3>
-        <p>(Áp dụng cho cá nhân cư trú có thu nhập từ tiền lương, tiền công)</p>
-        <p>[01]Kỳ tính thuế:</p>
-        <p> [02] Lần đầu [03] Bổ sung lần thứ</p>
+      <h3 style="font-size: 16px; margin-top: 15px; margin-bottom: 10px; font-weight: bold; text-align: center;">Tờ khai quyết toán thuế thu nhập cá nhân (TT92/2015)</h3>
+        <p style="font-size: 14px; font-style: italic; text-align: center; margin-bottom: 10px ;">(Áp dụng cho cá nhân cư trú có thu nhập từ tiền lương, tiền công)</p>
+        <p style="font-size: 14px; margin-bottom: 10px; font-weight: bold;">[01] Kỳ tính thuế: Năm <span id="displayYear"></span>
+        (từ tháng <span id="displayFromMonth"></span>
+        đến tháng <span id="displayToMonth"></span>)
+        </p>
+        <p style="font-size: 14px; font-weight: bold;"><span style="margin-right: 35px;">[02] Lần đầu [ x ] </span> <span>[03] Bổ sung lần thứ [  ]</span></p>
     </div>
 
-    <div style="margin-left: 30px; font-size: 14px;">
-      <span>[04] Tên người nộp thuế: </span>
-
+    <div class="span">
+        <div class="row">
+          <div class="col">
+            <span>[04] Tên người nộp thuế:</span>
+          </div>
+          <div class="col">
+            <span id="displayFullname"></span> 
+          </div>
+          <div class="col"></div>
+          <div class="col"></div>
+        </div>
     </div>
 
-    <div style="margin-left: 30px; font-size: 14px;">
-      <span>[05] Mã số thuế: </span>
+
+    <div class="span">
+      <div class="row">
+        <div class="col">
+          <span>[05] Mã số thuế: </span>
+        </div>
+        <div class="col">
+          <span style="margin-right: 10pc;"> <%= user.ca_nhan.masothue %></span>  
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
+      </div>
     </div>
 
-    <div style="margin-left: 30px; font-size: 14px;">
-      <span>[06] Địa chỉ: </span>
+    <div class="span">
+      <div class="row">
+        <div class="col">
+          <span >[06] Địa chỉ: </span>
+        </div>
+        <div class="col">
+          <input type="text" style="height: 95%;">
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
+      </div>
     </div>
 
-    <div style="margin-left: 30px; font-size: 14px;">
-      <span>[07] Quận/Huyện: </span>
+    <div class="span">
+     <div class="row">
+      <div class="col">
+        <span>[07] Quận/Huyện: </span>
+      </div>
+      <div class="col">
+        <select name="" id="" style="height: 95%;">
+        <option value="">Quận/Huyện</option></select>
+      </div>
+      <div class="col">
+        <span style="margin-right: 15px;">[08] Tỉnh/TP: </span>
+      </div>
+      <div class="col">
+        <select name="" id="" style="height: 95%;">
+          <option value="">Tỉnh/TP</option>
+        </select>
+      </div>
+     </div>
     </div>
 
-    <div style="margin-left: 30px; font-size: 14px;">
-      <span>[09] Điện thoại: </span>
+    <div class="span">
+      <div class="row">
+        <div class="col"> <span>[09] Điện thoại: </span></div>
+        <div class="col">0<%= user.ca_nhan.phone%></div>  
+        <div class="col">[10] Fax: </div>     
+        <div class="col"></div>
+      </div>
     </div>
 
-    <div style="margin-left: 30px; font-size: 14px;">
-      <span>[11] Email: </span>
+    <div class="span">
+      <div class="row">
+        <div class="col"> <span>[11] Email: </span></div>
+        <div class="col"><input style="height: 95%;" type="text" value="<%= user.ca_nhan.email %>"></div>  
+        <div class="col"></div>     
+        <div class="col"></div>
+      </div>
     </div>
 
-    <div style="margin-left: 30px; font-size: 14px;">
-      <span>[12] Số tài khoản ngân hàng (nếu có): </span>
+    <div class="span">
+      <div class="row">
+        <div class="col">
+          <span>[12] Số tài khoản ngân hàng (nếu có): </span>
+        </div>
+        <div class="col"><input type="text" style="height: 95%;"></div>
+        <div class="col">[12a] Mở tại: </div>
+        <div class="col"><input type="text" style="height: 95%;"></div>
+      </div>
+      
     </div>
 
-    <div style="margin-left: 30px; font-size: 14px;">
-      <span>[13] Tên đại lý thuế (nếu có): </span>
+    <div class="span">
+      <div class="row">
+        <div class="col">
+          <span>[13] Tên đại lý thuế (nếu có): </span>
+        </div>
+        <div class="col"> <input type="text" style="height: 95%;" ></div>
+        <div class="col"></div>
+        <div class="col"></div>
+      </div>
     </div>
 
-    <div style="margin-left: 30px; font-size: 14px;">
-      <span>[14] Mã số thuế: </span>
+    <div class="span">
+      <div class="row">
+        <div class="col">
+          <span>[14] Mã số thuế: </span>
+        </div>
+        <div class="col"> <input type="text" style="height: 95%;" ></div>
+        <div class="col"></div>
+        <div class="col"></div>
+      </div>
     </div>
-    <div style="margin-left: 30px; font-size: 14px;">
-      <span>[15] Địa chỉ: </span>
+
+    <div class="span">
+      <div class="row">
+        <div class="col">
+          <span >[15] Địa chỉ: </span>
+        </div>
+        <div class="col">
+          <input type="text" style="height: 95%;">
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
+      </div>
     </div>
-    <div style="margin-left: 30px; font-size: 14px;">
-      <span>[16] Quận/Huyện</span>
+
+    <div class="span">
+      <div class="row">
+       <div class="col">
+         <span>[16] Quận/Huyện: </span>
+       </div>
+       <div class="col">
+         <select name="" id="" style="height: 95%;">
+         <option value="">Quận/Huyện</option></select>
+       </div>
+       <div class="col">
+         <span style="margin-right: 15px;">[17] Tỉnh/TP: </span>
+       </div>
+       <div class="col">
+         <select name="" id="" style="height: 95%;">
+           <option value="">Tỉnh/TP</option>
+         </select>
+       </div>
+      </div>
+     </div>
+
+    <div class="span">
+      <div class="row">
+        <div class="col"> <span>[18] Điện thoại: </span></div>
+        <div class="col"></div>  
+        <div class="col">[19] Fax: </div>     
+        <div class="col"></div>
+      </div>
     </div>
-    <div style="margin-left: 30px; font-size: 14px;">
-      <span>[18] Điện thoại: </span>
+
+    <div class="span">
+      <div class="row">
+        <div class="col"> <span>[20] Email: </span></div>
+        <div class="col"><input style="height: 95%;" type="text" value=""></div>  
+        <div class="col"></div>     
+        <div class="col"></div>
+      </div>
     </div>
-    <div style="margin-left: 30px; font-size: 14px;">
-      <span>[20] Email: </span>
+
+    <div class="span">
+      <div class="row">
+        <div class="col"> <span>[21] Hợp đồng đại lý thuế, số:</span></div>
+        <div class="col"><input type="text" style="height: 95%;"></div>  
+        <div class="col">ngày</div>     
+        <div class="col"><input type="text" style="height: 95%;"></div>
+      </div>
     </div>
-    <div style="margin-left: 30px; font-size: 14px;">
-      <span>[21] Hợp đồng đại lý thuế, số:</span>
-    </div>
+
     <br>
     <!-- BẢNG TỜ KHAI QUYẾT TOÁN THUẾ-->
     <table class="table table-bordered border-primary " style="margin-left: 30px; width:95%; text-align: center">

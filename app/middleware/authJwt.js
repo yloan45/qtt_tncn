@@ -23,6 +23,43 @@ verifyToken = (req, res, next) => {
     });
 };
 
+verifyTokenCanhan = (req, res, next) => {
+  let token = req.session.token;
+  if (!token) {
+    return res.redirect('/canhan/login');
+  }
+  jwt.verify(token,
+    config.secret,
+    (err, decoded) => {
+      if (err) {
+        return res.status(401).send({
+          message: "Unauthorized!",
+        });
+      }
+      req.userId = decoded.id;
+      next();
+    });
+};
+
+verifyTokenTochuc = (req, res, next) => {
+  let token = req.session.token;
+  if (!token) {
+    return res.redirect('/tochuc/login');
+  }
+  jwt.verify(token,
+    config.secret,
+    (err, decoded) => {
+      if (err) {
+        return res.status(401).send({
+          message: "Unauthorized!",
+        });
+      }
+      req.userId = decoded.id;
+      next();
+    });
+};
+
+
 isAdmin = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.userId);
@@ -33,7 +70,6 @@ isAdmin = async (req, res, next) => {
         return next();
       }
     }
-
     return res.status(403).send({
       message: "Require Admin Role!",
     });
@@ -67,8 +103,7 @@ isTochuc = async (req, res, next) => {
 
 function checkUserRole(role) {
   return (req, res, next) => {
-    const user = req.session.user; // Lấy thông tin người dùng từ phiên
-
+    const user = req.session.user;
     // Kiểm tra quyền của người dùng
     if (user && user.authorities.includes(role)) {
       // Người dùng có quyền, tiếp tục xử lý
@@ -82,6 +117,8 @@ function checkUserRole(role) {
 
 const authJwt = {
   verifyToken,
+  verifyTokenCanhan,
+  verifyTokenTochuc,
   isAdmin,
   isTochuc,
   checkUserRole

@@ -18,25 +18,17 @@ const upload = async (req, res) => {
 
       let excelupload = [];
       const toChucId = req.session.user.toChucId;
-      console.log("tổ chức có id là: ", toChucId)
+     // console.log("tổ chức có id là: ", toChucId)
       rows.forEach((row) => {
         let excelfile = {
-          hoten: row[1],
-          cccd: row[2],
-          masothue: row[3],
-          email: row[4],
+          tennv: row[0],
+          masothue: row[1],
+          namsinh: row[2],
+          diachi: row[3],
+          vitri: row[4],
           dienthoai: row[5],
-          diachi: row[6],
-          vitricongviec: row[7],
-          hopdonglaodong: row[8],
-          tuthang: row[9],
-          denthang: row[10],
-          khautruthue: row[11],
-          muckhautru: row[12],
-          mucluong: row[13],
-          dakhautru: row[14],
-          tongthunhap: row[15],
-          ghichu: row[16],
+          email: row[6],
+          luong: row[7],
           toChucId: toChucId
         };
 
@@ -63,6 +55,7 @@ const upload = async (req, res) => {
   }
 };
 
+/*
 const getAllExcelFile = (req, res) => {
   Excelupload.findAll()
     .then((data) => {
@@ -75,13 +68,16 @@ const getAllExcelFile = (req, res) => {
       });
     });
 };
+*/
 
-
-const getToChucUploadFile = async (req, res) => {
+const getAllExcelFile = async (req, res) => {
   const toChucId = req.session.user.toChucId;
+ // const page = req.query.page || 1;
+ // const pageSize = 5;
+ // const {rows, count} = await paginate(Excelupload, {page, pageSize});
   Excelupload.findAll({ where: { toChucId } })
     .then((data) => {
-      res.render('tochuc/table.ejs', { data });
+      res.render('admin/listdata.ejs', { data });
     })
     .catch((err) => {
       res.status(500).send({
@@ -100,6 +96,5 @@ const paginate = (query, {page, pageSize}) => {
 module.exports = {
   upload,
   getAllExcelFile,
-  paginate,
-  getToChucUploadFile
+  paginate
 };

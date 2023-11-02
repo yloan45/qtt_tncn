@@ -44,62 +44,40 @@
         <table class="table table-bordered  table-striped "  id="data-table">
           <tr style="text-align: center; font-weight: bolder; ">
             <th style="text-align: center; font-weight: bolder; "> STT </th>
-            <th style="text-align: center; font-weight: bolder; ">Tên nhân viên</th>
+            <th style="text-align: center; font-weight: bolder; ">Họ và tên NNT</th>
             <th style="text-align: center; font-weight: bolder; ">Mã số thuế</th>
-            <th style="text-align: center; font-weight: bolder; ">Năm sinh</th>
-            <th style="text-align: center; font-weight: bolder; ">Vị trí</th>
             <th style="text-align: center; font-weight: bolder; ">Địa chỉ</th>
-            <th style="text-align: center; font-weight: bolder; ">Điện thoại</th>
             <th style="text-align: center; font-weight: bolder; ">Email</th>
-            <th style="text-align: center; font-weight: bolder; ">Lương</th>
-            <th style="text-align: center; font-weight: bolder; ">toChucId</th>
+            <th style="text-align: center; font-weight: bolder; ">Năm kê khai</th>
+            <th style="text-align: center; font-weight: bolder; ">Tờ khai</th>
+            <th style="text-align: center; font-weight: bolder; ">Trạng thái tờ khai</th>
+            <th style="text-align: center; font-weight: bolder; ">Action</th>
           </tr>
           <% let totalIndex=0; %>
-            <% data.forEach((user, index)=> { %>
-              <tr>
+          <% tokhai.forEach((tokhaithue, index)=> { %>
+            <tr style="text-align: center;">
+                <td> <%= index+1 %></td>
+                <td><%= tokhaithue.fullname %></td>
+                <td><%= tokhaithue.ca_nhan.masothue %></td>
+                <td><%= tokhaithue.address %></td>
+                <td><%= tokhaithue.email %></td>
+                <td><%= tokhaithue.tuthang %> - <%= tokhaithue.denthang %></td>
+                <td><%= tokhaithue.loai_to_khai.tenloai %></td>
+                <td><%= tokhaithue.trang_thai_xu_li.tentrangthai%></td>
                 <td>
-                  <%= index+1 %>
+                    <i class="fa-solid fa-eye"></i>
+                    <i class="fa-solid fa-pen"></i>
+                    <i class="fa-solid fa-envelope"></i>
                 </td>
-                <td>
-                  <%= user.hoten %>
-                </td>
-                <td>
-                  <%= user.masothue %>
-                </td>
-                <td>
-                  <%= user.namsinh %>
-                </td>
-                <td>
-                  <%= user.vitri %>
-                </td>
-                <td>
-                  <%= user.diachi %>
-                </td>
-                <td>
-                  <%= user.dienthoai %>
-                </td>
-                <td>
-                  <%= user.email %>
-                </td>
-                <td></td>
-                <td>
-                  <%= user.toChucId %>
-                </td>
-
-                <td>
-
-                </td>
-              </tr>
-              <% totalIndex++; %>
-                <% }) %>
-                  <h5>Tổng cộng: <%= totalIndex %>
-                  </h5>
-                  <!-- Nút phân trang -->
-
+            </tr>
+            <% totalIndex++; %>
+              <% }) %>
+                <h5>Tổng cộng: <%= totalIndex %>
+                </h5>
+         
         </table>
 
       </div>
-</body>
 <script>
   // Lấy tham chiếu đến trường tìm kiếm và bảng
   const searchInput = document.getElementById('search-input');

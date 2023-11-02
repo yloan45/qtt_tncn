@@ -14,9 +14,15 @@
       <!--phan header-->
       <h4 style="text-align: left;"> Thông tin doanh nghiệp kê khai trả trả lương cho cá nhân/tổ chức</h4>
       <!--PHẦN NỘI DUNG-->
+
+      
       <div class="container-fluid" style="margin-top: 1pc; margin-bottom: 1pc;">
+        <div class="input-group" style="margin-left: 20px; width: 250px;">
+          <input class="form-control"type="search" id="search-input" placeholder=" Tìm kiếm...">
+          <button class="btn btn-primary"><i class="fas fa-search" ></i></button>
+        </div>
         <h5 style="font-size: 16px; text-align: right; margin-right: 15px;">Tổng cộng: </h5>
-        <table class="table table-striped table-bordered mt-3 " style="text-align: center;">
+        <table  class="table table-striped table-bordered mt-3 "  id="data-table" style="text-align: center;">
           <thead>
             <th>STT</th>
             <th>Họ tên</th>
@@ -24,8 +30,8 @@
             <th>Địa chỉ</th>
             <th>Email</th>
             <th>Điện thoại</th>
-            <th>Lương (VNĐ/Tháng)</th>
-            <th>Chi trả khác</th>
+            <th>Hợp đồng lao động</th>
+            <th>Vị trí công việc</th>
             <th>Khấu trừ thuế</th>
             <th>Chi tiết khấu trừ thuế</th>
             <th>Vị trí công việc</th>
@@ -33,51 +39,24 @@
             <th>Action</th>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Lê Thị Yến Loan</td>
-              <td>CN12365478</td>
-              <td>Phụng Hiệp, Hậu Giang</td>
-              <td>ltyenloan@gmail.com</td>
-              <td>0379409425</td>
-              <td>20000000</td>
-              <td>0</td>
-              <td>Chưa khấu trừ</td>
-              <td>Chưa khấu trừ</td>
-              <td>Nhân viên văn phòng</td>
-              <td>24000000</td>
-              <td> thêm | sửa | xóa</td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Lê Thị Yến Loan</td>
-              <td>CN12365478</td>
-              <td>Phụng Hiệp, Hậu Giang</td>
-              <td>ltyenloan@gmail.com</td>
-              <td>0379409425</td>
-              <td>20000000</td>
-              <td>0</td>
-              <td>Chưa khấu trừ</td>
-              <td>Chưa khấu trừ</td>
-              <td>Nhân viên văn phòng</td>
-              <td>24000000</td>
-              <td> thêm | sửa | xóa</td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Lê Thị Yến Loan</td>
-              <td>CN12365478</td>
-              <td>Phụng Hiệp, Hậu Giang</td>
-              <td>ltyenloan@gmail.com</td>
-              <td>0379409425</td>
-              <td>20000000</td>
-              <td>0</td>
-              <td>Chưa khấu trừ</td>
-              <td>Chưa khấu trừ</td>
-              <td>Nhân viên văn phòng</td>
-              <td>24000000</td>
-              <td> thêm | sửa | xóa</td>
-            </tr>
+            <% data.forEach((data, index) => { %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= data.hoten %></td>
+                <td><%= data.masothue %></td>
+                <td><%= data.diachi %></td>
+                <td><%= data.email %></td>
+                <td><%= data.dienthoai %></td>
+                <td><%= data.hopdonglaodong %></td>
+                <td><%= data.vitricongviec %></td>
+                <td><%= data.mucluong %></td>
+                <td><%= data.tongthunhap %></td>
+                <td><%= data.dakhautru %></td>
+                <td><%= data.ghichu %></td>
+                <td><i class="fas fa-edit"></i> <i class="fas fa-trash"></i></td>
+              </tr>
+            <% }) %>
+            
           </tbody>
         </table>
         <nav aria-label="Page navigation example">
@@ -97,7 +76,35 @@
       <%- include('../partials/footer') %>
     </footer>
     <script src="js/formwizard.js"></script>
-
+    <script>
+      // Lấy tham chiếu đến trường tìm kiếm và bảng
+      const searchInput = document.getElementById('search-input');
+      const dataTable = document.getElementById('data-table');
+    
+      // Gán sự kiện input cho trường tìm kiếm
+      searchInput.addEventListener('input', function() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const rows = dataTable.querySelectorAll('tbody tr');
+    
+        rows.forEach(row => {
+          const columns = row.querySelectorAll('td');
+          let found = false;
+    
+          columns.forEach(column => {
+            if (column.textContent.toLowerCase().includes(searchTerm)) {
+              found = true;
+            }
+          });
+    
+          if (found) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+    </script>
 </body>
+
 
 </html>
