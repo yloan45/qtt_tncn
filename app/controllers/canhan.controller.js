@@ -26,22 +26,22 @@ exports.deleteUser = (req, res) => {
 }
 
 exports.getAllUser = (req, res) => {
-  Canhan.findAll(
-    {
-      include: [{
-        model: Diachi, as: 'dia_chi'
+  Canhan.findAll({
+    include: [
+      {
+        model: Diachi, as: 'dia_chis' // Sử dụng alias đúng ở đây
       },
       {
         model: User, as: 'user'
-      }]
-
-    }).then((users) => {
-      console.log(users);
-      res.render("admin/listUser",
-        { user: users });
-    })
-    .catch((err) => console.log(err));
+      }
+    ]
+  }).then((users) => {
+    console.log(users);
+    res.render("admin/listUser", { user: users });
+  })
+  .catch((err) => console.log(err));
 }
+
 
 exports.findOne = (req, res) => {
   const id = req.params.id;
@@ -103,7 +103,7 @@ exports.getUser = async (req, res) => {
       as: 'ca_nhan',
       include: {
         model: Diachi,
-        as: 'dia_chi'
+        as: 'dia_chis'
       }
     }
   });

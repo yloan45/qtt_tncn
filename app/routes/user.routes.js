@@ -1,17 +1,17 @@
 const { authJwt } = require("../middleware");
-const controller = require("../controllers/user.controller");
 const {  deleteUser, getAllUser, update, findOne, getUser} = require("../controllers/canhan.controller");
 const upload = require("../middleware/excelUpload");
 const excelController = require("../controllers/excel.controller");
 const tokhaithue = require("../controllers/tokhai.controller");
 const uploadTokhai = require("../controllers/upload.controller");
 const db = require("../models");
-const userController = require("../controllers/upload.controller");
-const { uploaduser } = require("../controllers/upload.user");
 const { getAllToChuc, deleteToChuc } = require("../controllers/tochuc.controller");
-const { signin, getAllTokhai } = require("../controllers/auth.controller");
-const { checkUserRole, isAdmin } = require("../middleware/authJwt");
+const { getAllTokhai } = require("../controllers/auth.controller");
 const File = db.noptokhai;
+const {getTokhaithue, duyettokhai, tokhaikhongduocduyet} = require("../controllers/admin.controller");
+const Tokhaithue = db.tokhaithue;
+const Trangthaixuly = db.trangthaixuly;
+const Duyettokhai = db.duyettokhai;
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -21,14 +21,14 @@ module.exports = function (app) {
     );
     next();
   });
-  
+
 
   app.get('/admin',  [authJwt.verifyToken, authJwt.isAdmin], (req, res)=>{
     const user = req.session.user;
     console.log(user);
     res.render('admin/index', {user: user});
   });
-
+  //app.get('/duyet-to-khai/:id', [authJwt.verifyToken, authJwt.isAdmin], findOneTokhaithue);
   app.get("/update/:id", [authJwt.verifyToken, authJwt.isAdmin],findOne);         // lấy thông tin update cá nhân
   app.get("/deletecn/:id",[authJwt.verifyToken, authJwt.isAdmin], deleteUser);    // xóa cá nhân
   app.get("/list-user",[authJwt.verifyToken,authJwt.isAdmin], getAllUser);        // lấy danh sách tất cả người dùng cá nhân
@@ -38,6 +38,8 @@ module.exports = function (app) {
   app.get("/delete/:id",[authJwt.verifyToken, authJwt.isAdmin], deleteToChuc);    // xóa 1 tổ chức/doanh nghiệp
   app.get("/getAll", excelController.getAllExcelFile);                            // read data từ form excel doanh nghiệp/tổ chức kê khai trả tiền lương/ tiền công cho cá nhân/tổ chức
 
+
+  app.get('/user/:id', [authJwt.verifyToken, authJwt.isAdmin], getTokhaithue);
   // upload file excel
   app.get("/tochuc/upload-file", [authJwt.verifyTokenTochuc, authJwt.isTochuc], (req, res)=>{
     const user = req.session.user;
@@ -74,6 +76,9 @@ module.exports = function (app) {
     res.render("nguoidung/index.ejs");    
   })
 
+  app.get('/check', (req, res)=> {
+    res.render("admin/check.ejs");
+  });
 
 // test routes
   app.get("/test", [authJwt.verifyToken, authJwt.isAdmin], (req, res)=>{
@@ -82,6 +87,9 @@ module.exports = function (app) {
     res.send("demo !!!", "user", user);
   })
 
+
+  // duyệt tờ khai demo
+//app.post('/duyet/:id', [authJwt.verifyToken, authJwt.isAdmin], duyetTokhai);
 // upload tờ khai
 app.post("/upload", upload.single("file"), excelController.upload);
 
@@ -114,18 +122,27 @@ app.post('/noptokhai', uploadTokhai.single('filename'), (req, res) => {
 app.get("/duyet-to-khai", [authJwt.verifyToken, authJwt.isAdmin], getAllTokhai);
 
 app.get("/create-user", [authJwt.verifyToken, authJwt.isAdmin], (req, res) => {
-  res.render("admin/create");                           // form create cá nhân
+  res.render("admin/create");                                                                   // form create cá nhân
 });
 
 app.get("/create-tochuc",[authJwt.verifyToken, authJwt.isAdmin],  (req, res) => {               // form create tổ chức
     res.render("admin/auth/create.tochuc.ejs");
 });
 
-app.get('/success', (req, res) => {
-  res.render('admin/success'); // Render trang thông báo
+app.put('/capnhattrangthai/:id', [authJwt.verifyToken, authJwt.isAdmin], duyettokhai);
+app.put('/duyet-to-khai/:id', [authJwt.verifyToken, authJwt.isAdmin], tokhaikhongduocduyet);
+
+app.post('/filter-tokhai', async (req, res) => {
+  const selectedStatusId = req.body.statusId;
+  let whereClause = {};
+
+  if (selectedStatusId !== 'all') {
+    whereClause = { trangThaiXuLiId: selectedStatusId };
+  }
+
+  const tokhais = await Tokhaithue.findAll({ where: whereClause });
+  res.render('admin/duyettokhai', { tokhais });
 });
-//app.get("/list-dn", getAllToChuc);
-//app.get('/canhan/demo',[authJwt.verifyToken, authJwt.isAdmin], getUser);
 
 
-};
+}

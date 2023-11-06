@@ -3,7 +3,6 @@ module.exports = (sequelize, Sequelize) => {
     username: {
       type: Sequelize.STRING,
       allowNull: false,
-      unique: true,
       validate: {
         notEmpty: {
           msg: "username khong duoc de trong!"

@@ -38,7 +38,6 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false
     },
-
     denthang: {
       type: Sequelize.STRING,
       allowNull: false

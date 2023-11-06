@@ -1,0 +1,548 @@
+
+<style scoped>
+    td input {
+      text-align: right;
+    }
+    input{
+      padding-right: 5px;
+    }
+    .form-control {
+      background-color: white;
+    }
+    .span {
+      font-size: 15px;
+      margin-bottom: 10px;
+      margin-left: 30px;
+    }
+    .input-group {
+      margin-bottom: 10px;
+    }
+  </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <!-- Scrollable modal -->
+  <a href="/duyet-to-khai" class="btn btn-link" style="text-decoration: none;">
+    <i class="fa-solid fa-arrow-left"></i> Go back home
+  </a>
+  
+  <div >
+      <div style="text-align: center;">
+        <h3 style="font-size: 16px; margin-top: 15px; margin-bottom: 10px; font-weight: bold; text-align: center;">Tờ khai quyết toán thuế thu nhập cá nhân (TT92/2015)</h3>
+          <p style="font-size: 14px; font-style: italic; text-align: center; margin-bottom: 10px ;">(Áp dụng cho cá nhân cư trú có thu nhập từ tiền lương, tiền công)</p>
+          <p style="font-size: 14px; margin-bottom: 10px; font-weight: bold;">[01] Kỳ tính thuế: Năm <span id="displayYear"></span>
+          (từ tháng <span id="displayFromMonth"></span>
+          đến tháng <span id="displayToMonth"></span>)
+          </p>
+          <p style="font-size: 14px; font-weight: bold;"><span style="margin-right: 35px;">[02] Lần đầu [ x ] </span> <span>[03] Bổ sung lần thứ [  ]</span></p>
+      </div>
+  
+      <div>
+        <input type="text" name="id" id="" style="display: none;">
+      </div>
+      <div class="span">
+          <div class="row">
+            <div class="col">
+              <span>[04] Tên người nộp thuế:</span>
+            </div>
+            <div class="col">
+              <span id="displayFullname"></span> 
+            </div>
+            <div class="col"></div>
+            <div class="col"></div>
+          </div>
+      </div>
+  
+  
+      <div class="span">
+        <div class="row">
+          <div class="col">
+            <span>[05] Mã số thuế: </span>
+          </div>
+          <div class="col">
+            <span style="margin-right: 10pc;"></span>  
+          </div>
+          <div class="col"></div>
+          <div class="col"></div>
+        </div>
+      </div>
+  
+      <div class="span">
+        <div class="row">
+          <div class="col">
+            <span >[06] Địa chỉ: </span>
+          </div>
+          <div class="col">
+            <input type="text" style="height: 95%;">
+          </div>
+          <div class="col"></div>
+          <div class="col"></div>
+        </div>
+      </div>
+  
+      <div class="span">
+       <div class="row">
+        <div class="col">
+          <span>[07] Quận/Huyện: </span>
+        </div>
+        <div class="col">
+          <select name="" id="" style="height: 95%;">
+          <option value="">Quận/Huyện</option></select>
+        </div>
+        <div class="col">
+          <span style="margin-right: 15px;">[08] Tỉnh/TP: </span>
+        </div>
+        <div class="col">
+          <select name="" id="" style="height: 95%;">
+            <option value="">Tỉnh/TP</option>
+          </select>
+        </div>
+       </div>
+      </div>
+  
+      <div class="span">
+        <div class="row">
+          <div class="col"> <span>[09] Điện thoại: </span></div>
+          <div class="col"></div>  
+          <div class="col">[10] Fax: </div>     
+          <div class="col"></div>
+        </div>
+      </div>
+  
+      <div class="span">
+        <div class="row">
+          <div class="col"> <span>[11] Email: </span></div>
+          <div class="col"><input style="height: 95%;" type="text" value=""></div>  
+          <div class="col"></div>     
+          <div class="col"></div>
+        </div>
+      </div>
+  
+      <div class="span">
+        <div class="row">
+          <div class="col">
+            <span>[12] Số tài khoản ngân hàng (nếu có): </span>
+          </div>
+          <div class="col"><input type="text" style="height: 95%;"></div>
+          <div class="col">[12a] Mở tại: </div>
+          <div class="col"><input type="text" style="height: 95%;"></div>
+        </div>
+        
+      </div>
+  
+      <div class="span">
+        <div class="row">
+          <div class="col">
+            <span>[13] Tên đại lý thuế (nếu có): </span>
+          </div>
+          <div class="col"> <input type="text" style="height: 95%;" ></div>
+          <div class="col"></div>
+          <div class="col"></div>
+        </div>
+      </div>
+  
+      <div class="span">
+        <div class="row">
+          <div class="col">
+            <span>[14] Mã số thuế: </span>
+          </div>
+          <div class="col"> <input type="text" style="height: 95%;" ></div>
+          <div class="col"></div>
+          <div class="col"></div>
+        </div>
+      </div>
+  
+      <div class="span">
+        <div class="row">
+          <div class="col">
+            <span >[15] Địa chỉ: </span>
+          </div>
+          <div class="col">
+            <input type="text" style="height: 95%;">
+          </div>
+          <div class="col"></div>
+          <div class="col"></div>
+        </div>
+      </div>
+  
+      <div class="span">
+        <div class="row">
+         <div class="col">
+           <span>[16] Quận/Huyện: </span>
+         </div>
+         <div class="col">
+           <select name="" id="" style="height: 95%;">
+           <option value="">Quận/Huyện</option></select>
+         </div>
+         <div class="col">
+           <span style="margin-right: 15px;">[17] Tỉnh/TP: </span>
+         </div>
+         <div class="col">
+           <select name="" id="" style="height: 95%;">
+             <option value="">Tỉnh/TP</option>
+           </select>
+         </div>
+        </div>
+       </div>
+  
+      <div class="span">
+        <div class="row">
+          <div class="col"> <span>[18] Điện thoại: </span></div>
+          <div class="col"></div>  
+          <div class="col">[19] Fax: </div>     
+          <div class="col"></div>
+        </div>
+      </div>
+  
+      <div class="span">
+        <div class="row">
+          <div class="col"> <span>[20] Email: </span></div>
+          <div class="col"><input style="height: 95%;" type="text" value=""></div>  
+          <div class="col"></div>     
+          <div class="col"></div>
+        </div>
+      </div>
+  
+      <div class="span">
+        <div class="row">
+          <div class="col"> <span>[21] Hợp đồng đại lý thuế, số:</span></div>
+          <div class="col"><input type="text" style="height: 95%;"></div>  
+          <div class="col">ngày</div>     
+          <div class="col"><input type="text" style="height: 95%;"></div>
+        </div>
+      </div>
+  
+      <br>
+      <!-- BẢNG TỜ KHAI QUYẾT TOÁN THUẾ-->
+      <table class="table table-bordered border-primary " style="margin-left: 30px; width:95%; text-align: center">
+        <tr style="text-align: center; background-color: rgb(71, 122, 242); color: white;">
+          <th>STT</th>
+          <th colspan="3">Chỉ tiêu</th>
+          <th>Mã chỉ tiêu</th>
+          <th>Đơn vị tính</th>
+          <th>Số tiền/Số người</th>
+        </tr>
+        <tr>
+          <td rowspan="5">1</td>
+          <td colspan="3" style="text-align: justify;">Tổng thu nhập chịu thuế(TNCN) trong kỳ:
+            [22]=[23]+[26]</td>
+          <td>[22]</td>
+          <td>VNĐ</td>
+          <td><input   type="text" name="ct22" id="ct22" style="border: none; background-color: white;"  value="0" readonly required  ></td>
+        </tr>
+        <tr>
+          <td rowspan="3">a</td>
+          <td colspan="2" style="text-align: justify;">Tổng TNCT phát sinh tại Việt Nam</td>
+          <td>[23]</td>
+          <td>VNĐ</td>
+          <td><input   name="ct23" id="ct23" value="0"></td>
+        </tr>
+        <tr>
+          <td rowspan="2">Trong đó</td>
+          <td style="text-align: justify;">Tổng TNCT làm căn cứ tính giảm thuế</td>
+          <td>[24]</td>
+          <td> VNĐ</td>
+          <td><input   name="ct24" id="ct24" value="0"></td>
+        </tr>
+        <tr>
+          <td style="text-align: justify;">Tổng TNCT được miễn giảm theo Hiệp định </td>
+          <td>[25]</td>
+          <td> VNĐ </td>
+          <td><input   name="ct25" id="ct25" value="0"></td>
+        </tr>
+  
+        <tr>
+          <td>b</td>
+          <td colspan="2" style="text-align: justify;">Tổng TNCT phát sinh ngoài Việt Nam</td>
+          <td>[26]</td>
+          <td> VNĐ </td>
+          <td><input   name="ct26" id="ct26" value="0"></td>
+        </tr>
+  
+  
+        <tr>
+          <td> 2 </td>
+          <td colspan="3" style="text-align: justify;">Số người phụ thuộc</td>
+          <td> [27] </td>
+          <td> Người </td>
+          <td><input   type="text" name="ct27" id="ct27" style="border: none; background-color: white;" readonly required  ></td>
+  
+        </tr>
+  
+        <%# STT 3%>
+  
+        <tr>
+          <td rowspan="6"> 3</td>
+          <td colspan="3" style="text-align: justify;">Các khoản giảm trừ <br> [28]=[29]+[30]+[31]+[32]+[33]</td>
+          <td>[28]</td>
+          <td> VNĐ </td>
+          <td><input   type="text" name="ct28" id="ct28" style="border: none; background-color: white;"  value="0" readonly required  ></td>
+        </tr>
+  
+        <tr>
+          <td>a</td>
+          <td colspan="2" style="text-align: justify;">Cho cá nhân bản thân</td>
+          <td> [29] </td>
+          <td> VNĐ </td>
+          <td><input   type="text" name="ct29" id="ct29" style="border: none; background-color: white;"  value="0" readonly required  ></td>
+        </tr>
+  
+        <tr>
+          <td>b </td>
+          <td colspan="2" style="text-align: justify;">Cho những người phụ thuộc được giảm
+            trừ</td>
+          <td> [30] </td>
+          <td> VNĐ </td>
+          <td><input   type="text" name="ct30" id="ct30" style="border: none; background-color: white;"  value="0"   required readonly></td>
+        </tr>
+  
+        <tr>
+          <td>c</td>
+          <td colspan="2" style="text-align: justify;">Từ thiện, nhân đạo, khuyến học</td>
+          <td> [31] </td>
+          <td> VNĐ </td>
+          <td> <input   type="text" name="ct31" id="ct31" value="0"> </td>
+        </tr>
+  
+        <tr>
+          <td>d</td>
+          <td colspan="2" style="text-align: justify;">Các khoản đóng bảo hiểm được trừ
+          </td>
+          <td> [32] </td>
+          <td> VNĐ </td>
+          <td><input   type="text" name="ct32" id="ct32" value="0"> </td>
+        </tr>
+  
+        <tr>
+          <td>e</td>
+          <td colspan="2" style="text-align: justify;">Khoản đóng quỹ hưu trí tự nguyện
+            được trừ</td>
+          <td> [33] </td>
+          <td> VNĐ </td>
+          <td> <input   type="text" name="ct33" id="ct33" value="0"></td>
+        </tr>
+  
+        <tr>
+          <td>4</td>
+          <td colspan="3" style="text-align: justify;">Tổng thu nhập tính thuế
+            <br>[34]=[22]-[25]-[28]
+          </td>
+          <td>[34]</td>
+          <td>VNĐ</td>
+          <td><input   type="text" name="ct34" id="ct34" style="border: none; background-color: white;"  value="0" readonly required  ></td>
+        </tr>
+  
+        <tr>
+          <td>5</td>
+          <td colspan="3" style="text-align: justify;">Tổng số thuế thu nhập cá nhân
+            (TNCN) phát sinh trong kỳ</td>
+          <td>[35]</td>
+          <td>VNĐ</td>
+          <td><input   type="text" name="ct35" id="ct35" style="border: none; background-color: white;"  value="0" readonly required  ></td>
+        </tr>
+  
+        <tr>
+          <td rowspan="5"> 6</td>
+          <td colspan="3" style="text-align: justify;">Tổng số thuế đã tạm nộp, đã khấu
+            trừ, đã nộp trong kỳ <br>
+            [36]=[37]+[38]+[39]-[40]
+          </td>
+          <td> [36]</td>
+          <td> VNĐ </td>
+          <td><input   type="text" name="ct36" id="ct36" style="border: none; background-color: white;"  value="0" readonly required  ></td>
+        </tr>
+  
+        <tr>
+          <td>a</td>
+          <td colspan="2" style="text-align: justify;">Đã khấu trừ</td>
+          <td> [37] </td>
+          <td> VNĐ </td>
+          <td> <input   type="text" name="ct37" id="ct37" value="0"> </td>
+        </tr>
+  
+        <tr>
+          <td>b </td>
+          <td colspan="2" style="text-align: justify;">Đã tạm nộp</td>
+          <td> [38] </td>
+          <td> VNĐ</td>
+          <td> <input   type="text" name="ct38" id="ct38" value="0"> </td>
+        </tr>
+  
+        <tr>
+          <td>c</td>
+          <td colspan="2" style="text-align: justify;">Đã nộp ở nước ngoài được giảm
+            trừ(nếu có)</td>
+          <td> [39] </td>
+          <td> VNĐ </td>
+          <td><input   type="text" name="ct39" id="ct39" value="0"> </td>
+        </tr>
+  
+        <tr>
+          <td>d</td>
+          <td colspan="2" style="text-align: justify;">Đã khấu trừ hoặc tạm nộp trùng do
+            quyết toán vất năm</td>
+          <td> [40] </td>
+          <td> VNĐ </td>
+          <td> <input   type="text" name="ct40" id="ct40" value="0"> </td>
+        </tr>
+  
+        <tr>
+          <td rowspan="3">7</td>
+          <td colspan="3" style="text-align: justify;">Tổng số thuế TNCN được giảm trừ
+            trong kỳ <br>
+            [41]=[35]-[36]+[43]</td>
+          <td> [41] </td>
+          <td> VNĐ </td>
+          <td><input   type="text" name="ct41" id="ct41" style="border: none; background-color: white;"  value="0" readonly required  ></td>
+        </tr>
+  
+        <tr>
+          <td>a</td>
+          <td colspan="2" style="text-align: justify;">Tổng số thuế TNCN được giảm do làm
+            việc trogn khu kinh tế</td>
+          <td> [42] </td>
+          <td> VNĐ </td>
+          <td><input   type="text" name="ct42" id="ct42" style="border: none; background-color: white;"  value="0" readonly required></td>
+        </tr>
+  
+        <tr>
+          <td>b</td>
+          <td colspan="2" style="text-align: justify;">Tổng số thuế TNCN được giảm trừ
+            khác</td>
+          <td> [43] </td>
+          <td> VNĐ </td>
+          <td> <input   type="text" name="ct43" value="0" id="ct43"></td>
+        </tr>
+  
+        <%# STT 9%>
+        <tr>
+          <td>8</td>
+          <td colspan="3" style="text-align: justify;">Tổng số thuế còn phải nộp trong
+            kỳ <br>
+            [44]=[35]-[36]-[41] >= 0
+          </td>
+          <td>[44]</td>
+          <td>VNĐ</td>
+          <td><input    type="text" name="ct44" id="ct44" style="border: none; background-color: white;"  value="0" readonly required  >
+          </td>
+        </tr>
+  
+        <%# STT 9%>
+        <tr>
+          <td rowspan="5">9</td>
+          <td colspan="3" style="text-align: justify;">Tổng số thuế nộp thừa trong
+            kỳ
+            <br>[45]=[35]-[36]-[41] < 0
+          </td>
+          <td>[45]</td>
+          <td>VNĐ</td>
+          <td><input   type="text" name="ct45" id="ct45" style="border: none; background-color: white;"  value="0" readonly required  ></td>
+        </tr>
+        <tr>
+          <td rowspan="3">a</td>
+          <td colspan="2" style="text-align: justify;">Tổng số thuế đề nghị hoàn
+            trả <br>
+            [46]=[47]+[48]
+          </td>
+          <td>[46]</td>
+          <td>VNĐ</td>
+          <td><input   type="text" name="ct46" id="ct46" style="border: none; background-color: white;"  value="0" readonly required  ></td>
+        </tr>
+        <tr>
+          <td rowspan="2">Trong đó</td>
+          <td style="text-align: justify;">Số thuế hoàn trả vào tài khoản người
+            nộp thuế</td>
+          <td>[47]</td>
+          <td> VNĐ</td>
+          <td><input   type="text" name="ct47" id="ct47" value="0"></td>
+        </tr>
+        <tr>
+          <td style="text-align: justify;">Số thuế bù trừ cho khoản phải nộp Ngân
+            sách nhà nước khác</td>
+          <td>[48]</td>
+          <td> VNĐ </td>
+          <td><input   type="text" name="ct48" id="ct48" value="0"></td>
+        </tr>
+  
+        <tr>
+          <td>b</td>
+          <td colspan="2" style="text-align: justify;">Tổng số thuế bù trừ cho các
+            phát sinh của kỳ sau <br>
+            [49]=[45]-[46]
+          </td>
+          <td>[49]</td>
+          <td> VNĐ </td>
+          <td><input   type="text" name="ct49" id="ct49" style="border: none; background-color: white;"  value="0" readonly required></td>
+        </tr>
+  
+      </table>
+      <h3>Tôi cam đoan số liệu khai trên là đúng và chịu trách nhiệm trước pháp luật về những số liệu đã khai./...</h3>
+     
+        <div class="row">
+          <div class="col">
+            <h2 style="margin-left: 135px; font-size: 20px; font-weight: bolder;">NHÂN VIÊN ĐẠI LÝ THUẾ</h2>
+            <div class="input-group mt-3">
+              <p style="margin-left: 135px; margin-right: 85px;">Họ và tên: </p>
+              <input type="text">
+            </div>
+            <div class="input-group mt-3">
+              <p style="margin-left: 135px; margin-right: 15px;">Chứng chỉ hành nghề:  </p>
+              <input type="text">
+            </div>
+          </div>
+  
+          
+          <div class="col">
+            <p style="font-size: 16px; font-style: italic; text-align: center; " id="currentDate"></p>
+            <p style="font-size: 18px; font-weight: bolder; text-align: center; ">NGƯỜI NỘP THUẾ hoặc <br>ĐẠI DIỆN HỢP PHÁP CỦA NGƯỜI NỘP <br>
+              THUẾ</p>
+            <p style="font-size: 18px; font-style: italic; text-align: center; margin-top: 5px; "> ( Ký, ghi rõ họ tên )</p>
+          </div>
+        </div>
+  
+    </div>
+
+    <form action="">
+        
+    </form>
+    <style scoped>
+      h3{
+        margin-left: 28px;
+        margin-top: 35px;
+        margin-bottom: 35px;
+        font-size: 23px;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .dailythue {
+        font-size: 14px !important;
+        margin-top: 25px !important;
+        margin-left: 25px !important;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .container {
+              width: 100%;
+              max-width: 1200px;
+              margin: 0 auto;
+              display: flex;
+          }
+  
+          .column {
+              flex: 1;
+              padding: 20px;
+          }
+    </style>
+  
+  <script>
+    // Sử dụng JavaScript để lấy ngày tháng năm hiện tại
+    var currentDateElement = document.getElementById("currentDate");
+    var currentDate = new Date();
+  
+    var day = currentDate.getDate();
+    var month = currentDate.getMonth() + 1; // Tháng trong JavaScript được đếm từ 0, nên cần cộng thêm 1
+    var year = currentDate.getFullYear();
+  
+    // Hiển thị ngày tháng năm lên trang HTML
+    currentDateElement.innerHTML = "Ngày " + day + " tháng " + month + " năm " + year;
+  </script>
+  

@@ -2,8 +2,7 @@ module.exports = (sequelize, Sequelize) => {
     const Admin = sequelize.define("admin", {
         macanbo: {
             type: Sequelize.STRING,
-            allowNull: false,
-            unique: true,
+            allowNull: false, 
             validate: {
                 notEmpty: {
                     msg: "Ma can bo khong duoc de trong!"
@@ -13,7 +12,6 @@ module.exports = (sequelize, Sequelize) => {
         masothue: {
             type: Sequelize.STRING,
             allowNull: false,
-            unique: true,
             validate: {
                 notEmpty: {
                     msg: "Ma so thue khong duoc de trong!"

@@ -3,11 +3,14 @@ module.exports = (sequelize, Sequelize) => {
       fullname: {
         type: Sequelize.STRING
       },
+      masothue: {
+        type: Sequelize.STRING
+      },
       address: {
         type: Sequelize.STRING
       },
       dienthoai: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
       },
       email: {
         type: Sequelize.STRING
@@ -111,6 +114,9 @@ module.exports = (sequelize, Sequelize) => {
       ct49: {
         type: Sequelize.STRING
       },
+      ngayTao: {
+        type: Sequelize.DATE
+      }
     });
     return Tokhaithue;
   };

@@ -1,7 +1,9 @@
 const { query } = require("express");
 const db = require("../models");
 const Excelupload = db.tochuckekhaithue;
-
+const Duyettokhai = db.duyettokhai;
+const Admin = db.admin;
+const Tokhaithue = db.tokhaithue;
 const readXlsxFile = require("read-excel-file/node");
 
 const upload = async (req, res) => {
@@ -96,6 +98,7 @@ const paginate = (query, {page, pageSize}) => {
   const limit = pageSize;
   return query.findAndCountAll({offset, limit});
 }
+
 
 module.exports = {
   upload,

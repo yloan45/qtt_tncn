@@ -1,0 +1,145 @@
+<!--
+    <div class="modal fade" id="myModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 950px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel" style="text-align: center;">Duyệt tờ khai quyết toán thuế thu nhập cá nhân - Mẫu 02/QTT-TNCN</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        <div class="mt-3">
+            <span>Họ và tên NNT</span>
+            <input type="text" class="form-control" name="fullname" id="fullname">
+        </div>
+        <div class="mt-3">
+            <span>Mã số thuế</span>
+            <input type="text" class="form-control" name="masothue" value="">
+        </div>
+        <div class="mt-3">
+            <span>Email</span>
+            <input type="text" class="form-control">
+        </div>
+        <div class="mt-3">
+            <span>Thông tin phụ thuộc</span>
+            <input type="text" class="form-control">
+        </div>
+        <div class="mt-3">
+            <span>Tổng thu nhập chịu thuế</span>
+            <input type="text" class="form-control">
+        </div>
+        <div class="mt-3">
+            <span>Tổng khấu trừ thuế</span>
+            <input type="text" class="form-control">
+        </div>
+        <div class="mt-3">
+            <span>Số thuế cần phải nộp</span>
+            <input type="text" class="form-control">
+        </div>
+        <div class="mt-3">
+            <span>Tổng số tiền hoàn trả thuế</span>
+            <input type="text" class="form-control">
+        </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Kiểm tra</button>
+            <button type="button" class="btn btn-success" style="color: white;"><i class="fas fa-check"></i> duyệt</button>
+            <button type="button" class="btn btn-danger"><i class="fa-solid fa-xmark"></i> không duyệt</button>
+        </div>
+      </div>
+    </div>
+  </div>
+-->
+
+            <!-- Modal for Editing User -->
+          <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="max-width: 950px;" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit User</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Form for editing user details -->
+                        <form id="editUserForm">
+                            <input type="hidden" id="editUserId" name="id">
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="fullname">Họ tên NNT</label>
+                                            <input type="text" class="form-control" id="fullname" name="fullname">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="masothue">Mã số thuế</label>
+                                            <input type="text" class="form-control" id="masothue" name="maaothue">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="phuthuoc">Email</label>
+                                            <input type="text" class="form-control" id="email" name="email">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="phuthuoc">Số người phụ thuộc</label>
+                                            <input type="text" class="form-control" id="phuthuoc" name="phuthuoc">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="thunhapchiuthue">Tổng thu nhập chịu thuế</label>
+                                            <input type="text" class="form-control" id="thunhapchiuthue" name="thunhapchiuthue">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="khautruthue">Khấu trừ thuế</label>
+                                            <input type="text" class="form-control" id="khautruthue" name="khautruthue">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="thuenop">Tổng số thuế phải nộp</label>
+                                            <input type="text" class="form-control" id="thuenop" name="thuenop">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="hoantrathue">Số tiền hoàn trả thuế</label>
+                                            <input type="text" class="form-control" id="hoantrathue" name="hoantrathue">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input  id="tokhaiId" name="tokhaiId">
+
+                          
+                        <div class="d-flex justify-content-between align-items-center">
+                                    <button type="button" class="btn btn-primary">Kiểm tra</button>
+                                    <div>
+                                        <button type="button" class="btn btn-success" style="color: white;" onclick="duyetToKhai()"><i class="fas fa-check"></i> duyệt</button>
+                                        <button type="button" class="btn btn-danger"style="color: white;" onclick="tuchoiDuyet()"><i class="fa-solid fa-xmark"></i> không duyệt</button>
+                                    </div>
+                                </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>

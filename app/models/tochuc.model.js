@@ -2,8 +2,7 @@ module.exports = (sequelize, Sequelize) => {
     const Tochuc = sequelize.define("to_chuc", {
       masothue: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
+        allowNull: false, 
         validate: {
           notEmpty: {
             msg: "Ma so thue khong duoc de trong!"
@@ -47,8 +46,7 @@ module.exports = (sequelize, Sequelize) => {
       },
       email: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
+        allowNull: false, 
         validate: {
           notEmpty: {
             msg: "Email khong duoc de trong!"

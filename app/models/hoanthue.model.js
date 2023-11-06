@@ -1,11 +1,7 @@
-// thông tin hoàn trả thuế
-// bao gồm: hình thức hoàn trả (ngân hàng | tiền mặt ...)
-// hình thức hoàn trả: chuyển khoản
 module.exports = (sequelize, Sequelize) => {
-    const Hoantrathue = sequelize.define("hoantrathue", {
+    const Hoantrathue = sequelize.define("hoan_tra_thue", {
         tentk: {
-            type: Sequelize.STRING,
-            allowNull: false
+            type: Sequelize.STRING
         },
         stk: {
             type: Sequelize.STRING,

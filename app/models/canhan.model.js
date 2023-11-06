@@ -3,7 +3,6 @@ module.exports = (sequelize, Sequelize) => {
     masothue: {
       type: Sequelize.STRING,
       allowNull: false,
-      unique: true,
       validate: {
         notEmpty: {
           msg: "Ma so thue khong duoc de trong!"
@@ -24,7 +23,6 @@ module.exports = (sequelize, Sequelize) => {
     cccd: {
       type: Sequelize.STRING,
       allowNull: false,
-      unique: true,
       validate: {
         notEmpty: {
           msg: "Can cuoc cong dan khong duoc de trong"
@@ -51,7 +49,6 @@ module.exports = (sequelize, Sequelize) => {
     email: {
       type: Sequelize.STRING,
       allowNull: false,
-      unique: true,
       validate: {
         notEmpty: {
           msg: "Email khong duoc de trong"

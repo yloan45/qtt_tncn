@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hóa đơn điện tử</title>
+    <!-- Sử dụng Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Nội dung hóa đơn sẽ được tạo ở đây -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">Hóa đơn điện tử</h3>
+            </div>
+            <div class="card-body">
+                <!-- Nội dung hóa đơn -->
+            </div>
+        </div>
+
+        <!-- Nút để tạo và in hóa đơn -->
+        <button id="printButton" class="btn btn-primary">Tạo và In Hóa đơn</button>
+    </div>
+
+    <!-- Sử dụng thư viện html2canvas -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <!-- Sử dụng FileSaver.js để lưu tệp tải xuống -->
+    <script src="https://cdn.rawgit.com/eligrey/FileSaver.js/08f42a4e8de00ad3c9cc3ca33b6a9e7c2c7ebe85/FileSaver.js"></script>
+    
+    <script>
+        document.getElementById("printButton").addEventListener("click", function () {
+            // Lấy phần tử chứa hóa đơn
+            const element = document.querySelector(".card");
+
+            // Sử dụng html2canvas để chuyển nó thành hình ảnh
+            html2canvas(element).then(function (canvas) {
+                const imgData = canvas.toDataURL("image/png");
+
+                // Tạo một đường dẫn tải xuống hình ảnh
+                const pdf = new jsPDF();
+                pdf.addImage(imgData, "PNG", 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+
+                // Lưu tệp PDF hoặc mở nó trong tab mới
+                pdf.save("hoa-don.pdf");
+            });
+        });
+    </script>
+</body>
+</html>

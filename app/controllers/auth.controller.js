@@ -94,11 +94,6 @@ exports.CaNhanSignup = async (req, res) => {
   // Save User to Database
   try {
     const randomPassword = generateRandomPassword();
-
-    const diachi = await Diachi.create({
-      tinh_tp: req.body.tinh_tp,
-    });
-
     const canhan = await Canhan.create({
       email: req.body.email,
       masothue: req.body.masothue,
@@ -107,7 +102,11 @@ exports.CaNhanSignup = async (req, res) => {
       cqqtthue: req.body.cqqtthue,
       phuthuoc: req.body.phuthuoc,
       fullname: req.body.fullname,
-      diaChiId: diachi.id,
+    });
+
+    const diachi = await Diachi.create({
+      tinh_tp: req.body.tinh_tp,
+      caNhanId: canhan.id
     });
 
     const user = await User.create({
@@ -295,7 +294,10 @@ exports.signin = async (req, res) => {
     req.session.token = token;
     req.session.user = {
       id: user.id,
-      username: user.username
+      username: user.username,
+      toChucId: user.toChucId,
+      adminId: user.adminId,
+      caNhanId: user.caNhanId
     };
 
     return res.redirect("/admin")

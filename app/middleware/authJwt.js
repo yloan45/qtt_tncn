@@ -120,7 +120,6 @@ const authJwt = {
   verifyTokenCanhan,
   verifyTokenTochuc,
   isAdmin,
-  isTochuc,
-  checkUserRole
+  isTochuc
 };
 module.exports = authJwt;

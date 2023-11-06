@@ -2,7 +2,37 @@
 <html dir="ltr" lang="en">
 
 <head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
   <%- include('./partials/head') %>
+  <style>
+    table {
+      width: 100%;
+    }
+
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      color: blue;
+      font-weight: bolder;
+      z-index: 1
+    }
+
+    tbody {
+      max-height: 400px; /* Điều chỉnh chiều cao tối đa của dữ liệu, có thể thay đổi theo nhu cầu */
+      overflow-y: auto;
+    } 
+
+    .table-row {
+    transition: background-color 0.s; /* Tạo hiệu ứng mượt khi thay đổi màu nền */
+  }
+
+  .table-row:hover {
+    background-color: #c8d5ed; /* Màu nền khi di chuyển chuột qua hàng */
+  }
+
+  </style>
 </head>
 
 <body>
@@ -30,9 +60,7 @@
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">
-                    Library
-                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">Library</li>
                 </ol>
               </nav>
             </div>
@@ -41,69 +69,79 @@
       </div>
 
       <div class="container-fluid">
-        <table class="table table-bordered  table-striped "  id="data-table">
-          <tr style="text-align: center; font-weight: bolder; ">
-            <th style="text-align: center; font-weight: bolder; "> STT </th>
-            <th style="text-align: center; font-weight: bolder; ">Họ và tên NNT</th>
-            <th style="text-align: center; font-weight: bolder; ">Mã số thuế</th>
-            <th style="text-align: center; font-weight: bolder; ">Địa chỉ</th>
-            <th style="text-align: center; font-weight: bolder; ">Email</th>
-            <th style="text-align: center; font-weight: bolder; ">Năm kê khai</th>
-            <th style="text-align: center; font-weight: bolder; ">Tờ khai</th>
-            <th style="text-align: center; font-weight: bolder; ">Trạng thái tờ khai</th>
-            <th style="text-align: center; font-weight: bolder; ">Action</th>
-          </tr>
-          <% let totalIndex=0; %>
-          <% tokhai.forEach((tokhaithue, index)=> { %>
-            <tr style="text-align: center;">
-                <td> <%= index+1 %></td>
+        <select id="filterStatus">
+          <option value="all">Tất cả</option>
+          <option value="đã duyệt">Đã duyệt</option>
+          <option value="đang chờ duyệt">Đang chờ duyệt</option>
+          <option value="không được duyệt">Không được duyệt</option>
+        </select>
+        <table class="table table-bordered">
+          <thead class="sticky-header" style="text-align: center; font-weight: bolder; ">
+            <th style="font-weight: bolder;"> STT </th>
+            <th style="font-weight: bolder;"> Họ và tên NNT</th>
+            <th style="font-weight: bolder;"> Mã số thuế</th>
+            <th style="font-weight: bolder;"> Địa chỉ</th>
+            <th style="font-weight: bolder;"> Email</th>
+            <th style="font-weight: bolder;"> Năm kê khai</th>
+            <th style="font-weight: bolder;"> Tờ khai</th>
+            <th style="font-weight: bolder;" class="status-cell"> Trạng thái tờ khai</th>
+            <th style="font-weight: bolder;"> Action</th>
+          </thead>
+          <tbody>
+            <% let totalIndex = 0; %>
+            <% tokhai.forEach((tokhaithue, index) => { %>
+              <tr  class="table-row"  style="text-align: center;">
+                <td ><%= index + 1 %></td>
                 <td><%= tokhaithue.fullname %></td>
                 <td><%= tokhaithue.ca_nhan.masothue %></td>
                 <td><%= tokhaithue.address %></td>
                 <td><%= tokhaithue.email %></td>
                 <td><%= tokhaithue.tuthang %> - <%= tokhaithue.denthang %></td>
                 <td><%= tokhaithue.loai_to_khai.tenloai %></td>
-                <td><%= tokhaithue.trang_thai_xu_li.tentrangthai%></td>
+                <td class="status-cell"><%= tokhaithue.trang_thai_xu_li.tentrangthai %></td>
                 <td>
-                    <i class="fa-solid fa-eye"></i>
-                    <i class="fa-solid fa-pen"></i>
-                    <i class="fa-solid fa-envelope"></i>
+                  <a href="/check"><i class="fa-solid fa-eye" style="color: rgb(114, 114, 216);"></i></a>
+                  <a href="#" class="edit-user" data-toggle="modal" data-target="#editModal" data-id="<%= tokhaithue.id %>">
+                    <i class="fa fa-pencil"></i>
+                  </a>
                 </td>
-            </tr>
-            <% totalIndex++; %>
-              <% }) %>
-                <h5>Tổng cộng: <%= totalIndex %>
-                </h5>
-         
+              </tr>
+              
+              <% totalIndex++; %>
+            <% }) %>
+            <h5>Tổng cộng: <%= totalIndex %></h5>
+          </tbody>
         </table>
-
       </div>
+      <%- include('check_tokhai') %>
+    </div>
+  </div>
+</body>
+
+<script src="js/check_tokhai.js"></script>
+
+<script src="js/index.js"></script>
 <script>
-  // Lấy tham chiếu đến trường tìm kiếm và bảng
-  const searchInput = document.getElementById('search-input');
-  const dataTable = document.getElementById('data-table');
+  document.addEventListener('DOMContentLoaded', function() {
+    const filterStatus = document.getElementById('filterStatus');
+    const tableRows = document.querySelectorAll('table tbody tr'); // Chỉ chọn các dòng trong tbody
 
-  // Gán sự kiện input cho trường tìm kiếm
-  searchInput.addEventListener('input', function() {
-    const searchTerm = searchInput.value.toLowerCase();
-    const rows = dataTable.querySelectorAll('tbody tr');
-
-    rows.forEach(row => {
-      const columns = row.querySelectorAll('td');
-      let found = false;
-
-      columns.forEach(column => {
-        if (column.textContent.toLowerCase().includes(searchTerm)) {
-          found = true;
+    filterStatus.addEventListener('change', function() {
+      const selectedStatus = filterStatus.value;
+      tableRows.forEach(row => {
+        const statusCell = row.querySelector('.status-cell'); // Điều chỉnh lớp CSS tùy theo thiết kế của bạn
+        if (selectedStatus === 'all' || statusCell.textContent === selectedStatus) {
+          row.style.display = ''; // Hiển thị dòng tờ khai
+        } else {
+          row.style.display = 'none'; // Ẩn dòng tờ khai
         }
       });
-
-      if (found) {
-        row.style.display = '';
-      } else {
-        row.style.display = 'none';
-      }
     });
+
+    if (tableRows.length === 0) {
+      const noDataRow = document.getElementById('no-data-row');
+      noDataRow.style.display = 'table-row';
+    }
   });
 </script>
 
