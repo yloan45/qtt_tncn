@@ -15,7 +15,6 @@ searchInput.addEventListener('input', function() {
         found = true;
       }
     });
-
     if (found) {
       row.style.display = '';
     } else {
@@ -39,11 +38,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   tableRows.forEach(row => {
     row.addEventListener('mouseover', function() {
-      row.style.backgroundColor = '#c8d5ed'; /* Màu nền khi di chuột qua hàng */
+      row.style.backgroundColor = '#c8d5ed';
     });
 
     row.addEventListener('mouseout', function() {
-      row.style.backgroundColor = ''; /* Trả lại màu nền gốc khi di chuột ra khỏi hàng */
+      row.style.backgroundColor = '';
     });
   });
 });

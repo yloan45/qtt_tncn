@@ -36,11 +36,11 @@ const getTokhaithue = async (req, res) => {
     });
     console.log(adminId)
     if (!tokhai) {
-      return res.status(404).json({ message: 'Không tìm thấy tờ khai để cập nhật.' });
+      return res.status(404).json({ message: 'Tờ khai đã duyệt!' });
     }
     await tokhai.update({ trangThaiXuLiId: 2 });        // trạng thái "đã duyệt"
     const email = tokhai.email;
-    mailer.sendMail(email,"tờ khai đã được duyệt");
+    mailer.sendMail(email,"Tờ khai của bạn đã được duyệt");
     await Duyettokhai.create({
       username: username,
       adminId:  adminId,
@@ -48,9 +48,9 @@ const getTokhaithue = async (req, res) => {
       ngayDuyet: new Date(),
     });
 
-    return res.status(200).json({ message: 'Cập nhật trạng thái tờ khai thành công.' });
+    return res.status(200).json({ message: 'Duyệt tờ khai thành công!' });
   } catch (error) {
-    return res.status(500).json({ error: 'Lỗi xử lý yêu cầu' });
+    return res.status(500).json({ error: 'Error' });
   }
 }
 
@@ -59,28 +59,35 @@ const tokhaikhongduocduyet = async (req, res) => {
   try {
     const tokhaiId = req.params.id;
     const {username, adminId} = req.session.user;
+
     const tokhai = await Tokhaithue.findOne({
       where: {
         id: tokhaiId,
-        trangThaiXuLiId: 1,                             // trạng thái "đang chờ duyệt"
+        trangThaiXuLiId: 1,                                           // trạng thái "đang chờ duyệt"
       },
     });
-    console.log(adminId)
+
+
     if (!tokhai) {
-      return res.status(404).json({ message: 'Không tìm thấy tờ khai để cập nhật.' });
+      return res.status(404).json({ message: 'Tờ khai đã duyệt!' });
     }
-    await tokhai.update({ trangThaiXuLiId: 3 });        // trạng thái "không được duyệt"
-    const email = tokhai.email;
-    mailer.sendMail(email,"tờ khai không được duyệt");
+
+    await tokhai.update({ trangThaiXuLiId: 3 });                        // trạng thái "không được duyệt"
+
+    const {email, ct22, ct44, ct45, ct35, ct34} = tokhai;
+
+    mailer.sendMail(email,"Tờ khai không được duyệt");
+
+
     await Duyettokhai.create({
       username: username,
       adminId:  adminId,
       toKhaiThueId: tokhaiId
     });
 
-    return res.status(200).json({ message: 'Cập nhật trạng thái tờ khai thành công.' });
+    return res.status(200).json({ message: 'Duyệt tờ khai thành công!' });
   } catch (error) {
-    return res.status(500).json({ error: 'Lỗi xử lý yêu cầu' });
+    return res.status(500).json({ error: 'Error' });
   }
 }
 

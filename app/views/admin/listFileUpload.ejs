@@ -82,6 +82,9 @@
                         <td></td>
                         <td>
                             <a class="fa fa-download" href="/download?path=<%= user.filePath %>"></a>
+                            <!-- Trong tệp EJS -->
+                            <a href="/uploads/<%= user.filename %>" target="_blank">Xem tài liệu</a>
+
                         </td>
                     </tr>
                     <% totalIndex++; %>

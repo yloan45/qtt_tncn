@@ -12,6 +12,8 @@ const {getTokhaithue, duyettokhai, tokhaikhongduocduyet} = require("../controlle
 const Tokhaithue = db.tokhaithue;
 const Trangthaixuly = db.trangthaixuly;
 const Duyettokhai = db.duyettokhai;
+const path = require('path');
+
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -118,6 +120,13 @@ app.post('/noptokhai', uploadTokhai.single('filename'), (req, res) => {
     res.redirect('/list-file-upload');
   });
 });
+
+app.get('/uploads/:filename', (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, '../../public/uploads/', filename);
+  res.sendFile(filePath);
+});
+
 
 app.get("/duyet-to-khai", [authJwt.verifyToken, authJwt.isAdmin], getAllTokhai);
 

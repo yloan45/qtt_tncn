@@ -26,7 +26,7 @@ function updateResults() {
   const ct28 = values.ct29 + values.ct30 + values.ct31 + values.ct32 + values.ct33;
   const ct34 = ct22 - values.ct25 - ct28;
   const ct34_month = ct34/(values.numMonths);
-
+  
     if(ct34_month <= 5000000){
     values.ct35 =(0.05*ct34_month)*values.numMonths;
   } else if ((ct34_month > 5000000) && (ct34_month <= 10000000)){
@@ -74,7 +74,6 @@ function updateResults() {
   } else {
     values.ct49 = 0
   }
-
   // Hiển thị kết quả
   document.getElementById("ct22").value = ct22.toLocaleString("en-US");
   document.getElementById("ct28").value = ct28.toLocaleString("en-US");
