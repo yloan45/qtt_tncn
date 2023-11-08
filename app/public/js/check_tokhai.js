@@ -17,7 +17,7 @@ document.querySelectorAll('.edit-user').forEach(function(editLink) {
         tokhaiIdInput.value = id; // Đặt giá trị của tokhaiId trong modal
 
         // Sử dụng Ajax hoặc Fetch API để lấy dữ liệu từ server theo userId
-        fetch(`/user/${id}`)
+        fetch(`/tokhaithue/${id}`)
             .then(response => response.json())
             .then(data => {
                 if (data) {
@@ -84,4 +84,4 @@ function duyetToKhai() {
       });
   }
 
-
+  

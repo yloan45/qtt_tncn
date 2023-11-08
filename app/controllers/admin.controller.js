@@ -12,7 +12,7 @@ const Tokhaithue = db.tokhaithue;
 const Tochuckekhaithue = db.tochuckekhaithue;
 const Trangthaitokhai = db.trangthaixuly;
 const Duyettokhai = db.duyettokhai;
-const Admin = db.admin;
+
 const getTokhaithue = async (req, res) => {
     const id = req.params.id;
     const tokhaithue = await Tokhaithue.findByPk(id);
@@ -24,7 +24,53 @@ const getTokhaithue = async (req, res) => {
     }
 };
 
- const duyettokhai = async (req, res) => {
+const checkTokhai = async (req, res) => {
+  const id = req.params.id;
+  const { masothue, ct37 } = req.body;
+
+  const tokhai = await Tokhaithue.findOne({
+    where: {
+      id: id,
+      masothue: masothue
+    }
+  });
+  const ct37_temp = ct37;         // update lại read từ tờ khai thuể về
+  const ct37WithoutCommas = ct37_temp.replace(/,/g, ''); 
+  
+  const ct37_number = parseFloat(ct37WithoutCommas);
+  console.log("Mã số thuế là", masothue);
+  console.log("Số thuế đã được khấu trừ là",ct37_number);
+
+  const tochuckekhaithue = await Tochuckekhaithue.findAll({
+    where: {
+      masothue: masothue
+    }
+  });
+
+  if (tochuckekhaithue.length > 0) {
+    let tong_khautruthue = 0;
+    tochuckekhaithue.forEach((banGhi) => {
+      const khautruthue = parseFloat(banGhi.tong_khautruthue);
+      if (!isNaN(khautruthue)) {
+        tong_khautruthue += khautruthue;
+      }
+    });
+    console.log('Tổng khẩu trừ thuế:', tong_khautruthue);
+
+    if (ct37_number == tong_khautruthue) {
+      console.log('ct37 === tong_khautruthue:', ct37_number === tong_khautruthue);
+      res.send('Hợp lệ');
+    } else {
+      console.log('ct37 === tong_khautruthue:', ct37_number === tong_khautruthue);
+      res.send('Không hợp lệ');
+    }
+  } else {
+    res.send('Không tìm thấy mã số thuế phù hợp');
+  }
+}
+
+
+const duyettokhai = async (req, res) => {
   try {
     const tokhaiId = req.params.id;
     const {username, adminId} = req.session.user;
@@ -53,8 +99,6 @@ const getTokhaithue = async (req, res) => {
     return res.status(500).json({ error: 'Error' });
   }
 }
-
-
 const tokhaikhongduocduyet = async (req, res) => {
   try {
     const tokhaiId = req.params.id;
@@ -92,5 +136,5 @@ const tokhaikhongduocduyet = async (req, res) => {
 }
 
 module.exports = {
-  duyettokhai, getTokhaithue, tokhaikhongduocduyet
+  duyettokhai, getTokhaithue, tokhaikhongduocduyet, checkTokhai
 }

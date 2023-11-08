@@ -8,7 +8,7 @@ const db = require("../models");
 const { getAllToChuc, deleteToChuc } = require("../controllers/tochuc.controller");
 const { getAllTokhai } = require("../controllers/auth.controller");
 const File = db.noptokhai;
-const {getTokhaithue, duyettokhai, tokhaikhongduocduyet} = require("../controllers/admin.controller");
+const {getTokhaithue, duyettokhai, tokhaikhongduocduyet, checkTokhai} = require("../controllers/admin.controller");
 const Tokhaithue = db.tokhaithue;
 const Trangthaixuly = db.trangthaixuly;
 const Duyettokhai = db.duyettokhai;
@@ -39,9 +39,9 @@ module.exports = function (app) {
   app.post("/update/:id", [authJwt.verifyToken, authJwt.isAdmin],update);         // update cá nhân
   app.get("/delete/:id",[authJwt.verifyToken, authJwt.isAdmin], deleteToChuc);    // xóa 1 tổ chức/doanh nghiệp
   app.get("/getAll", excelController.getAllExcelFile);                            // read data từ form excel doanh nghiệp/tổ chức kê khai trả tiền lương/ tiền công cho cá nhân/tổ chức
+  app.get('/tokhaithue/:id', [authJwt.verifyToken, authJwt.isAdmin], getTokhaithue);
 
 
-  app.get('/user/:id', [authJwt.verifyToken, authJwt.isAdmin], getTokhaithue);
   // upload file excel
   app.get("/tochuc/upload-file", [authJwt.verifyTokenTochuc, authJwt.isTochuc], (req, res)=>{
     const user = req.session.user;
@@ -56,9 +56,9 @@ module.exports = function (app) {
     res.render('tochuc/index', {user: user});
   });
   
+  app.get('/tochuc/update/:id',[authJwt.verifyToken, authJwt.isTochuc], excelController.getTochucUser);             // get one
+  app.get('/tochuc/upload', [authJwt.verifyTokenTochuc, authJwt.isTochuc], excelController.getToChucUploadFile);    // get all
 
-  // dữ liệu file excel được upload
-  app.get('/tochuc/upload', [authJwt.verifyTokenTochuc, authJwt.isTochuc], excelController.getToChucUploadFile);
 
 
   // danh sách các file được cá nhân upload
@@ -154,4 +154,6 @@ app.post('/filter-tokhai', async (req, res) => {
 });
 
 
+  app.post('/check-status/:id', checkTokhai);
+  app.get('/demo-get-tokhai', getTokhaithue);
 }

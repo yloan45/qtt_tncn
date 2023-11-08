@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
   const Tochuckekhaithue = sequelize.define("upload_excel", {
-    tennv: {
+    hoten: {
       type: Sequelize.STRING,
       allowNull: false,
       validate: {
@@ -9,47 +9,58 @@ module.exports = (sequelize, Sequelize) => {
         }
       }
     },
+    cccd: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
     masothue: {
       type: Sequelize.STRING
     },
-    namsinh: {
-      type: Sequelize.STRING
+    email: {
+      type: Sequelize.STRING,
+      allowNull: false
     },
-    vitri: {
-      type: Sequelize.STRING
+    dienthoai: {
+      type: Sequelize.STRING,
+      allowNull: false
     },
     diachi: {
       type: Sequelize.STRING
     },
-    dienthoai: {
+    vitricongviec: {
       type: Sequelize.STRING
     },
-    email: {
-      type: Sequelize.STRING
-    },
-    luong: {
+    hopdonglaodong: {
       type: Sequelize.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: "Luong khong duoc de trong"
-        }
-      }
+      allowNull: false
     },
-    donvitraluong: {
+    tuthang: {
       type: Sequelize.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: "Don vi tra luong khong duoc de trong"
-        }
-      }
+      allowNull: false
     },
-    ngaycapnhat: {
-      type: Sequelize.DATEONLY
+    denthang: {
+      type: Sequelize.STRING,
+      allowNull: false
     },
-    bienche: {
-      type: Sequelize.BOOLEAN
+    khautruthue: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    muckhautru: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    mucluong: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    dakhautru: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    tonghtunhap: {
+      type: Sequelize.STRING,
+      allowNull: false
     },
     ghichu: {
       type: Sequelize.STRING

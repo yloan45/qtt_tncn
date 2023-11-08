@@ -27,6 +27,26 @@ module.exports = (sequelize, Sequelize) => {
     diachi: {
       type: Sequelize.STRING
     },
+    phuthuoc: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    hopdonglaodong: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    thoigianlamviec: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    tuthang: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    denthang: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
     vitricongviec: {
       type: Sequelize.STRING
     },
@@ -42,23 +62,39 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false
     },
-    khautruthue: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
-    muckhautru: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
     mucluong: {
       type: Sequelize.STRING,
       allowNull: false
     },
-    dakhautru: {
+    khautruthue: {
       type: Sequelize.STRING,
       allowNull: false
     },
-    tonghtunhap: {
+    dakhautruthue: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    bhxh: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    bhyt: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    bhtn: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    thunhaptinhthue: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    tong_khautruthue: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    tong_thunhapchiuthue: {
       type: Sequelize.STRING,
       allowNull: false
     },

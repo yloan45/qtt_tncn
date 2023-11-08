@@ -5,6 +5,7 @@ const Duyettokhai = db.duyettokhai;
 const Admin = db.admin;
 const Tokhaithue = db.tokhaithue;
 const readXlsxFile = require("read-excel-file/node");
+const Tochuc = db.tochuc;
 
 const upload = async (req, res) => {
   try {
@@ -24,21 +25,27 @@ const upload = async (req, res) => {
       rows.forEach((row) => {
         let excelfile = {
           hoten: row[1],
-          cccd: row[2],
-          masothue: row[3],
+          cccd: row[3],
+          masothue: row[2],
           email: row[4],
           dienthoai: row[5],
           diachi: row[6],
-          vitricongviec: row[7],
+          phuthuoc: row[7],
           hopdonglaodong: row[8],
-          tuthang: row[9],
-          denthang: row[10],
-          khautruthue: row[11],
-          muckhautru: row[12],
+          thoigianlamviec: row[9],
+          tuthang: row[10],
+          denthang: row[11],
+          vitricongviec: row[12],
+          khautruthue: row[14],
           mucluong: row[13],
-          dakhautru: row[14],
-          tongthunhap: row[15],
-          ghichu: row[16],
+          bhxh: row[15],
+          bhyt: row[16],
+          bhtn: row[17],
+          thunhaptinhthue: row[18],
+          dakhautruthue: row[19],
+          tong_khautruthue: row[20],
+          tong_thunhaptinhthue: row[21],
+          ghichu: row[22],
           toChucId: toChucId
         };
 
@@ -78,6 +85,17 @@ const getAllExcelFile = (req, res) => {
     });
 };
 
+const getTochucUser = async (req, res) => {
+  const id = req.params.id;
+  const excelupload = await Excelupload.findByPk(id);
+  if(excelupload){
+    const tochuc = await Tochuc.findByPk(excelupload.toChucId);
+    console.log(excelupload);
+    res.json({excelupload, tochuc});
+  } else {
+    res.json(null);
+  }
+};
 
 const getToChucUploadFile = async (req, res) => {
   const toChucId = req.session.user.toChucId;
@@ -92,17 +110,11 @@ const getToChucUploadFile = async (req, res) => {
     });
 };
 
-const paginate = (query, {page, pageSize}) => {
-  const offset = (page -1) * pageSize;
-  //const limit = (pageSize - offset) * pageSize;
-  const limit = pageSize;
-  return query.findAndCountAll({offset, limit});
-}
 
 
 module.exports = {
   upload,
   getAllExcelFile,
-  paginate,
-  getToChucUploadFile
+  getToChucUploadFile,
+  getTochucUser
 };
