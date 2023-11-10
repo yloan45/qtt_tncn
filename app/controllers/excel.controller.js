@@ -12,13 +12,10 @@ const upload = async (req, res) => {
     if (req.file == undefined) {
       return res.status(400).send("Please upload an excel file!");
     }
-
     let path =
       __basedir + "/uploads/excel/" + req.file.filename;
-
     readXlsxFile(path).then((rows) => {
       rows.shift();
-
       let excelupload = [];
       const toChucId = req.session.user.toChucId;
       console.log("tổ chức có id là: ", toChucId)
@@ -30,32 +27,17 @@ const upload = async (req, res) => {
           email: row[4],
           dienthoai: row[5],
           diachi: row[6],
-          phuthuoc: row[7],
-          hopdonglaodong: row[8],
-          thoigianlamviec: row[9],
-          tuthang: row[10],
-          denthang: row[11],
-          vitricongviec: row[12],
-          khautruthue: row[14],
-          mucluong: row[13],
-          bhxh: row[15],
-          bhyt: row[16],
-          bhtn: row[17],
-          thunhaptinhthue: row[18],
-          dakhautruthue: row[19],
-          tong_khautruthue: row[20],
-          tong_thunhaptinhthue: row[21],
-          ghichu: row[22],
+          thunhaptinhthue: row[8],
+          ghichu: row[9],
           toChucId: toChucId
         };
-
         excelupload.push(excelfile);
         console.log("tổ chức có id là: ", toChucId)
       });
 
       Excelupload.bulkCreate(excelupload)
         .then(() => {
-          res.redirect('/getAll');
+          res.redirect('/tochuc/upload');
         })
         .catch((error) => {
           res.status(500).send({
@@ -75,7 +57,7 @@ const upload = async (req, res) => {
 const getAllExcelFile = (req, res) => {
   Excelupload.findAll()
     .then((data) => {
-      res.render('admin/listdata.ejs', {data})
+      res.render('tochuc/listdata.ejs', {data})
     })
     .catch((err) => {
       res.status(500).send({

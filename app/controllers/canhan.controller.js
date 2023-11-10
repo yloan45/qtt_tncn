@@ -112,5 +112,4 @@ exports.getUser = async (req, res) => {
   } else {
     res.status(404).json({ message: 'Người dùng không tồn tại' });
   }
-
 }

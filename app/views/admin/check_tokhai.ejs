@@ -9,6 +9,7 @@
                     </div>
                     <div class="modal-body">
                         <!-- Form for editing user details -->
+                        
                         <form id="editUserForm">
                             <input type="hidden" id="editUserId" name="id">
                             <div class="row">
@@ -22,7 +23,7 @@
                                     <div class="col">
                                         <div class="form-group">
                                             <label for="masothue">Mã số thuế</label>
-                                            <input type="text" class="form-control" id="masothue" name="maaothue">
+                                            <input type="text" class="form-control" id="masothue" name="masothue">
                                         </div>
                                     </div>
                                 </div>
@@ -46,7 +47,7 @@
                                     <div class="col">
                                         <div class="form-group">
                                             <label for="thunhapchiuthue">Tổng thu nhập chịu thuế</label>
-                                            <input type="text" class="form-control" id="thunhapchiuthue" name="thunhapchiuthue">
+                                            <input type="text" class="form-control" id="thunhapchiuthue" name="ct22">
                                         </div>
                                     </div>
                                     <div class="col">
@@ -72,11 +73,12 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             <input style="display: none;"  id="tokhaiId" name="tokhaiId">
+                            <div class="" id="alertMessage"></div><br>
 
-                          
                         <div class="d-flex justify-content-between align-items-center">
-                                    <button type="button" class="btn btn-primary">Kiểm tra</button>
+                                    <button type="button" class="btn btn-primary" onclick="checkTokhai()">Kiểm tra</button>
                                     <div>
                                         <button type="button" class="btn btn-success" style="color: white;" onclick="duyetToKhai()"><i class="fas fa-check"></i> duyệt</button>
                                         <button type="button" class="btn btn-danger"style="color: white;" onclick="tuchoiDuyet()"><i class="fa-solid fa-xmark"></i> không duyệt</button>
@@ -85,8 +87,13 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearAlertMessage()">Close</button>
+
                     </div>
                 </div>
             </div>
         </div>
+  
+    <style>
+        
+    </style>

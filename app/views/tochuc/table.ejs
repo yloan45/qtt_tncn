@@ -32,9 +32,7 @@
             <th>Địa chỉ</th>
             <th>Email</th>
             <th>Điện thoại</th>
-            <th>Hợp đồng lao động</th>
-            <th>Vị trí công việc</th>
-            <th>Tổng chi (VNĐ/Năm)</th>
+            <th>Thu nhập tính thuế</th>
             <th>Action</th>
           </thead>
           <tbody>
@@ -48,9 +46,7 @@
                 <td><%= data.diachi %></td>
                 <td><%= data.email %></td>
                 <td><%= data.dienthoai %></td>
-                <td><%= data.hopdonglaodong %></td>
-                <td><%= data.vitricongviec %></td>
-                <td><%= data.tongthunhap %></td>
+                <td><%= data.thunhaptinhthue %></td>
                 <td>
                     <a href="#" class="edit-user" data-toggle="modal" data-target="#editModal" data-id="<%= data.id %>">
                       <i class="fas fa-edit"></i>
@@ -118,24 +114,10 @@ document.querySelectorAll('.edit-user').forEach(function(editLink) {
         const hoten = modal.querySelector('#hoten');
         const masothue = modal.querySelector('#masothue');
         const diachi = modal.querySelector('#diachi');
-        const phuthuoc = modal.querySelector('#phuthuoc');
         const cccd = modal.querySelector('#cccd');
         const email = modal.querySelector('#email');
         const dienthoai = modal.querySelector('#dienthoai');
-        const hopdonglaodong = modal.querySelector('#hopdonglaodong');
-        const thoigianlamviec = modal.querySelector('#thoigianlamviec');
-        const bhxh = modal.querySelector('#bhxh');
-        const bhyt = modal.querySelector('#bhyt');
-        const bhtn = modal.querySelector('#bhtn');
-        const mucluong = modal.querySelector('#mucluong');
-        const vitricongviec = modal.querySelector('#vitricongviec');
-        const tuthang = modal.querySelector('#tuthang');
-        const denthang = modal.querySelector('#denthang');
-        const khautruthue = modal.querySelector('#khautruthue');
-        const dakhautruthue = modal.querySelector('#dakhautruthue');
         const thunhaptinhthue = modal.querySelector('#thunhaptinhthue');
-        const tong_thunhapchiuthue = modal.querySelector('#tong_thunhapchiuthue');
-        const tong_khautruthue = modal.querySelector('#tong_khautruthue');
         const ghichu = modal.querySelector('#ghichu');
         const nldIdInput = modal.querySelector('#nldId');
         nldIdInput.value = id;
@@ -147,31 +129,14 @@ document.querySelectorAll('.edit-user').forEach(function(editLink) {
                 if (data) {
                     modalTitle.textContent = `Duyệt khai quyêt toán thuế thu nhập cá nhân mẫu 02/QTT-TNCN - Tờ khai số:${data.excelupload.id}`;
                     editUserId.value = data.excelupload.id;
-                    hopdonglaodong.value = data.excelupload.hopdonglaodong;
-                    thoigianlamviec.value = data.excelupload.thoigianlamviec + ` tháng`;
-                    phuthuoc.value = data.excelupload.phuthuoc;
-                    tuthang.value = data.excelupload.tuthang;
-                    denthang.value = data.excelupload.denthang;
-                    khautruthue.value = data.excelupload.khautruthue;
                     thunhaptinhthue.value = data.excelupload.thunhaptinhthue;
-                    vitricongviec.value = data.excelupload.vitricongviec;
-                    dakhautruthue.value = data.excelupload.dakhautruthue + ' VNĐ';
-                    tong_khautruthue.value = data.excelupload.tong_khautruthue + ' VNĐ';
-                    tong_thunhapchiuthue.value = data.excelupload.tong_thunhapchiuthue + ` VNĐ`;
                     ghichu.value = data.excelupload.ghichu;
-                    mucluong.value = data.excelupload.mucluong;
-                    bhtn.value = data.excelupload.bhtn;
-                    bhyt.value = data.excelupload.bhyt;
-                    bhxh.value = data.excelupload.bhxh;
                     hoten.value = data.excelupload.hoten;
                     masothue.value = data.excelupload.masothue;
                     cccd.value = data.excelupload.cccd;
                     email.value = data.excelupload.email;
                     dienthoai.value = data.excelupload.dienthoai;
                     diachi.value = data.excelupload.diachi;
-                    phuthuoc.value = data.excelupload.phuthuoc;
-                    
-
                 }
             });
     });

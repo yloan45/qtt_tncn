@@ -8,7 +8,7 @@ const db = require("../models");
 const { getAllToChuc, deleteToChuc } = require("../controllers/tochuc.controller");
 const { getAllTokhai } = require("../controllers/auth.controller");
 const File = db.noptokhai;
-const {getTokhaithue, duyettokhai, tokhaikhongduocduyet, checkTokhai} = require("../controllers/admin.controller");
+const {getTokhaithue, duyettokhai, tokhaikhongduocduyet, checkTokhai, getListAllTongThuNhap} = require("../controllers/admin.controller");
 const Tokhaithue = db.tokhaithue;
 const Trangthaixuly = db.trangthaixuly;
 const Duyettokhai = db.duyettokhai;
@@ -155,5 +155,11 @@ app.post('/filter-tokhai', async (req, res) => {
 
 
   app.post('/check-status/:id', checkTokhai);
-  app.get('/demo-get-tokhai', getTokhaithue);
+  app.get('/demo-get-list', (req, res) => {
+    res.render('nguoidung/get-list');
+  });
+
+  app.get('/tokhai-step2', (req, res) => {
+    res.render('nguoidung/upload_phuluc');
+  });
 }

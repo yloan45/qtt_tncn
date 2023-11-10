@@ -84,4 +84,131 @@ function duyetToKhai() {
       });
   }
 
+/*
+  function checkTokhai() {
+    const modal = document.getElementById("editModal");
+    const tokhaiIdInput = modal.querySelector('#tokhaiId');
+    const tokhaiId = tokhaiIdInput.value;
   
+    fetch('/check-status/' + tokhaiId, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data) {
+        alert(data.message);
+        location.reload();
+      })
+      .catch(function(error) {
+        console.error('Lỗi:', error);
+      });
+  }
+
+function checkTokhai() {
+  const modal = document.getElementById("editModal");
+  const tokhaiIdInput = modal.querySelector('#tokhaiId');
+  const tokhaiId = tokhaiIdInput.value;
+
+  document.getElementById("alertMessage").innerHTML = '';
+  fetch('/check-status/' + tokhaiId, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      }
+  })
+      .then(function (response) {
+          return response.json();
+      })
+      .then(function (data) {
+          // Hiển thị thông báo trong tờ khai
+          const tokhaiMessage = document.getElementById("tokhaiMessage");
+          tokhaiMessage.textContent = data.message;
+          tokhaiMessage.style.display = 'block';
+
+          if (data.isSuccess) {
+              // Thành công, thực hiện các bước tiếp theo nếu cần
+          } else {
+              // Có lỗi, xử lý hoặc hiển thị thông báo lỗi tùy ý
+          }
+      })
+      .catch(function (error) {
+          console.error('Lỗi:', error);
+      });
+}
+
+function checkTokhai() {
+  const modal = document.getElementById("editModal");
+  const tokhaiIdInput = modal.querySelector('#tokhaiId');
+  const tokhaiId = tokhaiIdInput.value;
+
+  // Xóa thông báo trước đó nếu có
+  document.getElementById("alertMessage").innerHTML = '';
+
+  fetch('/check-status/' + tokhaiId, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(data) {
+      // Kiểm tra xem API có trả về thông báo và ID không
+      if (data.message && data.divId) {
+        // Hiển thị thông báo trong div mới
+        document.getElementById(data.divId).innerHTML = data.message;
+      } else {
+        // Nếu không có ID, sử dụng div mặc định
+        document.getElementById("alertMessage").innerHTML = data.message;
+      }
+    })
+    .catch(function(error) {
+      console.error('Lỗi:', error);
+    });
+}
+*/
+
+
+function checkTokhai() {
+  const modal = document.getElementById("editModal");
+  const tokhaiIdInput = modal.querySelector('#tokhaiId');
+  const tokhaiId = tokhaiIdInput.value;
+
+  // Xóa thông báo trước đó
+  document.getElementById("alertMessage").innerHTML = '';
+
+  fetch('/check-status/' + tokhaiId, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(data) {
+      if (data.message) {
+        const alertDiv = document.getElementById("alertMessage");
+        alertDiv.innerHTML = data.message;
+        if (data.isSuccess  == true) {
+          alertDiv.style.color = '#29c115';
+        } else {
+          alertDiv.style.color = 'red';
+        }
+        
+      }
+    })
+    .catch(function(error) {
+      console.error('Lỗi:', error);
+    });
+}
+
+
+function clearAlertMessage() {
+  document.getElementById("alertMessage").innerHTML = '';
+}
