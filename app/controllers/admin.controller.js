@@ -14,14 +14,14 @@ const Trangthaitokhai = db.trangthaixuly;
 const Duyettokhai = db.duyettokhai;
 
 const getTokhaithue = async (req, res) => {
-    const id = req.params.id;
-    const tokhaithue = await Tokhaithue.findByPk(id);
-    if(tokhaithue){
-      const canhan = await Canhan.findByPk(tokhaithue.caNhanId);
-      res.json({tokhaithue, canhan});
-    } else {
-      res.json(null);
-    }
+  const id = req.params.id;
+  const tokhaithue = await Tokhaithue.findByPk(id);
+  if (tokhaithue) {
+    const canhan = await Canhan.findByPk(tokhaithue.caNhanId);
+    res.json({ tokhaithue, canhan });
+  } else {
+    res.json(null);
+  }
 };
 /*
 const getListAllTongThuNhap = async (req, res) => {
@@ -59,54 +59,6 @@ const getListAllTongThuNhap = async (req, res) => {
   }
 }*/
 
-
-/*
-const checkTokhai = async (req, res) => {
-  const id = req.params.id;
-  const { masothue, ct37 } = req.body;
-  const tokhai = await Tokhaithue.findOne({
-    where: {
-      id: id,
-      masothue: masothue
-    }
-  });
-  const ct37_temp = ct37;         // update lại read từ tờ khai thuể về
-  const ct37WithoutCommas = ct37_temp.replace(/,/g, ''); 
-  
-  const ct37_number = parseFloat(ct37WithoutCommas);
-  console.log("Mã số thuế là", masothue);
-  console.log("Số thuế đã được khấu trừ là",ct37_number);
-
-  const tochuckekhaithue = await Tochuckekhaithue.findAll({
-    where: {
-      masothue: masothue
-    }
-  });
-
-  if (tochuckekhaithue.length > 0) {
-    let tong_khautruthue = 0;
-    tochuckekhaithue.forEach((banGhi) => {
-      const khautruthue = parseFloat(banGhi.tong_khautruthue);
-      if (!isNaN(khautruthue)) {
-        tong_khautruthue += khautruthue;
-      }
-    });
-    console.log('Tổng khẩu trừ thuế:', tong_khautruthue);
-
-    if (ct37_number == tong_khautruthue) {
-      console.log('ct37 === tong_khautruthue:', ct37_number === tong_khautruthue);
-      res.send('Hợp lệ');
-    } else {
-      console.log('ct37 === tong_khautruthue:', ct37_number === tong_khautruthue);
-      res.send('Không hợp lệ');
-    }
-  } else {
-    res.send('Không tìm thấy mã số thuế phù hợp');
-  }
-}
-*/
-
-
 const getListAllTongThuNhap = async (req, res) => {
   const id = req.params.id;
   const { username, password, ct37 } = req.body;
@@ -131,8 +83,8 @@ const getListAllTongThuNhap = async (req, res) => {
   const masothue = user.Canhan.masothue;
 
   const ct37_temp = ct37;         // update lại read từ tờ khai thuể về
-  const ct37WithoutCommas = ct37_temp.replace(/,/g, ''); 
-  
+  const ct37WithoutCommas = ct37_temp.replace(/,/g, '');
+
   const ct37_number = parseFloat(ct37WithoutCommas);
   console.log("Mã số thuế là", masothue);
   console.log("Số thuế đã được khấu trừ là", ct37_number);
@@ -168,57 +120,10 @@ const getListAllTongThuNhap = async (req, res) => {
     res.send('Không tìm thấy mã số thuế phù hợp');
   }
 }
-/*
+
+let checkTokhaiResult = {};
 const checkTokhai = async (req, res) => {
   const id = req.params.id;
-  const { masothue, ct22 } = req.body;
-  const tokhai = await Tokhaithue.findOne({
-    where: {
-      id: id,
-      masothue: masothue
-    }
-  });
-  const ct22_temp = ct22;         // update lại read từ tờ khai thuể về
-  const ct22WithoutCommas = ct22_temp.replace(/,/g, ''); 
-  
-  const ct22_number = parseFloat(ct22WithoutCommas);
-  console.log("Mã số thuế là", masothue);
-  console.log("Số thuế đã được khấu trừ là", ct22_number);
-  const tochuckekhaithue = await Tochuckekhaithue.findAll({
-    where: {
-      masothue: masothue
-    }
-  });
-  console.log("danh sách các tổ chức: ", tochuckekhaithue);
-
-  if (tochuckekhaithue.length > 0) {
-    let tongthu = 0;
-
-    // Tính tổng khấu trừ thuế
-    tochuckekhaithue.forEach((banGhi) => {
-      const khautruthue = parseFloat(banGhi.thunhaptinhthue);
-      if (!isNaN(khautruthue)) {
-        tongthu += khautruthue;
-      }
-    });
-
-    console.log('Tổng khẩu trừ thuế:', tongthu);
-
-    if (ct22_number === tongthu) {
-      console.log('ct22 === tongthu:', ct22_number === tongthu);
-      res.send('Hợp lệ');
-    } else {
-      console.log('ct22 === tongthu:', ct22_number === tongthu);
-      res.send('Không hợp lệ');
-    }
-  } else {
-    res.send('Không tìm thấy mã số thuế phù hợp');
-  }
-}
-*/
-const checkTokhai = async (req, res) => {
-  const id = req.params.id;
-
   // Lấy thông tin tokhai dựa trên id
   const tokhai = await Tokhaithue.findOne({
     where: {
@@ -247,6 +152,8 @@ const checkTokhai = async (req, res) => {
 
   console.log("Danh sách các tổ chức: ", tochuckekhaithue);
 
+  let result = { message: '', isSuccess: false };
+
   if (tochuckekhaithue.length > 0) {
     let tongthu = 0;
 
@@ -262,113 +169,93 @@ const checkTokhai = async (req, res) => {
 
     if (ct22_number === tongthu) {
       console.log('ct22 === tongthu:', ct22_number === tongthu);
-      res.json({ message: 'Hợp lệ', isSuccess: true });
+      result = { message: 'Hợp lệ', isSuccess: true, ct22: ct22_number };
     } else {
       console.log('ct22 === tongthu:', ct22_number === tongthu);
-      res.json({ message: 'Không hợp lệ', isSuccess: false });
+      result = { message: 'Không hợp lệ', isSuccess: false };
     }
   } else {
-    res.json({ message: 'Không tìm thấy mã số thuế phù hợp', isSuccess: false });
+    result = { message: 'Không tìm thấy mã số thuế phù hợp', isSuccess: false };
   }
+
+  checkTokhaiResult = result;
+  console.log(result);
+  res.json(result);
+
 }
+
 /*
 const duyettokhai = async (req, res) => {
   try {
     const tokhaiId = req.params.id;
-    const {username, adminId} = req.session.user;
+    const { username, adminId } = req.session.user;
+
     const tokhai = await Tokhaithue.findOne({
       where: {
         id: tokhaiId,
         trangThaiXuLiId: 1,                             // trạng thái "đang chờ duyệt"
       },
     });
-    console.log(adminId)
+    
     if (!tokhai) {
-      return res.status(404).json({ message: 'Tờ khai đã duyệt!' });
+      return res.status(404).json({ message: 'Tờ khai đã được duyệt' });
     }
     await tokhai.update({ trangThaiXuLiId: 2 });        // trạng thái "đã duyệt"
     const email = tokhai.email;
-    mailer.sendMail(email,"Tờ khai của bạn đã được duyệt",
-    `Xin chào người dùng<br>`);
-    await Duyettokhai.create({
-      username: username,
-      adminId:  adminId,
-      toKhaiThueId: tokhaiId,
-      ngayDuyet: new Date(),
-    });
-
-    return res.status(200).json({ message: 'Duyệt tờ khai thành công!' });
-  } catch (error) {
-    return res.status(500).json({ error: 'Error' });
-  }
-}*/
-
-
-const duyettokhai = async (req, res) => {
-  try {
-    const tokhaiId = req.params.id;
-    const { username, adminId } = req.session.user;
-
-    // Thực hiện kiểm tra tờ khai trước khi duyệt
-    const checkResult = await checkTokhai(tokhaiId);
-
-    if (!checkResult.isSuccess) {
-      return res.status(400).json({ error: checkResult.message });
-    }
-
-    const tokhai = await Tokhaithue.findOne({
-      where: {
-        id: tokhaiId,
-        trangThaiXuLiId: 1, // trạng thái "đang chờ duyệt"
-      },
-    });
-
-    if (!tokhai) {
-      return res.status(404).json({ message: 'Tờ khai đã duyệt!' });
-    }
-
-    await tokhai.update({ trangThaiXuLiId: 2 }); // trạng thái "đã duyệt"
-
-    const email = tokhai.email;
-    mailer.sendMail(email, "Tờ khai của bạn đã được duyệt", `Xin chào người dùng<br>`);
-
+    mailer.sendMail(email, "Tờ khai của bạn đã được duyệt",
+      `Xin chào người dùng<br>`);
     await Duyettokhai.create({
       username: username,
       adminId: adminId,
       toKhaiThueId: tokhaiId,
       ngayDuyet: new Date(),
     });
-
-    return res.status(200).json({ message: 'Duyệt tờ khai thành công!' });
+    return res.status(200).json({ message: `${username} bạn đã duyệt tờ khai thành công!` });
   } catch (error) {
-    console.error('Error:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Error' });
   }
 }
+*/
 
-const checkTokhaiInternal = async (tokhaiId) => {
-  // Thực hiện kiểm tra tờ khai
+const duyettokhai = async (req, res) => {
   try {
-    const response = await fetch(`/check-status/${tokhaiId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const tokhaiId = req.params.id;
+    const { username, adminId } = req.session.user;
+    if(checkTokhaiResult.isSuccess){
+          const tokhai = await Tokhaithue.findOne({
+      where: {
+        id: tokhaiId,
+        trangThaiXuLiId: 1,                             // trạng thái "đang chờ duyệt"
       },
     });
-
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error('Error during checkTokhaiInternal:', error);
-    return { message: 'Internal Server Error', isSuccess: false };
+    
+    if (!tokhai) {
+      return res.status(404).json({ message: 'Tờ khai đã được duyệt' });
+    }
+    await tokhai.update({ trangThaiXuLiId: 2 });        // trạng thái "đã duyệt"
+    const email = tokhai.email;
+    mailer.sendMail(email, "Tờ khai của bạn đã được duyệt",
+      `Xin chào người dùng<br>`);
+    await Duyettokhai.create({
+      username: username,
+      adminId: adminId,
+      toKhaiThueId: tokhaiId,
+      ngayDuyet: new Date(),
+    });
+    return res.status(200).json({ message: `${username} bạn đã duyệt tờ khai thành công!` });
+  } else {
+    return res.status(400).json({ message: `Tờ khai chưa được kiểm tra hoặc thông tin không chính xác!` });
+  }
+    }
+ catch (error) {
+    return res.status(500).json({ error: 'Error' });
   }
 }
-
 
 const tokhaikhongduocduyet = async (req, res) => {
   try {
     const tokhaiId = req.params.id;
-    const {username, adminId} = req.session.user;
+    const { username, adminId } = req.session.user;
 
     const tokhai = await Tokhaithue.findOne({
       where: {
@@ -384,14 +271,14 @@ const tokhaikhongduocduyet = async (req, res) => {
 
     await tokhai.update({ trangThaiXuLiId: 3 });                        // trạng thái "không được duyệt"
 
-    const {email, ct22, ct44, ct45, ct35, ct34} = tokhai;
+    const { email, ct22, ct44, ct45, ct35, ct34 } = tokhai;
 
-    mailer.sendMail(email,"Tờ khai không được duyệt");
+    mailer.sendMail(email, "Tờ khai không được duyệt");
 
 
     await Duyettokhai.create({
       username: username,
-      adminId:  adminId,
+      adminId: adminId,
       toKhaiThueId: tokhaiId
     });
 

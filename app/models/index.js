@@ -42,6 +42,19 @@ db.chicucthue = require("../models/chicucthue.model.js")(sequelize, Sequelize);
 db.phanhoi = require("../models/phanhoi.model.js")(sequelize, Sequelize);
 db.chitietphanhoi = require("../models/chitietphanhoi.model.js")(sequelize, Sequelize);
 
+
+db.file = require("../models/file.model.js")(sequelize,Sequelize);
+
+
+db.phuluc.hasMany(db.file, {
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+
+db.file.belongsTo(db.phuluc, {
+  onUpdate: "CASCADE",
+});
+
 // cá nhân - tờ khai - cá nhân có thể tạo nhiều tờ khai
 db.canhan.hasMany(db.tokhaithue, {
   onDelete: "CASCADE",

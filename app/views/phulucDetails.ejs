@@ -1,0 +1,38 @@
+<!-- phulucDetails.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Your head content here -->
+</head>
+
+<body>
+    <h1>Phuluc Details</h1>
+    <p>Tenphuluc: <%= phuluc.tenphuluc %></p>
+
+    <h2>Uploaded Files</h2>
+    <ul>
+        <% if (Array.isArray(filesArray) && filesArray.length > 0) { %>
+            <% filesArray.forEach(file => { %>
+                <li>
+                    <strong>File Name:</strong> <%= file.filename %><br>
+                    <strong>File Path:</strong> <%= file.filePath %><br>
+                    <strong>Field Name:</strong> <%= file.fieldName %><br>
+                    <!-- Add other file details as needed -->
+
+                    <!-- Add a link to view/download the file -->
+                    <a href="<%= file.filePath %>" target="_blank">View/Download File</a>
+                </li>
+            <% }); %>
+        <% } else { %>
+            <li>No files available</li>
+        <% } %>
+    </ul>
+
+    <!-- Add other content or links as needed -->
+
+    <a href="/">Go back to homepage</a>
+
+</body>
+
+</html>

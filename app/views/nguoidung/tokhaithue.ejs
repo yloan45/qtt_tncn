@@ -21,7 +21,7 @@
 
 
 <body>
-  <div class="container">
+  <div class="container" >
     <div class="khungtong">
       <header>
         <%- include('../partials/header') -%>
@@ -33,11 +33,15 @@
             Kê khai tờ khai quyết toán thuế trực tuyến
           </nav>
           <!-- Tệp EJS: views/formWizard.ejs -->
-          <form id="form-wizard" action="/tokhai" method="POST">
+          <form id="form-wizard" action="/tokhai" method="POST" enctype="multipart/form-data">
             <!--STEP 1-->
             <%- include('tokhaiStep1') -%>
             <!--STEP 2-->
             <%- include('tokhaiStep2') -%>
+            <%# STEP 3 %>
+            <%- include('upload_phuluc') %>
+            <!--STEP 4-->
+            <%- include('tokhai_step4') %>
           </form>
           <br><br>
 
@@ -51,7 +55,6 @@
 </body>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <%# form wizard with javascript %>
 <script>
   $(document).ready(function() {
@@ -59,12 +62,14 @@
     const steps = form.find('.step');
     const nextButtons = form.find('.next-button');
     const prevButtons = form.find('.prev-button');
+    const submitButton = form.find('.submit-button');
 
     nextButtons.click(function(e) {
       e.preventDefault();
       const currentStep = $(this).closest('.step');
       const nextStep = steps.filter(`[data-step="${currentStep.data('step') + 1}"]`);
       
+      // hiển thị dữ liệu đã nhập ở bước trước
       const fullnameInputValue = currentStep.find('input[name="fullname"]').val();
       nextStep.find('#displayFullname').text(fullnameInputValue);
 
@@ -84,6 +89,7 @@
       nextStep.show();
     });
 
+
     prevButtons.click(function(e) {
       e.preventDefault();
       const currentStep = $(this).closest('.step');
@@ -91,10 +97,21 @@
       currentStep.hide();
       prevStep.show();
     });
+    submitButton.click(function() {
+      form.submit();
+    });
+    
+    function togglePhuLucTable() {
+      var phuLucTable = document.getElementById("phuluc");
+      if (phuLucTable.style.display === "none") {
+        phuLucTable.style.display = "block";
+      } else {
+        phuLucTable.style.display = "none";
+      }
+    }
   });
 </script>
 
-<%# định dạng dấu , cho input : 2,000,000  %>
 <script>
   const numberInputs = document.querySelectorAll(".number-input");
   numberInputs.forEach(input => {
@@ -102,18 +119,12 @@
           let value = input.value.replace(/[^0-9]/g, '');
           const formattedValue = parseInt(value).toLocaleString("en-US");
           input.value = formattedValue;
-
-          // Thêm giá trị đã chuyển đổi vào biến numberValue
           const numberValue = parseInt(value);
-
-          // Gọi hàm createTokhai và chuyển giá trị đã chuyển đổi
           createTokhai(req, res, numberValue);
       });
   });
 </script>
 
-
-<%# định dạng năm ke khai cho tờ khai thuế %>
 <script>
         const yearInput = document.getElementById("yearInput");
         const fromMonth = document.getElementById("fromMonth");

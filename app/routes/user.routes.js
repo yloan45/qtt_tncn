@@ -3,7 +3,7 @@ const {  deleteUser, getAllUser, update, findOne, getUser} = require("../control
 const upload = require("../middleware/excelUpload");
 const excelController = require("../controllers/excel.controller");
 const tokhaithue = require("../controllers/tokhai.controller");
-const uploadTokhai = require("../controllers/upload.controller");
+const {uploadTokhai, uploadPhuluc} = require("../controllers/upload.controller");
 const db = require("../models");
 const { getAllToChuc, deleteToChuc } = require("../controllers/tochuc.controller");
 const { getAllTokhai } = require("../controllers/auth.controller");
@@ -13,7 +13,7 @@ const Tokhaithue = db.tokhaithue;
 const Trangthaixuly = db.trangthaixuly;
 const Duyettokhai = db.duyettokhai;
 const path = require('path');
-
+const Phuluc = db.phuluc;
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -105,9 +105,8 @@ app.get('/noptokhai', (req, res) => {
 
 app.post('/tokhai', tokhaithue.create);
 
-
 // Xử lý việc tải lên tệp
-app.post('/noptokhai', uploadTokhai.single('filename'), (req, res) => {
+app.post('/noptokhai', uploadPhuluc, (req, res) => {
   File.create({
     fullname: req.body.fullname,
     address: req.body.address,
@@ -127,6 +126,8 @@ app.get('/uploads/:filename', (req, res) => {
   res.sendFile(filePath);
 });
 
+
+app.get('/phuluc', tokhaithue.getPhulucDetails);
 
 app.get("/duyet-to-khai", [authJwt.verifyToken, authJwt.isAdmin], getAllTokhai);
 
@@ -162,4 +163,17 @@ app.post('/filter-tokhai', async (req, res) => {
   app.get('/tokhai-step2', (req, res) => {
     res.render('nguoidung/upload_phuluc');
   });
+
+  app.get('/success', ( req, res) => {
+    res.render('nguoidung/tokhai_success');
+  });
+
+  app.get('/list-phuluc/:id', async (req, res) => {
+    const id = req.params.id;
+    const phuluc = await Phuluc.findByPk(id);
+    const filesArray = phuluc.files || [];
+    console.log(phuluc);
+    console.log("danh sách các file là",filesArray);
+    res.render('phulucDetails', { phuluc, filesArray });
+  })
 }

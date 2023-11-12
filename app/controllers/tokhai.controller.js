@@ -6,6 +6,9 @@ const Op = db.Sequelize.Op;
 const Loaitokhai = db.loaitokhai;
 const Trangthaixuli = db.trangthaixuly;
 const Hoantrathue = db.hoantrathue;
+const Phuluc = db.phuluc;
+const File = db.file;
+const { uploadTokhai, uploadPhuluc} = require("../controllers/upload.controller");
 // create tờ khai quyết toán thuế thu nhập cá nhân
 
 const createTokhai = async (req, res) => {
@@ -19,6 +22,7 @@ const createTokhai = async (req, res) => {
         fullname: req.body.fullname,
         address: req.body.address,
         dienthoai: req.body.phone,
+        masothue: req.body.masothue,
         email: req.body.email,
         namkekhai: req.body.year,
         tokhai: req.body.tokhai,
@@ -65,15 +69,102 @@ const createTokhai = async (req, res) => {
       nganhang: req.body.nganhang,
       toKhaiThueId: tokhai.id
     };
+/*
+    uploadPhuluc(req, res, async (err) => {
+        if (err) {
+            // Xử lý lỗi tải lên file
+            console.error(err);
+            return res.status(500).send(err.message);
+        }
+        // Khi tải lên file hoàn tất, tiến hành tạo Phuluc
+        try {
+            const phulucData = {
+                tenphuluc: req.body.fieldName,
+                files: [] // Tạo một mảng để lưu thông tin về các file
+            };
+            req.files.forEach((file) => {
+                phulucData.files.push({
+                    filename: file.filename,
+                    filepath: file.path
+                });
+            });
+            const phuluc = await Phuluc.create(phulucData);
+
+        } catch (error) {
+            console.error(error);
+            res.status(500).send(error.message);
+        }
+    });
+    
+*/
+uploadPhuluc(req, res, async (err) => {
+    if (err) {
+        console.error(err);
+        return res.status(500).send(err.message);
+    }
+    // Khi tải lên file hoàn tất, tiến hành tạo Phuluc
+    try {
+        // Trong hàm createTokhai
+const phuluc = await Phuluc.create({
+    tenphuluc: req.body.fieldName[0], // Lấy tên phụ lục từ trường đầu tiên
+    toKhaiThueId: tokhai.id,
+});
+
+const filesData = req.files.map((file, index) => ({
+    filename: file.filename,
+    filePath: file.path,
+    fieldName: req.body.fieldName[index],
+    phuLucId: phuluc.id, // Liên kết với Phuluc vừa tạo
+}));
+
+await File.bulkCreate(filesData);
+
+
+        // Tiếp tục xử lý...
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error.message);
+    }
+});
 
     if(req.body.stk && req.body.nganhang){
      await Hoantrathue.create(hoantrathue);
     }
 
     console.log(tokhai);
-    res.send("tạo tờ khai thành công!");
+    res.redirect('/success')
 }
+
+const getFilesFromDatabase = async (phulucId) => {
+    try {
+        const phuluc = await Phuluc.findByPk(phulucId, { attributes: ['id', 'tenphuluc'], raw: true });
+
+        if (!phuluc) {
+            return null; // Handle the case where the specified phulucId is not found
+        }
+
+        const files = await Phuluc.findAll({ where: { phulucId: phuluc.id }, raw: true });
+
+        return {
+            phuluc: phuluc,
+            filesArray: files,
+        };
+    } catch (error) {
+        console.error('Error fetching files from the database:', error);
+        throw error;
+    }
+};
+
+// tokhai.controller.js
+const getPhulucDetails = (req, res) => {
+    // Fetch 'files' from your database based on the 'phulucId' or other criteria
+    const filesArray = getFilesFromDatabase(req.params.phulucId); // Implement this function
+    console.log(filesArray);
+    res.render('phulucDetails', { filesArray });
+};
 
 module.exports = {
     create: createTokhai,
+    getPhulucDetails,
+    getFilesFromDatabase
 }

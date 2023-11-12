@@ -49,7 +49,7 @@
           <span>[05] Mã số thuế: </span>
         </div>
         <div class="col">
-          <span style="margin-right: 10pc;"> <%= user.ca_nhan.masothue %></span>  
+          <input type="text" name="masothue" style="border: none; background-color: white;" value="<%= user.ca_nhan.masothue %>" readonly required  >
         </div>
         <div class="col"></div>
         <div class="col"></div>
@@ -487,15 +487,12 @@
             THUẾ</p>
           <p style="font-size: 18px; font-style: italic; text-align: center; margin-top: 5px; "> ( Ký, ghi rõ họ tên )</p>
         </div>
-
-
       </div>
 
-
-
-    <br><br><br><br><br>
-    <button class="prev-button btn btn-primary" style="margin-left: 35pc;" data-step="1">Quay lại</button>
-    <button type="submit" class=" btn btn-primary">Nộp tờ khai</button>
+      <br><br><br>
+      <button class="prev-button btn btn-primary" style="margin-left: 35pc;" data-step="1">Quay lại</button>
+      <button  class="next-button btn btn-primary" data-step="3">Tiếp tục</button>
+   
   </div>
   <style scoped>
     h3{
@@ -505,19 +502,7 @@
       font-size: 23px;
       font-family: Arial, Helvetica, sans-serif;
     }
-    .dailythue {
-      font-size: 14px !important;
-      margin-top: 25px !important;
-      margin-left: 25px !important;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-    .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-        }
-
+ 
         .column {
             flex: 1;
             padding: 20px;

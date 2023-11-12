@@ -12,4 +12,9 @@ const storage = multer.diskStorage({
 });
 
 const uploadTokhai = multer({ storage });
-module.exports = uploadTokhai;
+//const uploadPhuluc = multer({ storage }).single('filename');
+const uploadPhuluc = multer({ storage }).array('filename', 5); // Giả sử bạn cho phép tối đa 5 tệp tin
+
+module.exports = {
+    uploadTokhai, uploadPhuluc
+};
