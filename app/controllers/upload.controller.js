@@ -1,7 +1,6 @@
 const db = require("../models");
 const multer = require('multer');
 const path = require('path');
-const Noptokhai = db.noptokhai;
 
 // Cấu hình Multer để lưu tệp tải lên vào thư mục 'public/uploads'
 const storage = multer.diskStorage({
@@ -12,8 +11,7 @@ const storage = multer.diskStorage({
 });
 
 const uploadTokhai = multer({ storage });
-//const uploadPhuluc = multer({ storage }).single('filename');
-const uploadPhuluc = multer({ storage }).array('filename', 5); // Giả sử bạn cho phép tối đa 5 tệp tin
+const uploadPhuluc = multer({ storage }).array('filename', 25); // Cho phep upload toi da 25 tep tin
 
 module.exports = {
     uploadTokhai, uploadPhuluc

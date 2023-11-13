@@ -1,13 +1,7 @@
 const db = require("../models");
-const config = require("../config/auth.config");
 require('dotenv/config');
-const mailer = require('../utils/mailer');
-
 const User = db.user;
-const Role = db.role;
-const Op = db.Sequelize.Op;
 const Canhan = db.canhan;
-const Tochuc = db.tochuc;
 const Diachi = db.diachi;
 
 exports.deleteUser = (req, res) => {
@@ -29,7 +23,7 @@ exports.getAllUser = (req, res) => {
   Canhan.findAll({
     include: [
       {
-        model: Diachi, as: 'dia_chis' // Sử dụng alias đúng ở đây
+        model: Diachi, as: 'dia_chi' // Sử dụng alias đúng ở đây
       },
       {
         model: User, as: 'user'
@@ -37,7 +31,9 @@ exports.getAllUser = (req, res) => {
     ]
   }).then((users) => {
     console.log(users);
-    res.render("admin/listUser", { user: users });
+    res.render("admin/listUser", { 
+      user: users,
+     });
   })
   .catch((err) => console.log(err));
 }
@@ -103,12 +99,14 @@ exports.getUser = async (req, res) => {
       as: 'ca_nhan',
       include: {
         model: Diachi,
-        as: 'dia_chis'
+        as: 'dia_chi'
       }
     }
   });
   if (user) {
-      res.render('nguoidung/tokhaithue', {user: user});
+      res.render('nguoidung/tokhaithue', {
+        user: user
+      });
   } else {
     res.status(404).json({ message: 'Người dùng không tồn tại' });
   }

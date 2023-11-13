@@ -97,7 +97,7 @@ db.duyettokhai.belongsTo(db.tokhaithue, {
 });
 
 // cá nhân - địa chỉ
-db.canhan.hasMany(db.diachi, {
+db.canhan.hasOne(db.diachi, {
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });

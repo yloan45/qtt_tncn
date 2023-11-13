@@ -91,12 +91,10 @@
               <tr class="table-row" style="text-align: center;">
                 <td><%= index + 1 %></td>
                 <td><%= tokhaithue.fullname %></td>
-                <td><%= tokhaithue.ca_nhan.masothue %></td>
+                <td><%= tokhaithue.masothue %></td>
                 <td><%= tokhaithue.address %></td>
                 <td><%= tokhaithue.email %></td>
                 <td><%= tokhaithue.tuthang %> - <%= tokhaithue.denthang %></td>
-                <td><%= tokhaithue.loai_to_khai.tenloai %></td>
-                <td class="status-cell"><%= tokhaithue.trang_thai_xu_li.tentrangthai %></td>
                 <td>
                   <a href="/check"><i class="fa-solid fa-eye" style="color: rgb(114, 114, 216);"></i></a>
                   <a href="#" class="edit-user" data-toggle="modal" data-target="#editModal" data-id="<%= tokhaithue.id %>">

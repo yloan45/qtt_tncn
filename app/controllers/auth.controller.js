@@ -23,7 +23,7 @@ const bcrypt = require("bcryptjs");
 const { checkUserRole } = require("../middleware/authJwt");
 
 function generateRandomPassword() {
-  return crypto.randomBytes(6).toString('hex'); // Đây tạo một chuỗi 24 ký tự
+  return crypto.randomBytes(4).toString('hex');
 }
 /*
 exports.CaNhanSignup = async (req, res) => {
@@ -91,7 +91,6 @@ exports.CaNhanSignup = async (req, res) => {
 };
 */
 exports.CaNhanSignup = async (req, res) => {
-  // Save User to Database
   try {
     const randomPassword = generateRandomPassword();
     const canhan = await Canhan.create({
@@ -106,6 +105,8 @@ exports.CaNhanSignup = async (req, res) => {
 
     const diachi = await Diachi.create({
       tinh_tp: req.body.tinh_tp,
+      quan_huyen: req.body.quan_huyen,
+      xa_phuong: req.body.xa_phuong,
       caNhanId: canhan.id
     });
 

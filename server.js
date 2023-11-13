@@ -53,10 +53,9 @@ app.get("/captcha", function (req, res) {
   var captcha = svgCaptcha.create({
     noise: 0
   });
-  req.session.captcha = captcha.text; //Save the session for the verification interface to get the text code
+  req.session.captcha = captcha.text;
   res.type("svg");
   res.status(200).send(captcha.data);
-
 });
 
 require('./app/routes/auth.routes')(app);

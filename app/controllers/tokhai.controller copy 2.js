@@ -5,18 +5,18 @@ const Hoantrathue = db.hoantrathue;
 const Phuluc = db.phuluc;
 const File = db.file;
 
-const svgCaptcha = require('svg-captcha');
 const { uploadPhuluc } = require("../controllers/upload.controller");
 
 const createTokhai = async (req, res) => {
     const loaitokhai = await Loaitokhai.findOne({
         where: {
-          tenloai: 'Tờ khai chính thức'
+            tenloai: 'Tờ khai chính thức'
         }
-      });
-      const tokhaiData = {
+    });
+
+    const tokhai = await Tokhai.create({
         fullname: req.body.fullname,
-        address: (req.body.xa_phuong || '') + ', ' + (req.body.quan_huyen || '') + ', ' + (req.body.tinh_tp || ''),
+        address: req.body.address,
         dienthoai: req.body.phone,
         masothue: req.body.masothue,
         email: req.body.email,
@@ -58,57 +58,48 @@ const createTokhai = async (req, res) => {
         caNhanId: req.session.user.caNhanId,
         loaiToKhaiId: loaitokhai.id,
         trangThaiXuLiId: 1,
-      };
-    
-      req.session.tokhaiData = tokhaiData;
-      res.redirect('/tokhai/b2');
-}
+    });
 
-async function createTokhaiStep2(req, res, tokhaiData) {
-    try {
-      const tokhai = await Tokhai.create(tokhaiData);
-  
-      uploadPhuluc(req, res, async (err) => {
+    const hoantrathue = {
+        stk: req.body.stk,
+        nganhang: req.body.nganhang,
+        toKhaiThueId: tokhai.id
+    };
+
+    // gọi uploadPhuluc từ upload.controller
+    uploadPhuluc(req, res, async (err) => {
         if (err) {
-          console.error(err);
-          return res.status(500).send(err.message);
+            console.error(err);
+            return res.status(500).send(err.message);
         }
-  
-        const phulucData = {
-          tenphuluc: req.body.fieldName[0], // lấy tên trường đầu tiên của phụ lục
-          toKhaiThueId: tokhai.id,
-        };
-  
-        const phuluc = await Phuluc.create(phulucData);
-  
-        const filesData = req.files.map((file, index) => ({
-          filename: file.filename,
-          filePath: file.path,
-          fieldName: req.body.fieldName[index],
-          phuLucId: phuluc.id,
-        }));
-  
-        await File.bulkCreate(filesData);
-  
-        delete req.session.tokhaiData;
-        res.redirect('/success');
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send(error.message);
+        try {
+            const phuluc = await Phuluc.create({
+                tenphuluc: req.body.fieldName[0], // lấy tên trường đầu tiên của phụ lục
+                toKhaiThueId: tokhai.id,
+            });
+
+            const filesData = req.files.map((file, index) => ({
+                filename: file.filename,
+                filePath: file.path,
+                fieldName: req.body.fieldName[index],
+                phuLucId: phuluc.id,
+            }));
+
+            await File.bulkCreate(filesData);
+        } catch (error) {
+            console.error(error);
+            res.status(500).send(error.message);
+        }
+    });
+
+    if (req.body.stk && req.body.nganhang) {
+        await Hoantrathue.create(hoantrathue);
     }
-  }
- 
-function generateCaptcha() {
-  return svgCaptcha.create();
+
+    console.log(tokhai);
+    res.redirect('/success')
 }
 
-function validateCaptcha(userInput, expectedCaptcha) {
-    return userInput === expectedCaptcha;
-  }
-  
 module.exports = {
-    create: createTokhai,
-    createTokhaiStep2, validateCaptcha,generateCaptcha
-
+    create: createTokhai
 }

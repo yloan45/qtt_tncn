@@ -1,0 +1,32 @@
+<html lang="en">
+
+<head>
+  <%- include('head') %>
+</head>
+
+<body>
+  <div class="container">
+    <div class="khungtong">
+      <header>
+        <%- include('../partials/header') -%>
+      </header>
+      <div class="container-fluid mt-3" style="text-align: center;">
+          <form id="captchaImg" action="/tokhai/b3" method="post">
+            <!-- File nguoidung/tokhaiCaptcha.ejs -->
+            <img src="/captcha" alt="Captcha Image for B3">
+            <input type="text" name="captcha" placeholder="Enter captcha" required>
+            <a href="/tokhai/b3">
+              <img src="https://cdn-icons-png.flaticon.com/512/126/126502.png" alt="Reload" width="20" height="20">
+            </a>
+            <button type="submit">Submit</button> 
+          </form>
+
+          <br><br><br>
+      </div>
+    </div>
+    <footer>
+      <%- include('../partials/footer') %>
+    </footer>
+</body>
+
+</html>
