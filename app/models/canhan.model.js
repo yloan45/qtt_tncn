@@ -30,7 +30,7 @@ module.exports = (sequelize, Sequelize) => {
       }
     },
     phone: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING,
       allowNull: false,
       validate: {
         notEmpty: {

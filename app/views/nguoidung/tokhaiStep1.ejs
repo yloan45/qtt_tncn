@@ -20,7 +20,7 @@
                 <span class="thongtintokhai">Điện thoại liên lạc
                   <font style="color: red;">(*)</font>
                 </span>
-                <input style="width: 600px;" type="tel" name="phone" value="<%= user.ca_nhan.phone %>" required>
+                <input style="width: 600px;" type="tel" name="phone" value="<%= user.ca_nhan.phone %>" readonly>
               </div>
 
               <%# EMAIL - NAME="email" %>
@@ -28,14 +28,14 @@
                 <span class="thongtintokhai">Địa chỉ Email
                   <font style="color: red;">(*)</font>
                 </span>
-                <input style="width: 600px;" name="email" type="text" value="<%= user.ca_nhan.email %>"  id="">
+                <input style="width: 600px;" name="email" type="text" value="<%= user.ca_nhan.email %>"  id="" readonly>
               </div>
 
               <!--CHỌN TỜ KHAI-->
               <div class="input-group" style="margin-top: 15px;">
                 <span class="thongtintokhai">Chọn tờ khai</span>
-                <select class="" style="margin-right: 250px; width: 600px;" name="tokhai" id="">
-                  <option value="" name="">02/QTT-TNCN- Tờ khai quyết toán thuế thu nhập cá nhân(TT92/2015)</option>
+                <select  class="" style="margin-right: 250px; width: 600px;" name="tokhai" id="">
+                  <option value="Mẫu tờ khai 02/QTT-TNCN(TT92/2015)">02/QTT-TNCN- Tờ khai quyết toán thuế thu nhập cá nhân(TT92/2015)</option>
                 </select>
               </div>
 

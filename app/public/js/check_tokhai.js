@@ -24,7 +24,7 @@ document.querySelectorAll('.edit-user').forEach(function(editLink) {
                     modalTitle.textContent = `Duyệt khai quyêt toán thuế thu nhập cá nhân mẫu 02/QTT-TNCN - Tờ khai số:${data.tokhaithue.id}`;
                     editUserId.value = data.tokhaithue.id;
                     fullname.value = data.tokhaithue.fullname;
-                    email.value = data.tokhaithue.email;
+                    email.value = data.canhan.email;
                     masothue.value = data.canhan.masothue;
                     phuthuoc.value = data.canhan.phuthuoc;
                     thunhapchiuthue.value = data.tokhaithue.ct22;

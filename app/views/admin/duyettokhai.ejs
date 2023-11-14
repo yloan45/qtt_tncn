@@ -80,8 +80,10 @@
             <th style="font-weight: bolder;"> Mã số thuế </th>
             <th style="font-weight: bolder;"> Địa chỉ </th>
             <th style="font-weight: bolder;"> Email </th>
+            <th style="font-weight: bolder;"> Điện thoại </th>
             <th style="font-weight: bolder;"> Năm kê khai </th>
-            <th style="font-weight: bolder;"> Tờ khai </th>
+            <th style="font-weight: bolder;"> Loại tờ khai </th>
+            <th style="font-weight: bolder;"> Phụ lục </th>
             <th style="font-weight: bolder;" class="status-cell"> Trạng thái tờ khai </th>
             <th style="font-weight: bolder;"> Action </th>
           </thead>
@@ -91,11 +93,13 @@
               <tr class="table-row" style="text-align: center;">
                 <td><%= index + 1 %></td>
                 <td><%= tokhaithue.fullname %></td>
-                <td><%= tokhaithue.masothue %></td>
+                <td><%= tokhaithue.ca_nhan.masothue %></td>
                 <td><%= tokhaithue.address %></td>
-                <td><%= tokhaithue.email %></td>
-                <td><%= tokhaithue.tuthang %> - <%= tokhaithue.denthang %></td>
+                <td><%= tokhaithue.ca_nhan.email %></td>
+                <td><%= tokhaithue.ca_nhan.phone %></td>
+                <td><%= tokhaithue.namkekhai %></td>
                 <td><%= tokhaithue.loai_to_khai.tenloai %></td>
+                <td><a href="#">Xem chi tiết</a></td>
                 <td class="status-cell"><%= tokhaithue.trang_thai_xu_li.tentrangthai %></td>
                 <td>
                   <a href="/check"><i class="fa-solid fa-eye" style="color: rgb(114, 114, 216);"></i></a>

@@ -7,15 +7,16 @@ const db = require("../models");
 const { getAllToChuc, deleteToChuc } = require("../controllers/tochuc.controller");
 const { getAllTokhai } = require("../controllers/auth.controller");
 const File = db.file; // nhầm lẫn giữa file phụ lục và file nộp tờ khai
-const {getTokhaithue, duyettokhai, tokhaikhongduocduyet, checkTokhai, getListAllTongThuNhap} = require("../controllers/admin.controller");
+const {getTokhaithue, duyettokhai, tokhaikhongduocduyet, checkTokhai, getListAllTongThuNhap, getListThuNhap} = require("../controllers/admin.controller");
 const Tokhaithue = db.tokhaithue;
 const Trangthaixuly = db.trangthaixuly;
 const Duyettokhai = db.duyettokhai;
 const path = require('path');
-const { uploadPhuluc } = require("../controllers/upload.controller");
+const { uploadPhuluc, uploadTokhai } = require("../controllers/upload.controller");
 const Phuluc = db.phuluc;
 const Tokhai = db.tokhaithue;
 const Loaitokhai = db.loaitokhai;
+const Files = db.noptokhai;
 
 const {generateCaptcha} = require('../controllers/tokhai.controller') 
 const generateRandomCode = require('../utils/generateRandomCode');
@@ -68,7 +69,7 @@ module.exports = function (app) {
 
   // danh sách các file được cá nhân upload
   app.get('/list-file-upload', (req, res) => {
-    File.findAll().then(files => {
+    Files.findAll().then(files => {
       res.render('admin/listFileUpload', {files});
     });
   });
@@ -96,7 +97,7 @@ app.post("/upload", upload.single("file"), excelController.upload);
 
 // nộp tờ khai quyết toán thuế nhu nhập cá nhân
 app.get('/noptokhai', (req, res) => {
-    File.findAll().then(files => {
+    Files.findAll().then(files => {
       res.render('uploadfile', { files });
     });
   })
@@ -201,8 +202,8 @@ app.post('/tokhai/b3', async (req, res) => {
 
 
 // Xử lý việc tải lên tệp  => cập nhật lại sau, 
-app.post('/noptokhai', uploadPhuluc, (req, res) => {
-  File.create({
+app.post('/noptokhai', uploadTokhai.single('filename'), (req, res) => {
+  Files.create({
     fullname: req.body.fullname,
     address: req.body.address,
     phone: req.body.phone,
@@ -268,4 +269,6 @@ app.post('/filter-tokhai', async (req, res) => {
     res.render('phulucDetails', { phuluc, filesArray });
   });
 
+
+  app.get('/list-thu-nhap-tc',[authJwt.verifyTokenCanhan], getListThuNhap);
 }

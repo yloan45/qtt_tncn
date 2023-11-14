@@ -1,15 +1,10 @@
 module.exports = (sequelize, Sequelize) => {
     const Hoantrathue = sequelize.define("hoan_tra_thue", {
-        tentk: {
+        tonghoantra: {
             type: Sequelize.STRING
         },
-        stk: {
+        trangthai: {
             type: Sequelize.STRING,
-           
-        },
-        nganhang: {
-            type: Sequelize.STRING,
-            
         }
     });
     return Hoantrathue;

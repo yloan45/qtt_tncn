@@ -17,12 +17,14 @@ const createTokhai = async (req, res) => {
       const tokhaiData = {
         fullname: req.body.fullname,
         address: (req.body.xa_phuong || '') + ', ' + (req.body.quan_huyen || '') + ', ' + (req.body.tinh_tp || ''),
-        dienthoai: req.body.phone,
-        masothue: req.body.masothue,
-        email: req.body.email,
+       // dienthoai: req.body.phone,
+       // masothue: req.body.masothue,
+       // email: req.body.email,
         namkekhai: req.body.year,
         tokhai: req.body.tokhai,
-        loaitokhai: req.body.loaitokhai,
+        stk: req.body.stk,
+        nganhang: req.body.nganhang,
+       // loaitokhai: req.body.loaitokhai,
         cucthue: req.body.cucthue,
         chicucthue: req.body.chicucthue,
         tuthang: req.body.tungay,
@@ -59,7 +61,7 @@ const createTokhai = async (req, res) => {
         loaiToKhaiId: loaitokhai.id,
         trangThaiXuLiId: 1,
       };
-    
+     
       req.session.tokhaiData = tokhaiData;
       res.redirect('/tokhai/b2');
 }
@@ -67,13 +69,21 @@ const createTokhai = async (req, res) => {
 async function createTokhaiStep2(req, res, tokhaiData) {
     try {
       const tokhai = await Tokhai.create(tokhaiData);
-  
+        const ct46 = tokhai;
+
+        const hoantrathue = {
+          tonghoantra: tokhai.ct46,
+          trangthai: "đang xét duyệt",
+          toKhaiThueId: tokhai.id
+        }
+        const hoantra = Hoantrathue.create(hoantrathue);
+
+
       uploadPhuluc(req, res, async (err) => {
         if (err) {
           console.error(err);
           return res.status(500).send(err.message);
         }
-  
         const phulucData = {
           tenphuluc: req.body.fieldName[0], // lấy tên trường đầu tiên của phụ lục
           toKhaiThueId: tokhai.id,
@@ -107,6 +117,9 @@ function validateCaptcha(userInput, expectedCaptcha) {
     return userInput === expectedCaptcha;
   }
   
+
+
+
 module.exports = {
     create: createTokhai,
     createTokhaiStep2, validateCaptcha,generateCaptcha

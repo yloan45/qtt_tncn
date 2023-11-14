@@ -115,44 +115,57 @@
 
 <%# định dạng năm ke khai cho tờ khai thuế %>
 <script>
-        const yearInput = document.getElementById("yearInput");
-        const fromMonth = document.getElementById("fromMonth");
-        const toMonth = document.getElementById("toMonth");
-        const numMonths = document.getElementById("numMonths");
+  const yearInput = document.getElementById("yearInput");
+  const fromMonth = document.getElementById("fromMonth");
+  const toMonth = document.getElementById("toMonth");
+  const numMonths = document.getElementById("numMonths");
+  const yearError = document.getElementById("yearError");
 
-        yearInput.addEventListener("input", updateMonths);
-        fromMonth.addEventListener("input", updateNumMonths);
-        toMonth.addEventListener("input", updateNumMonths);
+  yearInput.addEventListener("input", updateMonths);
+  fromMonth.addEventListener("input", updateNumMonths);
+  toMonth.addEventListener("input", updateNumMonths);
 
-        function updateMonths() {
-            const year = parseInt(yearInput.value);
+  function updateMonths() {
+      const currentYear = new Date().getFullYear();
+      const year = parseInt(yearInput.value);
 
-            if (!isNaN(year)) {
-                fromMonth.value = "1/" + year;
-                toMonth.value = "12/" + year;
-                updateNumMonths();
-            } else {
-                fromMonth.value = "";
-                toMonth.value = "";
-                numMonths.value = "";
-            }
-        }
+      if (!isNaN(year) && year >= 1900 && year <= currentYear) {
+          fromMonth.value = "1/" + year;
+          toMonth.value = "12/" + year;
+          updateNumMonths();
+          clearError(yearError);
+      } else {
+          fromMonth.value = "";
+          toMonth.value = "";
+          numMonths.value = "";
+          displayError(yearError, "Vui lòng nhập một năm hợp lệ trong khoảng từ 1900 đến " + currentYear + ".");
+      }
+  }
 
-        function updateNumMonths() {
-            const fromDate = fromMonth.value.split("/");
-            const toDate = toMonth.value.split("/");
+  function updateNumMonths() {
+      const fromDate = fromMonth.value.split("/");
+      const toDate = toMonth.value.split("/");
 
-            const fromYear = parseInt(fromDate[1]);
-            const toYear = parseInt(toDate[1]);
+      const fromYear = parseInt(fromDate[1]);
+      const toYear = parseInt(toDate[1]);
 
-            if (!isNaN(fromYear) && !isNaN(toYear) && toYear >= fromYear) {
-                const num = (toYear - fromYear) * 12 + parseInt(toDate[0]) - parseInt(fromDate[0]) + 1;
-                numMonths.value = num;
-            } else {
-                numMonths.value = "";
-            }
-        }ment.getElementById("month12Input").value = thang12;
-  
+      if (!isNaN(fromYear) && !isNaN(toYear) && toYear >= fromYear) {
+          const num = (toYear - fromYear) * 12 + parseInt(toDate[0]) - parseInt(fromDate[0]) + 1;
+          numMonths.value = num;
+      } else {
+          numMonths.value = "";
+      }
+  }
+
+  function displayError(element, message) {
+      element.textContent = message;
+      element.style.display = "block";
+  }
+
+  function clearError(element) {
+      element.textContent = "";
+      element.style.display = "none";
+  }
 </script>
 
 <script src="js/tokhai.js"></script>
