@@ -2,7 +2,7 @@ module.exports = {
   HOST: "localhost",
   USER: "root",
   PASSWORD: "",
-  DB: "quyet_toan_thue_tncn",
+  DB: "qtt_tncn_reset",
   dialect: "mysql",
   pool: {
     max: 5,

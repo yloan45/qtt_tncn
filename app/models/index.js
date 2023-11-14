@@ -250,7 +250,7 @@ db.user.belongsTo(db.admin, {
 
 db.tokhaithue.belongsTo(db.loaitokhai, {
   onDelete: "CASCADE",
-  onUpdate: "CASCADE"
+  onUpdate: "CASCADE",
 });
 
 db.loaitokhai.hasMany(db.tokhaithue, {

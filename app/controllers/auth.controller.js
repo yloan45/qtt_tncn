@@ -246,7 +246,7 @@ exports.AdminSignup = async (req, res) => {
         Tài khoản đăng nhập hệ thống của bạn:<br>
         - username: ${user.username} <br>
         - password: ${randomPassword}`);
-        return res.render('admin/success-modal', { showSuccessModal: true });
+        return res.redirect('/admin-login');
       }
     }
   } catch (error) {
@@ -403,7 +403,7 @@ exports.signout = async (req, res) => {
   }
 };
 
-
+/*
 exports.getAllTokhai = async (req, res) => {
   Tokhaithue.findAll({
     include: [{
@@ -425,4 +425,16 @@ exports.getAllTokhai = async (req, res) => {
   })
   .catch((err) => console.log(err));
 }
-
+*/
+exports.getAllTokhai = async (req, res) => {
+  Tokhaithue.findAll({
+    include: [
+      { model: Loaitokhai, as: 'loai_to_khai'},
+      { model: Canhan, as: 'ca_nhan' },
+      { model: Trangthaixuly, as: 'trang_thai_xu_li'},
+    ]
+  }).then((tokhai) => {
+    console.log(tokhai);
+    res.render("admin/duyettokhai", { tokhai: tokhai });
+  }).catch((err) => console.log(err));
+}

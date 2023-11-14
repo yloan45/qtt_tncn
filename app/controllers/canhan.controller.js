@@ -3,6 +3,8 @@ require('dotenv/config');
 const User = db.user;
 const Canhan = db.canhan;
 const Diachi = db.diachi;
+const Tokhaithue = db.tokhaithue;
+const Loaitokhai = db.loaitokhai;
 
 exports.deleteUser = (req, res) => {
   Canhan.destroy({
@@ -33,6 +35,23 @@ exports.getAllUser = (req, res) => {
     console.log(users);
     res.render("admin/listUser", { 
       user: users,
+     });
+  })
+  .catch((err) => console.log(err));
+}
+
+
+exports.getAllTokhaithue = (req, res) => {
+  Tokhaithue.findAll({
+    include: [
+      {
+        model: Loaitokhai, as: 'loai_to_khai' // Sử dụng alias đúng ở đây
+      }
+    ]
+  }).then((tokhai) => {
+    console.log(tokhai);
+    res.render("admin/demo-list", { 
+      tokhai: tokhai,
      });
   })
   .catch((err) => console.log(err));

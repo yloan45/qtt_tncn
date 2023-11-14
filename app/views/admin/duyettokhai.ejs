@@ -95,6 +95,8 @@
                 <td><%= tokhaithue.address %></td>
                 <td><%= tokhaithue.email %></td>
                 <td><%= tokhaithue.tuthang %> - <%= tokhaithue.denthang %></td>
+                <td><%= tokhaithue.loai_to_khai.tenloai %></td>
+                <td class="status-cell"><%= tokhaithue.trang_thai_xu_li.tentrangthai %></td>
                 <td>
                   <a href="/check"><i class="fa-solid fa-eye" style="color: rgb(114, 114, 216);"></i></a>
                   <a href="#" class="edit-user" data-toggle="modal" data-target="#editModal" data-id="<%= tokhaithue.id %>">
@@ -130,34 +132,33 @@
 <script src="js/index.js"></script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const filterStatus = document.getElementById('filterStatus');
-    const tableRows = document.querySelectorAll('table tbody tr');
+document.addEventListener('DOMContentLoaded', function () {
+  const filterStatus = document.getElementById('filterStatus');
+  const tableRows = document.querySelectorAll('table tbody tr');
 
-    filterStatus.addEventListener('change', function() {
-      const selectedStatus = filterStatus.value;
-      let dataFound = false;
+  filterStatus.addEventListener('change', function () {
+    const selectedStatus = filterStatus.value;
+    let dataFound = false;
 
-      tableRows.forEach(row => {
-        const statusCell = row.querySelector('.status-cell');
-        if (selectedStatus === 'all' || statusCell.textContent === selectedStatus) {
-          row.style.display = '';
-          dataFound = true;
-        } else {
-          row.style.display = 'none';
-        }
-      });
-
-      if (!dataFound) {
-        const noDataRow = document.querySelector('.no-data-row');
-        noDataRow.style.display = 'table-row';
+    tableRows.forEach(row => {
+      const statusCell = row.querySelector('.status-cell');
+      if (selectedStatus === 'all' || statusCell.textContent === selectedStatus) {
+        row.style.display = '';
+        dataFound = true;
       } else {
-        const noDataRow = document.querySelector('.no-data-row');
-        noDataRow.style.display = 'none';
+        row.style.display = 'none';
       }
     });
+
+    if (!dataFound) {
+      const noDataRow = document.querySelector('.no-data-row');
+      noDataRow.style.display = 'table-row';
+    } else {
+      const noDataRow = document.querySelector('.no-data-row');
+      noDataRow.style.display = 'none';
+    }
   });
+});
+
 </script>
-
-
 </html>

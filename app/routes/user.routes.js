@@ -1,5 +1,5 @@
 const { authJwt } = require("../middleware");
-const {  deleteUser, getAllUser, update, findOne, getUser} = require("../controllers/canhan.controller");
+const {  deleteUser, getAllUser, update, findOne, getUser, getAllTokhaithue} = require("../controllers/canhan.controller");
 const upload = require("../middleware/excelUpload");
 const excelController = require("../controllers/excel.controller");
 const tokhaithue = require("../controllers/tokhai.controller");
@@ -86,14 +86,6 @@ module.exports = function (app) {
   app.get('/check', (req, res)=> {
     res.render("admin/check.ejs");
   });
-
-// test routes
-  app.get("/test", [authJwt.verifyToken, authJwt.isAdmin], (req, res)=>{
-    const user = req.session.user;
-    console.log(user);
-    res.send("demo !!!", "user", user);
-  })
-
 
 
   // duyệt tờ khai demo
@@ -239,9 +231,12 @@ app.get("/create-tochuc",[authJwt.verifyToken, authJwt.isAdmin],  (req, res) => 
     res.render("admin/auth/create.tochuc.ejs");
 });
 
+
+// duyệt tờ khai
 app.put('/capnhattrangthai/:id', [authJwt.verifyToken, authJwt.isAdmin], duyettokhai);
 app.put('/duyet-to-khai/:id', [authJwt.verifyToken, authJwt.isAdmin], tokhaikhongduocduyet);
 
+/*
 app.post('/filter-tokhai', async (req, res) => {
   const selectedStatusId = req.body.statusId;
   let whereClause = {};
@@ -249,11 +244,10 @@ app.post('/filter-tokhai', async (req, res) => {
   if (selectedStatusId !== 'all') {
     whereClause = { trangThaiXuLiId: selectedStatusId };
   }
-
   const tokhais = await Tokhaithue.findAll({ where: whereClause });
   res.render('admin/duyettokhai', { tokhais });
 });
-
+*/
 
   app.post('/check-status/:id', checkTokhai);
   app.get('/demo-get-list', (req, res) => {
@@ -272,5 +266,6 @@ app.post('/filter-tokhai', async (req, res) => {
     console.log(phuluc);
     console.log("danh sách các file là",filesArray);
     res.render('phulucDetails', { phuluc, filesArray });
-  })
+  });
+
 }
