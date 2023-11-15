@@ -13,7 +13,6 @@ const {uploadTokhai } = require("../controllers/upload.controller");
 const Phuluc = db.phuluc;
 const Files = db.noptokhai;
 const svgCaptcha = require("svg-captcha");
-const generateRandomCode = require('../utils/generateRandomCode');
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -105,45 +104,34 @@ app.get('/noptokhai', (req, res) => {
     });
   })
 
+// TẠO TỜ KHAI QUYẾT TOÁN THUẾ
 
-/*BƯỚC 1 TẠO TỜ KHAI QTT*/
 app.get('/tokhaithue',[authJwt.verifyTokenCanhan], getUser);          // step 1  
-app.post('/tokhai/b1', tokhaithue.create);                            // post step 1
+app.post('/tokhai/b1', tokhaithue.create);                      // post step 1
 
-/* BƯỚC 2 TẠO TỜ KHAI QTT */
-app.get("/tokhai/b2", (req, res)=>{
+app.get("/tokhai/b2",[authJwt.verifyTokenCanhan], (req, res)=>{
   res.render('nguoidung/upload_phuluc')                               // get step 2
 });
-app.post('/tokhai/b2', async (req, res) => {                          // post step 2
-  const tokhaiData = req.session.tokhaiData;
-  await tokhaithue.createTokhaiStep2(req, res, tokhaiData);
+app.post('/tokhai/b2', [authJwt.verifyTokenCanhan], async (req, res) => {                          // post step 2
+  await tokhaithue.createTokhaiStep2(req, res);
 });
 
-app.get('/success', ( req, res) => {
+app.get('/tokhai/b3',  [authJwt.verifyTokenCanhan], (req, res) => {
+  res.render('nguoidung/tokhaiB3');
+});
+app.post('/tokhai/b3' , [authJwt.verifyTokenCanhan], async (req, res) => {
+  const userCaptcha = req.body.captcha;
+  if (userCaptcha !== req.session.captcha) {
+     return res.render('nguoidung/tokhaiB3', { captchaError: true, error: 'Mã kiểm tra không chính xác!' });
+  }
+  await tokhaithue.createTokhaiStep3(req, res);
+  res.redirect('/success');
+});
+app.get('/success', [authJwt.verifyTokenCanhan], ( req, res) => {
   const tokhaiData = req.session.tokhaiData;
   res.render('nguoidung/tokhai_success', {tokhaiData});
 });
 
-
-app.get('/captcha1', (req, res) => {
-  tokhaithue.currentCaptchaB3 = tokhaithue.generateCaptcha();
-  res.type('svg');
-  res.status(200).send(currentCaptchaB3.data);
-});
-
-app.get('/captcha-b3', (req, res) => {
-  res.render('nguoidung/tokhaiCaptcha');
-});
-
-app.post('/tokhai/b3', async (req, res) => {
-  const userEnteredCaptcha = req.body.captcha; 
-  console.log(tokhaithue.currentCaptchaB3.text);
-  if(userEnteredCaptcha === tokhaithue.currentCaptchaB3.text){
-  res.redirect('/success');
-  } else {
-    res.status(400).send('Xác thực captcha không thành công!');
-  }
-});
 
 // Xử lý việc tải lên tệp  => cập nhật lại sau, 
 app.post('/noptokhai', uploadTokhai.single('filename'), (req, res) => {

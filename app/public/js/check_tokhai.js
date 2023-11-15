@@ -28,7 +28,7 @@ document.querySelectorAll('.edit-user').forEach(function(editLink) {
                     masothue.value = data.canhan.masothue;
                     phuthuoc.value = data.canhan.phuthuoc;
                     thunhapchiuthue.value = data.tokhaithue.ct22;
-                    khautruthue.value = data.tokhaithue.ct37;
+                    khautruthue.value = data.tokhaithue.ct36;
                     thuenop.value = data.tokhaithue.ct44;
                     hoantrathue.value = data.tokhaithue.ct46;
                 

@@ -13,7 +13,7 @@ const Tochuckekhaithue = db.tochuckekhaithue;
 const Trangthaitokhai = db.trangthaixuly;
 const Duyettokhai = db.duyettokhai;
 const Tochuc = db.tochuc;
-
+const Phuluc = db.phuluc;
 
 const getTokhaithue = async (req, res) => {
   const id = req.params.id;
@@ -105,8 +105,8 @@ const getListThuNhap = async (req, res) => {
         }
       ]
     });
-    
-    if(tochuckekhaithue.length === 0){
+
+    if (tochuckekhaithue.length === 0) {
       return null;
     }
     console.log(tochuckekhaithue);
@@ -126,6 +126,9 @@ const checkTokhai = async (req, res) => {
       {
         model: Canhan,
         as: 'ca_nhan'
+      },
+      {
+        model: Phuluc, as: 'phu_lucs'
       }
     ]
   });
@@ -135,7 +138,16 @@ const checkTokhai = async (req, res) => {
     return;
   }
 
-  const { ct22 } = tokhai;
+  const { ct22, ct27, ct36 } = tokhai;
+
+  let hasAttachment = false;
+  if (ct27 > 0 || ct36 > 0) {
+    if (tokhai.phu_lucs && tokhai.phu_lucs.length > 0) {
+      hasAttachment = true;
+    }
+  }
+
+  console.log('Has Attachment:', hasAttachment);
   const { masothue } = tokhai.ca_nhan;
   const ct22_temp = ct22; // Lấy ct22 từ đối tượng tokhai
   const ct22WithoutCommas = ct22_temp.replace(/,/g, '');
@@ -152,7 +164,7 @@ const checkTokhai = async (req, res) => {
 
   console.log("Danh sách các tổ chức: ", tochuckekhaithue);
 
-  let result = { message: '', isSuccess: false };
+  let result = { message: '', isSuccess: false, hasAttachment: hasAttachment };
 
   if (tochuckekhaithue.length > 0) {
     let tongthu = 0;
@@ -167,13 +179,16 @@ const checkTokhai = async (req, res) => {
 
     console.log('Tổng khẩu trừ thuế:', tongthu);
 
-    if (ct22_number === tongthu) {
+    if (ct22_number === tongthu && hasAttachment === true) {
       console.log('ct22 === tongthu:', ct22_number === tongthu);
-      result = { message: 'Hợp lệ', isSuccess: true, ct22: ct22_number };
+      result = { message: 'Tờ khai hợp lệ', isSuccess: true, ct22: ct22_number, hasAttachment: hasAttachment };
+    } else if (ct22_number === tongthu && hasAttachment === false) {
+      console.log('ct22 === tongthu:', ct22_number === tongthu);
+      result = { message: 'Tờ khai thiếu phụ lục kèm theo', isSuccess: false };
     } else {
-      console.log('ct22 === tongthu:', ct22_number === tongthu);
-      result = { message: 'Không hợp lệ', isSuccess: false };
-    }
+      console.log('ct22 !== tongthu:', ct22_number === tongthu);
+      result = { message: 'Tổng thu nhập chịu thuế không đúng', isSuccess: false };
+    } 
   } else {
     result = { message: 'Không tìm thấy mã số thuế phù hợp', isSuccess: false };
   }
@@ -194,15 +209,23 @@ const duyettokhai = async (req, res) => {
           id: tokhaiId,
           trangThaiXuLiId: 1,                             // trạng thái "đang chờ duyệt"
         },
+        include: [{
+          model: Canhan, as: 'ca_nhan'
+        }]
       });
 
       if (!tokhai) {
         return res.status(404).json({ message: 'Tờ khai đã được duyệt' });
       }
       await tokhai.update({ trangThaiXuLiId: 2 });        // trạng thái "đã duyệt"
-      const email = tokhai.email;
+      const email = tokhai.ca_nhan.email;
       mailer.sendMail(email, "Tờ khai của bạn đã được duyệt",
-        `Xin chào người dùng<br>`);
+        `Xin chào ${tokhai.fullname} <br>
+        Tờ khai quyết toán thuế thu nhập cá nhân của bạn đã được duyệt, thông tin chi tiết như sau:
+        <li>Tổng thu nhập chịu thuế của bạn là: ${tokhai.ct22}</li>
+       <li> Số thuế phải nộp là: ${tokhai.ct44} đồng </li>
+       <li> Só thuế đề nghị hoàn trả vào tài khoản là: ${tokhai.ct46} đồng </li><br>
+       Bạn vui lòng đến cơ quan quản lý thuế tại ${tokhai.ca_nhan.cqqtthue} để hoàn tất thủ tục quyết toán thuế năm ${tokhai.namkekhai}`);
       await Duyettokhai.create({
         username: username,
         adminId: adminId,
@@ -223,33 +246,55 @@ const tokhaikhongduocduyet = async (req, res) => {
   try {
     const tokhaiId = req.params.id;
     const { username, adminId } = req.session.user;
+    if (checkTokhaiResult.isSuccess === false) {
+      const tokhai = await Tokhaithue.findOne({
+        where: {
+          id: tokhaiId,
+          trangThaiXuLiId: 1,                                           // trạng thái "đang chờ duyệt"
+        },
+        include: [{
+          model: Canhan, as: 'ca_nhan'
+        }]
+      });
 
-    const tokhai = await Tokhaithue.findOne({
-      where: {
-        id: tokhaiId,
-        trangThaiXuLiId: 1,                                           // trạng thái "đang chờ duyệt"
-      },
-    });
+      if (!tokhai) {
+        return res.status(404).json({ message: 'Tờ khai đã duyệt!' });
+      }
 
+      await tokhai.update({ trangThaiXuLiId: 3 });                        // trạng thái "không được duyệt"
+      const email = tokhai.ca_nhan.email;
 
-    if (!tokhai) {
-      return res.status(404).json({ message: 'Tờ khai đã duyệt!' });
+      if (checkTokhaiResult.message === "Tờ khai thiếu phụ lục kèm theo") {
+        mailer.sendMail(email, `Tờ khai QTT-TNCN năm ${tokhai.namkekhai} không được duyệt`,
+          `Xin chào ${tokhai.fullname}, <br>
+        Tờ khai quyết toán thuế của bạn không được duyệt, lý do:
+        <li>${checkTokhaiResult.message}</li>
+        Vui lòng kiểm tra và bổ sung các loại giáy tờ/chứng từ liên quan vào phụ lục trong mục tra cứu tờ khai
+        `);
+      } else if (checkTokhaiResult.message === "Không tìm thấy mã số thuế phù hợp") {
+        mailer.sendMail(email, "Tờ khai không được duyệt",
+          `Xin chào ${tokhai.fullname}, <br>
+        Tờ khai quyết toán thuế của bạn không được duyệt, lý do:
+        <li>${checkTokhaiResult.message}</li>
+        Vui lòng kiểm tra và đối chiếu lại thông tin của bạn tại nơi làm việc.
+        `);
+      } else if (checkTokhaiResult.message === "Tổng thu nhập chịu thuế không đúng") {
+        mailer.sendMail(email, "Tờ khai không được duyệt",
+          `Xin chào ${tokhai.fullname}, <br>
+       Tờ khai quyết toán thuế của bạn không được duyệt, lý do:
+       <li>${checkTokhaiResult.message}</li>
+       Vui lòng kiểm tra và đối chiếu lại cá thông tin thu nhập của bạn tại nơi làm việc hoặc kiểm tra nhanh tại mục tra cứu thu nhập cá nhân.
+       `);
+      }
+      await Duyettokhai.create({
+        username: username,
+        adminId: adminId,
+        toKhaiThueId: tokhaiId
+      });
+      return res.status(200).json({ message: 'Duyệt tờ khai thành công!' });
+    } else {
+      return res.status(400).json({ message: `Tờ khai chưa được kiểm tra hoặc thông tin tờ khai là hợp lệ!` });
     }
-
-    await tokhai.update({ trangThaiXuLiId: 3 });                        // trạng thái "không được duyệt"
-
-    const { email, ct22, ct44, ct45, ct35, ct34 } = tokhai;
-
-    mailer.sendMail(email, "Tờ khai không được duyệt");
-
-
-    await Duyettokhai.create({
-      username: username,
-      adminId: adminId,
-      toKhaiThueId: tokhaiId
-    });
-
-    return res.status(200).json({ message: 'Duyệt tờ khai thành công!' });
   } catch (error) {
     return res.status(500).json({ error: 'Error' });
   }
