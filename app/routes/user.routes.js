@@ -1,5 +1,5 @@
 const { authJwt } = require("../middleware");
-const {  deleteUser, getAllUser, update, findOne, getUser, getAllTokhaithue} = require("../controllers/canhan.controller");
+const {  deleteUser, getAllUser, update, findOne, getUser} = require("../controllers/canhan.controller");
 const upload = require("../middleware/excelUpload");
 const excelController = require("../controllers/excel.controller");
 const tokhaithue = require("../controllers/tokhai.controller");
@@ -7,21 +7,14 @@ const db = require("../models");
 const { getAllToChuc, deleteToChuc } = require("../controllers/tochuc.controller");
 const { getAllTokhai } = require("../controllers/auth.controller");
 const File = db.file; // nhầm lẫn giữa file phụ lục và file nộp tờ khai
-const {getTokhaithue, duyettokhai, tokhaikhongduocduyet, checkTokhai, getListAllTongThuNhap, getListThuNhap} = require("../controllers/admin.controller");
-const Tokhaithue = db.tokhaithue;
-const Trangthaixuly = db.trangthaixuly;
-const Duyettokhai = db.duyettokhai;
+const {getTokhaithue, duyettokhai, tokhaikhongduocduyet, checkTokhai, getListThuNhap} = require("../controllers/admin.controller");
 const path = require('path');
-const { uploadPhuluc, uploadTokhai } = require("../controllers/upload.controller");
+const {uploadTokhai } = require("../controllers/upload.controller");
 const Phuluc = db.phuluc;
-const Tokhai = db.tokhaithue;
-const Loaitokhai = db.loaitokhai;
 const Files = db.noptokhai;
-
-const {generateCaptcha} = require('../controllers/tokhai.controller') 
+const svgCaptcha = require("svg-captcha");
 const generateRandomCode = require('../utils/generateRandomCode');
 
-let currentCaptchaB3 = generateCaptcha(); 
 module.exports = function (app) {
   app.use(function (req, res, next) {
     res.header(
@@ -30,7 +23,6 @@ module.exports = function (app) {
     );
     next();
   });
-
 
   app.get('/admin',  [authJwt.verifyToken, authJwt.isAdmin], (req, res)=>{
     const user = req.session.user;
@@ -88,10 +80,21 @@ module.exports = function (app) {
     res.render("admin/check.ejs");
   });
 
+// routes
+app.get("/captcha", function (req, res) {
+  const captcha = svgCaptcha.create({
+    noise: 2,
+    fontSize: 50,
+    color: true,
+    
+  });
+  req.session.captcha = captcha.text;
+  res.type('svg');
+  res.status(200).send(captcha.data);
+  console.log(captcha.text);
+});
 
-  // duyệt tờ khai demo
-//app.post('/duyet/:id', [authJwt.verifyToken, authJwt.isAdmin], duyetTokhai);
-// upload tờ khai
+
 app.post("/upload", upload.single("file"), excelController.upload);
 
 
@@ -141,65 +144,6 @@ app.post('/tokhai/b3', async (req, res) => {
     res.status(400).send('Xác thực captcha không thành công!');
   }
 });
-
-
-/*app.post('/tokhai/b1', async (req, res) => {
-  const loaitokhai = await Loaitokhai.findOne({
-    where: {
-      tenloai: 'Tờ khai chính thức'
-    }
-  });
-  const tokhaiData = {
-    fullname: req.body.fullname,
-    address: (req.body.xa_phuong || '') + ', ' + (req.body.quan_huyen || '') + ', ' + (req.body.tinh_tp || ''),
-    dienthoai: req.body.phone,
-    masothue: req.body.masothue,
-    email: req.body.email,
-    namkekhai: req.body.year,
-    tokhai: req.body.tokhai,
-    loaitokhai: req.body.loaitokhai,
-    cucthue: req.body.cucthue,
-    chicucthue: req.body.chicucthue,
-    tuthang: req.body.tungay,
-    denthang: req.body.denngay,
-    ct22: req.body.ct22,
-    ct23: req.body.ct23,
-    ct24: req.body.ct24,
-    ct25: req.body.ct25,
-    ct26: req.body.ct26,
-    ct27: req.body.ct27,
-    ct28: req.body.ct28,
-    ct29: req.body.ct29,
-    ct30: req.body.ct30,
-    ct31: req.body.ct31,
-    ct32: req.body.ct32,
-    ct33: req.body.ct33,
-    ct34: req.body.ct34,
-    ct35: req.body.ct35,
-    ct36: req.body.ct36,
-    ct37: req.body.ct37,
-    ct38: req.body.ct38,
-    ct39: req.body.ct39,
-    ct40: req.body.ct40,
-    ct41: req.body.ct41,
-    ct42: req.body.ct42,
-    ct43: req.body.ct43,
-    ct44: req.body.ct44,
-    ct45: req.body.ct45,
-    ct46: req.body.ct46,
-    ct47: req.body.ct47,
-    ct48: req.body.ct48,
-    ct49: req.body.ct49,
-    caNhanId: req.session.user.caNhanId,
-    loaiToKhaiId: loaitokhai.id,
-    trangThaiXuLiId: 1,
-  };
-
-  req.session.tokhaiData = tokhaiData;
-  res.redirect('/tokhai/b2');
-});*/
-
-
 
 // Xử lý việc tải lên tệp  => cập nhật lại sau, 
 app.post('/noptokhai', uploadTokhai.single('filename'), (req, res) => {
@@ -270,5 +214,42 @@ app.post('/filter-tokhai', async (req, res) => {
   });
 
 
-  app.get('/list-thu-nhap-tc',[authJwt.verifyTokenCanhan], getListThuNhap);
+  app.get('/list-thu-nhap', [authJwt.verifyTokenCanhan], (req, res) => {
+    const data = req.session.tochuckekhaithue || [];
+    res.render('nguoidung/tong-thu-nhap', {tochuckekhaithue: data});
+  });
+
+  app.post('/tra-cuu-thu-nhap',[authJwt.verifyTokenCanhan], async (req, res) => {
+    try{
+      // kiểm tra mã captcha
+      const userCaptcha = req.body.captcha;
+      if (userCaptcha !== req.session.captcha) {
+         return res.render('nguoidung/tracuu', { captchaError: true, error: 'Mã kiểm tra không chính xác!' });
+      }
+
+      const tochuckekhaithue = await getListThuNhap(req,res);
+
+      if(tochuckekhaithue === null){
+        return res.render('nguoidung/tracuu', { noDataError: true, error: 'Không tìm thấy thông tin thu nhập!' });
+      }
+
+      req.session.tochuckekhaithue = tochuckekhaithue;
+      if(tochuckekhaithue){
+        return res.redirect(`/list-thu-nhap?result`);
+      }
+      else {
+        return res.render('nguoidung/tracuu', { noDataError: true, error: 'Không tìm thấy thông tin thu nhập!' });
+      }
+
+    } catch(error){
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
+  app.get('/tra-cuu-thu-nhap', [authJwt.verifyTokenCanhan], (req, res) => {
+    res.render('nguoidung/tracuu.ejs');
+  });
+
+
 }

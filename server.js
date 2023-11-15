@@ -11,20 +11,12 @@ var corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-// parse requests of content-type - application/json
 app.use(express.json());
-
-// parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
-
-//use view engine ejs
 configViewEngine(app);
 
 // database
 const db = require("./app/models");
-const Role = db.role;
-
 
 const homeRoutes = require('./app/routes/index.routes');
 
@@ -40,7 +32,7 @@ db.sequelize.sync({ force: true }).then(() => {
 });
 */
 
-const svgCaptcha = require("svg-captcha");
+
 app.use(
   session({
     secret: "your secret",
@@ -48,15 +40,6 @@ app.use(
     saveUninitialized: true
   })
 );
-// routes
-app.get("/captcha", function (req, res) {
-  var captcha = svgCaptcha.create({
-    noise: 0
-  });
-  req.session.captcha = captcha.text;
-  res.type("svg");
-  res.status(200).send(captcha.data);
-});
 
 require('./app/routes/auth.routes')(app);
 require('./app/routes/user.routes')(app);

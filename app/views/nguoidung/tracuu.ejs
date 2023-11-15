@@ -1,0 +1,73 @@
+<html lang="en">
+
+<head>
+  <%- include('../partials/head') %>
+</head>
+
+<body>
+  <div class="container">
+    <div class="khungtong">
+      <!--phan header-->
+      <header>
+        <%- include('../partials/header') -%>
+      </header>
+      <div class="container-fluid" style="width: 450px; margin-top: 1pc; margin-bottom: 1pc;">
+        <h4 style="text-align: center; margin-bottom: 3pc;">Nhập thông tin tra cứu</h4>
+        <form id="captchaForm" action="/tra-cuu-thu-nhap" method="post">
+   
+          <div class="row mt-3">
+            <div class="col" style="margin-bottom: 5px;">
+              <span style="margin-bottom: 5px;">Nhập mã số thuế <font style="color: red;">(*)</font></span>
+              <input type="text" name="masothue" class="form-control">
+              <% if (typeof noDataError!== 'undefined' && noDataError) { %>
+                <span style="color: red;"><%= error %></span>
+              <% } %>
+            </div>
+          </div>
+
+
+          <div class="row mt-3">
+            <div class="col">
+              <span>Mã kiểm tra<font style="color: red;">(*)</font></span>
+              <input type="text" name="captcha" class="form-control" required>
+              <% if (typeof captchaError !== 'undefined' && captchaError) { %>
+                <span style="color: red;"><%= error %></span>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col">
+                <img style="border: 1px; background-color: rgba(113, 146, 213, 0.125);" id="captchaImage" src="/captcha" alt="">
+                <img id="reload" src="https://cdn-icons-png.flaticon.com/512/2546/2546705.png" alt=""  style=" margin-left: 15px; height: 30px; width: 30px;">
+            </div>
+          </div>
+         
+          <div class="row mt-3">
+            <div class="col">
+                <button type="submit" class="btn btn-primary" style="width: 165px;">Tra cứu</button>
+            </div>
+          </div>
+        </form>
+       
+        <br><br><br>
+
+
+        <br><br><br>
+        <!--PHẦN NỘI DUNG-->
+      </div>
+    </div>
+  </div>
+  <footer>
+    <%- include('../partials/footer') %>
+  </footer>
+</body>
+
+<script>
+ document.getElementById('reload').addEventListener('click', function() {
+    var captchaImage = document.getElementById('captchaImage');
+    var newImageUrl = '/captcha?' + new Date().getTime();
+    captchaImage.src = newImageUrl;
+});
+</script>
+</html>

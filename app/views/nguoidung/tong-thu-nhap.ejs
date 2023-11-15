@@ -1,48 +1,71 @@
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+  <%- include('../partials/head') %>
 </head>
-<body class="container">
-    <h1>Hello, <%= user.username %></h1>
-    <table  class="table table-striped table-bordered mt-3 " >
-        <thead>
-            <th>Tên tổ chức</th>
-            <th>Đại diện</th>
+
+<body>
+  <div class="container">
+    <div class="khungtong">
+      <!--phan header-->
+      <header>
+        <%- include('../partials/header') -%>
+      </header>
+      <!--phan header-->
+      <div class="container-fluid" style="margin-top: 1pc; margin-bottom: 1pc;">
+        <div class="input-group" style="margin-left: 20px; width: 250px;">
+          <input class="form-control" type="search" id="search-input" placeholder=" Tìm kiếm...">
+          <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+        </div>
+        <h3>Danh sách các nguồn thu nhập trong năm quyết toán</h3>
+        <h5 style="font-size: 16px; text-align: right; margin-right: 15px;">Tổng cộng: </h5>
+        <table class="table table-striped table-bordered mt-3 " id="data-table" style="text-align: center;">
+          <thead>
+            <th>STT</th>
+            <th>Họ tên</th>
+            <th>Nơi làm việc</th>
             <th>Mã số thuế</th>
             <th>Email</th>
             <th>Điện thoại</th>
-            <th>Tổng chi</th>
+            <th>Tổng thu nhập nhận được</th>
             <th>Ghi chú</th>
             <th>Phản hồi</th>
             <th>Action</th>
-        </thead>
-        <tbody>
-            
-                <% tochuckekhaithue.forEach(canhan => { %>
-                <tr>
-                    <td><%= canhan.to_chuc.tentochuc %></td>
-                    <td><%= canhan.to_chuc.daidien %></td>
-                    <td><%= canhan.to_chuc.masothue %></td>
-                    <td><%= canhan.to_chuc.email %></td>
-                    <td><%= canhan.to_chuc.phone %></td>
-                    <td><%= canhan.thunhaptinhthue %></td>
-                    <td><%= canhan.ghichu %></td>
-                    <td>
-                        <textarea name="phanhoi" id=""></textarea>
-                    </td>
-                    <td>
-                        <button class="btn btn-danger">Send</button>
-                    </td>
-                </tr>
-                <% }) %>
-            
-        </tbody>
-    </table>
-   
+          </thead>
+          <tbody>
+
+            <% tochuckekhaithue.forEach((canhan, index) => { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= canhan.hoten %></td>
+              <td><%= canhan.to_chuc.tentochuc %></td>
+              <td><%= canhan.to_chuc.masothue %></td>
+              <td><%= canhan.to_chuc.email %></td>
+              <td><%= canhan.to_chuc.phone %></td>
+              <td><%= canhan.thunhaptinhthue %></td>
+              <td><%= canhan.ghichu %></td>
+              <td>
+                <select name="" id="" style="width: 85%;">
+                    <option value=""></option>
+                    <option value="">Thu nhập nhận được không đúng</option>
+                    <option value="">Đã được khấu trừ thuế tại nguồn</option>
+                    <option value="">Thông tin nơi làm việc không chính xác</option>
+                </select>
+              </td>
+              <td>
+                <button class="btn btn-danger">Send</button>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+        <br><br><br>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <%- include('../partials/footer') %>
+  </footer>
 </body>
+
 </html>

@@ -108,20 +108,9 @@ async function createTokhaiStep2(req, res, tokhaiData) {
       res.status(500).send(error.message);
     }
   }
- 
-function generateCaptcha() {
-  return svgCaptcha.create();
-}
-
-function validateCaptcha(userInput, expectedCaptcha) {
-    return userInput === expectedCaptcha;
-  }
-  
-
-
 
 module.exports = {
     create: createTokhai,
-    createTokhaiStep2, validateCaptcha,generateCaptcha
+    createTokhaiStep2, 
 
 }
