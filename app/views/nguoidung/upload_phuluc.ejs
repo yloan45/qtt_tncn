@@ -1,12 +1,8 @@
-<head>
-
-</head>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <%- include('head') %>
+  <%- include('./partials/head') %>
   <style scoped>
     /* Đặt lớp CSS hidden */
     .step.hidden {
@@ -24,7 +20,7 @@
   <div class="container">
     <div class="khungtong">
       <header>
-        <%- include('../partials/header') -%>
+        <%- include('./partials/header') -%>
       </header>
       <div class="container-fluid" style="width: 1275px; margin-top: 1pc; margin-bottom: 1pc;">
         <div class="card" style="border:1px solid rgba(93, 156, 238, 0.437)">
@@ -61,7 +57,9 @@
                     </tbody>
                 </table>
                 <input class="btn btn-success add-row" type="button" value="Thêm hàng" style="width: 100px;">
-                <button style="text-align: center;" class="btn btn-success" type="submit">Tiếp tục</button>
+                <button style="text-align: center;" class="btn btn-success" type="submit">Nộp tờ khai</button>
+                
+
               </div>
         </form> 
 
@@ -75,8 +73,6 @@
 
   <%- include('../partials/footer') %>
 </body>
-
-
 
 </html>
 

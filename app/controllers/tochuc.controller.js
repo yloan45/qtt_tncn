@@ -2,6 +2,22 @@ const db = require("../models");
 
 const User = db.user;
 const Tochuc = db.tochuc;
+const ExcelUpload = db.tochuckekhaithue;
+
+exports.deleteNhanVien = (req, res) => {
+  ExcelUpload.destroy({
+    where: {
+      id: req.params.id
+    },
+  })
+    .then(function (rowDeleted) {
+      if (rowDeleted == 1) {
+        console.log("deleted!!!");
+        res.redirect('/tochuc/upload');
+      }
+    })
+}
+
 
 exports.deleteToChuc = (req, res) => {
   Tochuc.destroy({
@@ -53,6 +69,18 @@ exports.updateToChuc = (req, res) => {
     .then(num => {
       if (num == 1) {
         res.redirect("/list-user");
+      } else {
+        res.send('Unable to update the user');
+      }
+    })
+}
+
+exports.updateNhanvien = (req, res) => {
+  const id = req.params.id;
+  ExcelUpload.update(req.body, { where: { id: id } })
+    .then(num => {
+      if (num == 1) {
+        res.json("Cập nhật thành công")
       } else {
         res.send('Unable to update the user');
       }

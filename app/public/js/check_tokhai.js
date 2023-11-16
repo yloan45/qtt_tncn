@@ -84,96 +84,6 @@ function duyetToKhai() {
       });
   }
 
-/*
-  function checkTokhai() {
-    const modal = document.getElementById("editModal");
-    const tokhaiIdInput = modal.querySelector('#tokhaiId');
-    const tokhaiId = tokhaiIdInput.value;
-  
-    fetch('/check-status/' + tokhaiId, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(function(response) {
-        return response.json();
-      })
-      .then(function(data) {
-        alert(data.message);
-        location.reload();
-      })
-      .catch(function(error) {
-        console.error('Lỗi:', error);
-      });
-  }
-
-function checkTokhai() {
-  const modal = document.getElementById("editModal");
-  const tokhaiIdInput = modal.querySelector('#tokhaiId');
-  const tokhaiId = tokhaiIdInput.value;
-
-  document.getElementById("alertMessage").innerHTML = '';
-  fetch('/check-status/' + tokhaiId, {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      }
-  })
-      .then(function (response) {
-          return response.json();
-      })
-      .then(function (data) {
-          // Hiển thị thông báo trong tờ khai
-          const tokhaiMessage = document.getElementById("tokhaiMessage");
-          tokhaiMessage.textContent = data.message;
-          tokhaiMessage.style.display = 'block';
-
-          if (data.isSuccess) {
-              // Thành công, thực hiện các bước tiếp theo nếu cần
-          } else {
-              // Có lỗi, xử lý hoặc hiển thị thông báo lỗi tùy ý
-          }
-      })
-      .catch(function (error) {
-          console.error('Lỗi:', error);
-      });
-}
-
-function checkTokhai() {
-  const modal = document.getElementById("editModal");
-  const tokhaiIdInput = modal.querySelector('#tokhaiId');
-  const tokhaiId = tokhaiIdInput.value;
-
-  // Xóa thông báo trước đó nếu có
-  document.getElementById("alertMessage").innerHTML = '';
-
-  fetch('/check-status/' + tokhaiId, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-    .then(function(response) {
-      return response.json();
-    })
-    .then(function(data) {
-      // Kiểm tra xem API có trả về thông báo và ID không
-      if (data.message && data.divId) {
-        // Hiển thị thông báo trong div mới
-        document.getElementById(data.divId).innerHTML = data.message;
-      } else {
-        // Nếu không có ID, sử dụng div mặc định
-        document.getElementById("alertMessage").innerHTML = data.message;
-      }
-    })
-    .catch(function(error) {
-      console.error('Lỗi:', error);
-    });
-}
-*/
-
-
 function checkTokhai() {
   const modal = document.getElementById("editModal");
   const tokhaiIdInput = modal.querySelector('#tokhaiId');
@@ -212,3 +122,32 @@ function checkTokhai() {
 function clearAlertMessage() {
   document.getElementById("alertMessage").innerHTML = '';
 }
+
+document.getElementById('download-pdf').addEventListener('click', function() {
+  var contentElement = document.getElementById('pdf-content');
+  var clonedContent = contentElement.cloneNode(true);
+  var buttons = clonedContent.querySelectorAll('button, a');
+  buttons.forEach(function(button) {
+    button.remove();
+  });
+  var formFields = clonedContent.querySelectorAll('input, select');
+  formFields.forEach(function(field) {
+    field.style.border = 'none';
+  });
+  var inputs = clonedContent.querySelectorAll('input');
+  inputs.forEach(function(input) {
+    var inputValue = input.value;
+    var valueParagraph = document.createElement('p');
+    valueParagraph.innerText = inputValue;
+    input.replaceWith(valueParagraph);
+  });
+
+  var options = {
+    margin: 10,
+    filename: 'tokhai_qtt_tncn.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 1 },
+    jsPDF: { unit: 'mm', format: 'a3', orientation: 'portrait' }
+  };
+  html2pdf().from(clonedContent).set(options).save();
+});

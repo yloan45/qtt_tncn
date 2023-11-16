@@ -4,7 +4,7 @@ const upload = require("../middleware/excelUpload");
 const excelController = require("../controllers/excel.controller");
 const tokhaithue = require("../controllers/tokhai.controller");
 const db = require("../models");
-const { getAllToChuc, deleteToChuc } = require("../controllers/tochuc.controller");
+const { getAllToChuc, deleteToChuc, deleteNhanVien, updateNhanvien } = require("../controllers/tochuc.controller");
 const { getAllTokhai } = require("../controllers/auth.controller");
 const File = db.file; // nhầm lẫn giữa file phụ lục và file nộp tờ khai
 const {getTokhaithue, duyettokhai, tokhaikhongduocduyet, checkTokhai, getListThuNhap} = require("../controllers/admin.controller");
@@ -33,12 +33,11 @@ module.exports = function (app) {
   app.get("/deletecn/:id",[authJwt.verifyToken, authJwt.isAdmin], deleteUser);    // xóa cá nhân
   app.get("/list-user",[authJwt.verifyToken,authJwt.isAdmin], getAllUser);        // lấy danh sách tất cả người dùng cá nhân
   app.get("/list-dn",[authJwt.verifyToken, authJwt.isAdmin], getAllToChuc);       // lấy all danh sách doanh nghiệp/tổ chức
-   app.post("/update/:id", [authJwt.verifyToken, authJwt.isAdmin],update);         // update cá nhân
+  app.post("/update/:id", [authJwt.verifyToken, authJwt.isAdmin],update);         // update cá nhân
   app.get("/delete/:id",[authJwt.verifyToken, authJwt.isAdmin], deleteToChuc);    // xóa 1 tổ chức/doanh nghiệp
   app.get("/getAll", excelController.getAllExcelFile);                            // read data từ form excel doanh nghiệp/tổ chức kê khai trả tiền lương/ tiền công cho cá nhân/tổ chức
   app.get('/tokhaithue/:id', [authJwt.verifyToken, authJwt.isAdmin], getTokhaithue);
-
-
+  app.get('/delete-nv/:id', [authJwt.verifyTokenTochuc, authJwt.isTochuc], deleteNhanVien);
   // upload file excel
   app.get("/tochuc/upload-file", [authJwt.verifyTokenTochuc, authJwt.isTochuc], (req, res)=>{
     const user = req.session.user;
@@ -100,7 +99,7 @@ app.post("/upload", upload.single("file"), excelController.upload);
 // nộp tờ khai quyết toán thuế nhu nhập cá nhân
 app.get('/noptokhai', (req, res) => {
     Files.findAll().then(files => {
-      res.render('uploadfile', { files });
+      res.render('nguoidung/guitokhai', { files });
     });
   })
 
@@ -238,6 +237,10 @@ app.post('/filter-tokhai', async (req, res) => {
   app.get('/tra-cuu-thu-nhap', [authJwt.verifyTokenCanhan], (req, res) => {
     res.render('nguoidung/tracuu.ejs');
   });
+
+
+  app.post('/update/nv/:id', [authJwt.verifyTokenTochuc, authJwt.isTochuc] ,updateNhanvien);
+
 
 
 }

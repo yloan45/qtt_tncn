@@ -1,12 +1,8 @@
-<head>
-
-</head>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <%- include('head') %>
+  <%- include('./partials/head') %>
   <style scoped>
     /* Đặt lớp CSS hidden */
     .step.hidden {
@@ -24,7 +20,7 @@
   <div class="container">
     <div class="khungtong">
       <header>
-        <%- include('../partials/header') -%>
+        <%- include('./partials/header') -%>
       </header>
       <div class="container-fluid" style="width: 1275px; margin-top: 1pc; margin-bottom: 1pc;">
         <div class="card" style="border:1px solid rgba(93, 156, 238, 0.437)">
@@ -40,7 +36,7 @@
             <%- include('tokhaiStep2') -%>
           </form>
           <br><br>
-
+          
         </div>
         <br><br>
       </div>
@@ -51,6 +47,7 @@
 </body>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
 
 <%# form wizard with javascript %>
 <script>
@@ -64,7 +61,7 @@
       e.preventDefault();
       const currentStep = $(this).closest('.step');
       const nextStep = steps.filter(`[data-step="${currentStep.data('step') + 1}"]`);
-      
+
       const fullnameInputValue = currentStep.find('input[name="fullname"]').val();
       nextStep.find('#displayFullname').text(fullnameInputValue);
 
@@ -98,18 +95,49 @@
 <script>
   const numberInputs = document.querySelectorAll(".number-input");
   numberInputs.forEach(input => {
-      input.addEventListener("input", function() {
-          let value = input.value.replace(/[^0-9]/g, '');
-          const formattedValue = parseInt(value).toLocaleString("en-US");
-          input.value = formattedValue;
+    input.addEventListener("input", function() {
+      let value = input.value.replace(/[^0-9]/g, '');
+      const formattedValue = parseInt(value).toLocaleString("en-US");
+      input.value = formattedValue;
 
-          // Thêm giá trị đã chuyển đổi vào biến numberValue
-          const numberValue = parseInt(value);
+      // Thêm giá trị đã chuyển đổi vào biến numberValue
+      const numberValue = parseInt(value);
 
-          // Gọi hàm createTokhai và chuyển giá trị đã chuyển đổi
-          createTokhai(req, res, numberValue);
-      });
+      // Gọi hàm createTokhai và chuyển giá trị đã chuyển đổi
+      createTokhai(req, res, numberValue);
+    });
   });
+</script>
+<script>
+  document.getElementById('download-pdf').addEventListener('click', function() {
+    var contentElement = document.getElementById('pdf-content');
+    var clonedContent = contentElement.cloneNode(true);
+    var buttons = clonedContent.querySelectorAll('button, a');
+    buttons.forEach(function(button) {
+      button.remove();
+    });
+    var formFields = clonedContent.querySelectorAll('input, select');
+    formFields.forEach(function(field) {
+      field.style.border = 'none';
+    });
+    var inputs = clonedContent.querySelectorAll('input');
+    inputs.forEach(function(input) {
+      var inputValue = input.value;
+      var valueParagraph = document.createElement('p');
+      valueParagraph.innerText = inputValue;
+      input.replaceWith(valueParagraph);
+    });
+
+    var options = {
+      margin: 10,
+      filename: 'tokhai_qtt_tncn.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 1 },
+      jsPDF: { unit: 'mm', format: 'a3', orientation: 'portrait' }
+    };
+    html2pdf().from(clonedContent).set(options).save();
+  });
+
 </script>
 
 
@@ -126,45 +154,52 @@
   toMonth.addEventListener("input", updateNumMonths);
 
   function updateMonths() {
-      const currentYear = new Date().getFullYear();
-      const year = parseInt(yearInput.value);
+    const currentYear = new Date().getFullYear();
+    const year = parseInt(yearInput.value);
 
-      if (!isNaN(year) && year >= 1900 && year <= currentYear) {
-          fromMonth.value = "1/" + year;
-          toMonth.value = "12/" + year;
-          updateNumMonths();
-          clearError(yearError);
-      } else {
-          fromMonth.value = "";
-          toMonth.value = "";
-          numMonths.value = "";
-          displayError(yearError, "Vui lòng nhập một năm hợp lệ trong khoảng từ 1900 đến " + currentYear + ".");
-      }
+    var yearValue = parseInt(yearInput.value, 10);
+    if (isNaN(yearValue) || yearValue < 1900 || yearValue > 2100) {
+      yearError.style.display = 'block'; // Hiển thị thông báo lỗi
+    } else {
+      yearError.style.display = 'none'; // Ẩn thông báo lỗi nếu giá trị hợp lệ
+    }
+
+    if (!isNaN(year) && year >= 1900 && year <= currentYear) {
+      fromMonth.value = "1/" + year;
+      toMonth.value = "12/" + year;
+      updateNumMonths();
+      clearError(yearError);
+    } else {
+      fromMonth.value = "";
+      toMonth.value = "";
+      numMonths.value = "";
+      displayError(yearError, "Vui lòng nhập một năm hợp lệ trong khoảng từ 1900 đến " + currentYear + ".");
+    }
   }
 
   function updateNumMonths() {
-      const fromDate = fromMonth.value.split("/");
-      const toDate = toMonth.value.split("/");
+    const fromDate = fromMonth.value.split("/");
+    const toDate = toMonth.value.split("/");
 
-      const fromYear = parseInt(fromDate[1]);
-      const toYear = parseInt(toDate[1]);
+    const fromYear = parseInt(fromDate[1]);
+    const toYear = parseInt(toDate[1]);
 
-      if (!isNaN(fromYear) && !isNaN(toYear) && toYear >= fromYear) {
-          const num = (toYear - fromYear) * 12 + parseInt(toDate[0]) - parseInt(fromDate[0]) + 1;
-          numMonths.value = num;
-      } else {
-          numMonths.value = "";
-      }
+    if (!isNaN(fromYear) && !isNaN(toYear) && toYear >= fromYear) {
+      const num = (toYear - fromYear) * 12 + parseInt(toDate[0]) - parseInt(fromDate[0]) + 1;
+      numMonths.value = num;
+    } else {
+      numMonths.value = "";
+    }
   }
 
   function displayError(element, message) {
-      element.textContent = message;
-      element.style.display = "block";
+    element.textContent = message;
+    element.style.display = "block";
   }
 
   function clearError(element) {
-      element.textContent = "";
-      element.style.display = "none";
+    element.textContent = "";
+    element.style.display = "none";
   }
 </script>
 

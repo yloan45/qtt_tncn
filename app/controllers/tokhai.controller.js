@@ -62,7 +62,7 @@ const createTokhai = async (req, res) => {
     loaiToKhaiId: loaitokhai.id,
     trangThaiXuLiId: 1,
   };
-
+  
   req.session.tokhaiData = tokhaiData;
   res.redirect('/tokhai/b2');
 }
