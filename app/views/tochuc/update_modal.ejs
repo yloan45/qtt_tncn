@@ -8,8 +8,7 @@
   }
 </style>
 
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" style="max-width: 950px;" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -19,7 +18,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" >
+      <div class="modal-body">
         <!-- Form for editing user details -->
         <form id="editUserForm">
           <input type="hidden" id="editUserId" name="id">
@@ -83,16 +82,20 @@
               <div class="col">
                 <div class="input-group">
                   <label for="" style="margin-right: 15px;"> Ghi chú</label>
-                  <textarea class="form-control" name="ghichu" id="ghichu"
-                    placeholder="Nhập nội dung ghi chú tại đây"></textarea>
+                  <textarea class="form-control" name="ghichu" id="ghichu" placeholder="Nhập nội dung ghi chú tại đây"></textarea>
                 </div>
               </div>
             </div>
           </div>
           <input style="display: none;" id="nldId" name="nldId">
+          <!-- Trong phần modal-body -->
+          <div id="updateMessage" style="display: none; margin-right: 25px; margin-top: 25px;" class="alert alert-success" role="alert">
+            Cập nhật thông tin thành công!
+          </div>
+
           <br><br>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">Close</button>
             <button type="button" class="btn btn-primary" onclick="updateNhanvien()">Cập nhật</button>
           </div>
         </form>
@@ -101,3 +104,14 @@
     </div>
   </div>
 </div>
+
+<script>
+  function closeModal() {
+    // Đóng modal
+    $('#editModal').modal('hide');
+    
+    // Làm mới trang
+    location.reload();
+}
+
+</script>

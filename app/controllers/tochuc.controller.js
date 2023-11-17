@@ -18,7 +18,6 @@ exports.deleteNhanVien = (req, res) => {
     })
 }
 
-
 exports.deleteToChuc = (req, res) => {
   Tochuc.destroy({
     where: {

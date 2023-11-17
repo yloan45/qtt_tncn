@@ -173,8 +173,9 @@ function updateNhanvien() {
     })
     .then(response => response.json())
     .then(data => {
-        alert("Cập nhật thông tin thành công!");
-        location.reload();
+        document.getElementById('updateMessage').style.display = 'block';
+       // alert("Cập nhật thông tin thành công!");
+       // location.reload();
     })
     .catch(error => {
         console.error('Lỗi khi cập nhật:', error);

@@ -241,6 +241,15 @@ app.post('/filter-tokhai', async (req, res) => {
 
   app.post('/update/nv/:id', [authJwt.verifyTokenTochuc, authJwt.isTochuc] ,updateNhanvien);
 
+  app.get('/tra-cuu-to-khai',[authJwt.verifyTokenCanhan], (req, res) => {
+    res.render('nguoidung/tra-cuu-to-khai');
+  })
+  app.get('/tra-cuu-to-khai-result',[authJwt.verifyTokenCanhan], (req, res) => {
+    res.render('/nguoidung/resultsSearch');
+  })
+  app.post('/tra-cuu-to-khai-qtt',[authJwt.verifyTokenCanhan], tokhaithue.tracuuTokhai);
 
-
+  app.get('/add-phu-luc/:id', (req, res) => {
+    res.render('nguoidung/addPhuluc')
+  });
 }

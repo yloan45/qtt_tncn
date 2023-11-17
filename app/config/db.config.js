@@ -4,6 +4,7 @@ module.exports = {
   PASSWORD: "",
   DB: "qtt_tncn_reset",
   dialect: "mysql",
+  timezone: '+07:00',
   pool: {
     max: 5,
     min: 0,

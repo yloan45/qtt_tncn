@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+ <html lang="en">
+ <head>
+   <%- include('./partials/head') %>
+   <style scoped>
+     /* Đặt lớp CSS hidden */
+     .step.hidden {
+       display: none;
+     }
+     .step {
+       background-color: white;
+     }
+   </style>
+ </head>
+ <body>
+   <div class="container">
+     <div class="khungtong">
+       <header>
+         <%- include('./partials/header') -%>
+       </header>
+       <!--phan header-->
+       <div class="container-fluid" style="margin-top: 1pc; margin-bottom: 1pc;">
+         <h3>Kết quả tra cứu</h3>
+         <h5 style="font-size: 16px; text-align: right; margin-right: 15px;">Tổng cộng: </h5>
+         <table class="table table-striped table-bordered mt-3 " id="data-table" style="text-align: center;">
+           <thead>
+             <th>STT</th>
+             <th>Họ tên</th>
+             <th>Tên tờ khai</th>
+             <th>Loại tờ khai</th>
+             <th>Kỳ kê khai</th>
+             <th>Địa chỉ liên hệ</th>
+             <th>Điện thoại</th>
+             <th>Cơ quan quyết toán thuế</th>
+             <th>Trạng thái tờ khai</th>
+             <th>Ngày gửi</th>
+             <th>Thêm phụ lục</th>
+           </thead>
+           <tbody>
+             <% if (searchResult.length > 0) { %>
+                <% searchResult.forEach((result, index) => { %>
+                <tr>
+                  <td style="display: none;"><%= result.id %></td>
+                  <td><%= index + 1 %></td>
+                  <td><%= result.fullname %></td>
+                  <td><%= result.tokhai %></td>
+                  <td><%= result.loai_to_khai.tenloai %></td>
+                  <td><%= result.namkekhai %></td>
+                  <td><%= result.address %></td>
+                  <td><%= result.ca_nhan.phone %></td>
+                  <td><%= result.ca_nhan.cqqtthue %></td>
+                  <td><%= result.trang_thai_xu_li.tentrangthai %></td>
+                  <td><%= result.createdAt.toLocaleString() %></td>
+                  <td><a href="/add-phu-luc/<%= result.id %>"><i class="fas fa-plus"></i></a></td>
+                </tr>
+                <% }) %>
+             <% } else { %>
+             <td colspan="10">Không tìm thấy tờ khai trong khoảng thời gian đã chọn.</td>
+             <% } %>
+           </tbody>
+         </table>
+         <br><br><br>
+       </div>
+     </div>
+   </div>
+   <footer>
+     <%- include('../partials/footer') %>
+   </footer>
+ </body>
+
+ </html>

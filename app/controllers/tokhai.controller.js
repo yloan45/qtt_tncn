@@ -4,10 +4,11 @@ const Loaitokhai = db.loaitokhai;
 const Hoantrathue = db.hoantrathue;
 const Phuluc = db.phuluc;
 const File = db.file;
-
-const svgCaptcha = require('svg-captcha');
+const Duyettokhai = db.duyettokhai;
+const Canhan = db.canhan;
 const { uploadPhuluc } = require("../controllers/upload.controller");
-const tokhaithue = require("../models/tokhaithue");
+const Trangthai = db.trangthaixuly;
+const {Op} = require('sequelize')
 
 const createTokhai = async (req, res) => {
   const loaitokhai = await Loaitokhai.findOne({
@@ -186,8 +187,61 @@ async function createTokhaiStep3(req, res) {
   }
 }
 
+
+const tracuuTokhai = async (req, res) => {
+  try{
+    const {tokhai, trangthaixuly, startDate, endDate} = req.body;
+    if (!tokhai || !trangthaixuly || !startDate) {
+      return res.status(400).json({ message: 'Vui lòng nhập đầy đủ thông tin để tra cứu' });
+    }
+    
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() + 1);  // cộng thêm 1 ngày
+    const startDatetime = new Date(startDate + 'T00:00:00Z');
+    const endDatetime = new Date(endDate+ 'T23:59:59Z');
+
+
+    if(startDatetime >= currentDate){
+      return res.render('nguoidung/tra-cuu-to-khai', { startError: true, startError: 'Ngày gửi không được quá ngày hiện tại!' });
+    } 
+     if(endDatetime < startDatetime){
+      return res.render('nguoidung/tra-cuu-to-khai', { endError: true, endError: 'Ngày kết thúc không được ít hơn  ngày hiện tại!' });
+    }
+
+
+    const searchResult = await Tokhai.findAll({
+      where: {
+        createdAt: {
+          [Op.between]: [startDatetime, endDatetime],
+        },
+      },
+      include: [
+        {
+          model: Trangthai, as: 'trang_thai_xu_li',
+          where: {
+            tentrangthai: trangthaixuly
+          }
+        },
+        {
+          model: Loaitokhai, as: 'loai_to_khai'
+        },
+        {
+          model: Canhan, as: 'ca_nhan'
+        }
+      ]
+    });
+    console.log("kết quả tra cứu là: ",searchResult);
+    res.render('nguoidung/resultsSearch', {searchResult});
+    
+  } catch {
+
+  } 
+
+};
+
 module.exports = {
   create: createTokhai,
   createTokhaiStep2,
   createTokhaiStep3,
+  tracuuTokhai
 };
