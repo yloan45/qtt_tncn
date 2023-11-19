@@ -32,6 +32,9 @@ app.use(
   })
 );
 
+const admin = require('./app/routes/admin.routes');
+app.use('/admin', admin);
+
 require('./app/routes/auth.routes')(app);
 require('./app/routes/user.routes')(app);
 

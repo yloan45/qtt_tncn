@@ -68,50 +68,6 @@ const createTokhai = async (req, res) => {
   res.redirect('/tokhai/b2');
 }
 
-/*async function createTokhaiStep2(req, res, tokhaiData) {
-    try {
-      const tokhai = await Tokhai.create(tokhaiData);
-        const ct46 = tokhai;
-
-        const hoantrathue = {
-          tonghoantra: tokhai.ct46,
-          trangthai: "đang xét duyệt",
-          toKhaiThueId: tokhai.id
-        }
-        const hoantra = Hoantrathue.create(hoantrathue);
-
-
-      uploadPhuluc(req, res, async (err) => {
-        if (err) {
-          console.error(err);
-          return res.status(500).send(err.message);
-        }
-        const phulucData = {
-          tenphuluc: req.body.fieldName[0], // lấy tên trường đầu tiên của phụ lục
-          toKhaiThueId: tokhai.id,
-        };
-  
-        const phuluc = await Phuluc.create(phulucData);
-  
-        const filesData = req.files.map((file, index) => ({
-          filename: file.filename,
-          filePath: file.path,
-          fieldName: req.body.fieldName[index],
-          phuLucId: phuluc.id,
-        }));
-  
-        await File.bulkCreate(filesData);
-  
-        delete req.session.tokhaiData;
-        res.redirect('/success');
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send(error.message);
-    }
-}*/
-
-
 async function createTokhaiStep2(req, res) {
   try {
 
@@ -187,7 +143,6 @@ async function createTokhaiStep3(req, res) {
   }
 }
 
-
 const tracuuTokhai = async (req, res) => {
   try{
     const {tokhai, trangthaixuly, startDate, endDate} = req.body;
@@ -239,9 +194,63 @@ const tracuuTokhai = async (req, res) => {
 
 };
 
+async function createPhuluc(req, res) {
+  try {
+    uploadPhuluc(req, res, async (err) => {
+      if (err) {
+        console.error(err);
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          const errorMessage = 'File size exceeds the limit.';
+          return res.send(`<script>alert('${errorMessage}'); window.location.href = window.location.href;</script>`);
+        }
+        return res.status(500).send(err.message);
+      }
+      const phulucData = {
+        tenphuluc: req.body.fieldName[0],
+        files: req.files.map((file, index) => ({
+          filename: file.filename,
+          filePath: file.path,
+          fieldName: req.body.fieldName[index]
+        }))
+      };
+
+      const id = req.params.id;
+      console.log("id của tờ khai là: ", id);
+      const tokhai = await Tokhai.findByPk(id);
+
+      if (!tokhai) {
+        return res.status(404).send('Tờ khai không tồn tại');
+      }
+      const existingPhuluc = await Phuluc.findOne({
+        where: {
+          toKhaiThueId: tokhai.id,
+        },
+      });
+
+      if (!existingPhuluc) {
+        return res.status(404).send('Phụ lục không tồn tại cho tờ khai này');
+      }
+      const newFilesData = phulucData.files.map((file) => ({
+        filename: file.filename,
+        filePath: file.filePath,
+        fieldName: file.fieldName,
+        phuLucId: existingPhuluc.id,
+      }));
+      await File.bulkCreate(newFilesData);
+      res.redirect('/tra-cuu-to-khai');
+
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+}
+
+
 module.exports = {
   create: createTokhai,
   createTokhaiStep2,
   createTokhaiStep3,
-  tracuuTokhai
+  tracuuTokhai,
+  createPhuluc
 };

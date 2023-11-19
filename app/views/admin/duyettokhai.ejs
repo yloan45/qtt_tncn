@@ -89,7 +89,7 @@
           </thead>
           <tbody>
             <% let totalIndex = 0; %>
-            <% tokhai.forEach((tokhaithue, index) => { %>
+            <% tokhaithue.items.forEach((tokhaithue, index) => { %>
               <tr class="table-row" style="text-align: center;">
                 <td><%= index + 1 %></td>
                 <td><%= tokhaithue.fullname %></td>
@@ -99,7 +99,7 @@
                 <td><%= tokhaithue.ca_nhan.phone %></td>
                 <td><%= tokhaithue.namkekhai %></td>
                 <td><%= tokhaithue.loai_to_khai.tenloai %></td>
-                <td><a href="#">Xem chi tiết</a></td>
+                <td><a href="/phu-luc-to-khai/<%= tokhaithue.id %>">Xem chi tiết</a></td>
                 <td class="status-cell"><%= tokhaithue.trang_thai_xu_li.tentrangthai %></td>
                 <td>
                   <a href="/check"><i class="fa-solid fa-eye" style="color: rgb(114, 114, 216);"></i></a>
@@ -126,6 +126,16 @@
             </div>
           </tbody>
         </table>
+
+        <div class="pagination">
+          <ul class="pagination">
+            <% for(let i = 1; i <= tokhaithue.totalPages; i++) { %>
+              <li class="page-item <% if (i === tokhaithue.currentPage) { %> active <% } %>">
+                <a class="page-link" href="/duyet-to-khai?page=<%= i %>"><%= i %></a>
+              </li>
+            <% } %>
+          </ul>
+        </div>
       </div>
       <%- include('check_tokhai') %>
     </div>

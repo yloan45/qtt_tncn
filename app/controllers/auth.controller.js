@@ -14,7 +14,6 @@ const Diachi = db.diachi;
 const Tokhaithue =  db.tokhaithue;
 const Loaitokhai = db.loaitokhai;
 const Trangthaixuly = db.trangthaixuly;
-
 const express = require('express');
 const app = express;
 
@@ -426,7 +425,38 @@ exports.getAllTokhai = async (req, res) => {
   .catch((err) => console.log(err));
 }
 */
+
+// Trong hàm paginate
+const paginate = async (model, condition, page = 1, perPage = 5) => {
+  try {
+    const result = await model.findAndCountAll({
+      where: condition,
+      limit: perPage,
+      offset: (page - 1) * perPage,
+      include: [
+        { model: Loaitokhai, as: 'loai_to_khai'},
+        { model: Canhan, as: 'ca_nhan' },
+        { model: Trangthaixuly, as: 'trang_thai_xu_li'},
+      ],
+    });
+
+    const totalPages = Math.ceil(result.count / perPage);
+
+    return {
+      items: result.rows,
+      totalItems: result.count,
+      totalPages: totalPages,
+      currentPage: page,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+/*
 exports.getAllTokhai = async (req, res) => {
+  const tokhaiPage = await paginate(Tokhaithue, {}, req.query.page || 1, 5);
   Tokhaithue.findAll({
     include: [
       { model: Loaitokhai, as: 'loai_to_khai'},
@@ -435,6 +465,19 @@ exports.getAllTokhai = async (req, res) => {
     ]
   }).then((tokhai) => {
     console.log(tokhai);
-    res.render("admin/duyettokhai", { tokhai: tokhai });
+    res.render("admin/duyettokhai", {
+      tokhai: tokhai,
+      tokhaiPage });
   }).catch((err) => console.log(err));
 }
+*/
+
+exports.getAllTokhai = async (req, res) => {
+  try {
+    const tokhaithue = await paginate(Tokhaithue, {}, req.query.page || 1, 10);
+    res.render("admin/duyettokhai", { tokhaithue });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+};

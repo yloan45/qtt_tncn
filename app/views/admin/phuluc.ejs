@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+  <%- include('./partials/head') %>
+</head>
+
+<body>
+  <div class="preloader">
+    <div class="lds-ripple">
+      <div class="lds-pos"></div>
+      <div class="lds-pos"></div>
+    </div>
+  </div>
+  <div id="main-wrapper" data-layout="vertical">
+    <header class="topbar" data-navbarbg="skin5">
+      <%- include('./partials/header') %>
+    </header>
+    <aside class="left-sidebar" data-sidebarbg="skin5">
+      <div class="scroll-sidebar">
+        <%-include('./partials/sidebar') %>
+      </div>
+    </aside>
+    <div class="page-wrapper" style="background-color: white;">
+      <div class="page-breadcrumb">
+        <div class="row">
+          <div class="col-12 d-flex no-block align-items-center">
+            <h4 class="page-title">Danh sách phụ lục tờ khai của <%= user.fullname %></h4>
+            <div class="ms-auto text-end">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Library
+                  </li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="container-fluid">
+        <table class="table table-bordered  table-striped "  id="data-table">
+          <tr style="text-align: center; font-weight: bolder; ">
+            <th style="text-align: center; font-weight: bolder; "> STT </th>
+            <th style="text-align: center; font-weight: bolder; ">Tên tờ khai</th>
+            <th style="text-align: center; font-weight: bolder; ">Tên phụ lục</th>
+            <th style="text-align: center; font-weight: bolder; ">Ngày gửi file</th>
+            <th style="text-align: center; font-weight: bolder; ">Action</th>
+          </tr>
+          <% let totalIndex=0; %>
+          <% if (phuluc.length > 0) { %>
+            <% phuluc.forEach((files, index)=> { %>
+               
+              <tr>
+                <td>
+                  <%= index+1 %>
+                </td>
+                <td>
+                  <%= user.tokhai %>
+                </td>
+                <td>
+                  <%= files.fieldName %>
+                </td>
+                <td>
+                  <%= files.createdAt.toLocaleString() %>
+                </td>
+                <td style="text-align: center;">
+                    <a class="btn btn-warning" style="text-align: center;" href="/uploads/<%= files.filename %>">View</a> 
+                </td>
+              </tr>
+              <% totalIndex++; %>
+                <% }) %>
+                <% } else { %>
+                    <td colspan="10" >Tờ khai không có phụ lục</td>
+                    <% } %>
+                <div class="d-flex justify-content-between align-items-center">
+                 <h5>Tổng cộng: <%= totalIndex %></h5>
+                                    <a class="btn btn-info" style="margin-bottom: 5px;" href="/download-phuluc/<%= user.id %>">Download All</i></a>
+                </div>
+            </table>
+      </div>
+</body>
+</html>

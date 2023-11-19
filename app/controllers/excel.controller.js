@@ -1,9 +1,6 @@
 const { query } = require("express");
 const db = require("../models");
 const Excelupload = db.tochuckekhaithue;
-const Duyettokhai = db.duyettokhai;
-const Admin = db.admin;
-const Tokhaithue = db.tokhaithue;
 const readXlsxFile = require("read-excel-file/node");
 const Tochuc = db.tochuc;
 
@@ -55,9 +52,13 @@ const upload = async (req, res) => {
 };
 
 const getAllExcelFile = (req, res) => {
-  Excelupload.findAll()
+  Excelupload.findAll({
+    include: [{
+      model: Tochuc, as: 'to_chuc'
+    }]
+  })
     .then((data) => {
-      res.render('tochuc/listdata.ejs', {data})
+      res.render('admin/listdata.ejs', {data})
     })
     .catch((err) => {
       res.status(500).send({

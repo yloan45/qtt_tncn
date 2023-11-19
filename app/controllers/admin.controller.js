@@ -14,6 +14,10 @@ const Trangthaitokhai = db.trangthaixuly;
 const Duyettokhai = db.duyettokhai;
 const Tochuc = db.tochuc;
 const Phuluc = db.phuluc;
+const Files = db.file;
+const path = require('path');
+const archiver = require('archiver');
+const fs = require('fs');
 
 const getTokhaithue = async (req, res) => {
   const id = req.params.id;
@@ -139,8 +143,13 @@ const checkTokhai = async (req, res) => {
   }
 
   const { ct22, ct27, ct36 } = tokhai;
+  console.log('Attachments:', tokhai.phu_lucs);
+  console.log('Number of Attachments:', tokhai.phu_lucs.length);
+  console.log(' chỉ tiêu ct22 và ct36: ', ct22, ct36);
 
-  let hasAttachment = false;
+  //let hasAttachment = false;
+  let hasAttachment = tokhai.phu_lucs && tokhai.phu_lucs.length > 0;
+
   if (ct27 > 0 || ct36 > 0) {
     if (tokhai.phu_lucs && tokhai.phu_lucs.length > 0) {
       hasAttachment = true;
@@ -300,7 +309,89 @@ const tokhaikhongduocduyet = async (req, res) => {
   }
 }
 
+const getPhuluc = async (req, res) => {
+  const id = req.params.id;
+  const tokhai = await Tokhaithue.findOne({
+    where: {
+      id: id,
+    },
+    include: [
+      {
+        model: Canhan,
+        as: 'ca_nhan'
+      },
+      {
+        model: Phuluc,
+        as: 'phu_lucs',
+        include: [
+          {
+            model: Files,
+            as: 'files',
+          }
+        ]
+      }
+    ]
+  });
+  if(!tokhai){
+    res.json({ message: 'Không tìm thấy tờ khai!'});
+    return;
+  }
+ 
+  const listFiles = tokhai.phu_lucs.reduce((acc, phuluc) => {
+    acc.push(...phuluc.files);
+    return acc;
+  }, []);
+  
+  console.log("phụ lục của tờ khai là: ", listFiles);
+  res.render('admin/phuluc', { phuluc: listFiles,
+    user: tokhai
+  });
+
+
+};
+const downloadPhuluc = async (req, res) => {
+  const tokhaiId = req.params.id;
+  const tokhai = await Tokhaithue.findOne({
+    where: {
+      id: tokhaiId,
+    },
+    include: [
+      {
+        model: Phuluc,
+        as: 'phu_lucs',
+        include: [
+          {
+            model: Files,
+            as: 'files',
+          },
+        ],
+      },
+    ],
+  });
+
+  if (!tokhai) {
+    res.json({ message: 'Không tìm thấy tờ khai!' });
+    return;
+  }
+
+  const archive = archiver('zip', {
+    zlib: { level: 9 },
+  });
+
+  const zipFileName = `downloaded_files_${tokhaiId}.zip`;
+  res.attachment(zipFileName);
+  archive.pipe(res);
+  const basePath = process.cwd();
+  tokhai.phu_lucs.forEach((phuluc) => {
+    phuluc.files.forEach((file) => {
+      const filePath = path.join(basePath, 'public', 'uploads', file.filename);
+      archive.file(filePath, { name: file.filename });
+    });
+  });
+  archive.finalize();
+};
+
 module.exports = {
   duyettokhai, getTokhaithue, tokhaikhongduocduyet,
-  checkTokhai, getListAllTongThuNhap, getListThuNhap
+  checkTokhai, getListAllTongThuNhap, getListThuNhap, getPhuluc, downloadPhuluc
 }
