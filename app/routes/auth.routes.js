@@ -35,4 +35,8 @@ app.get("/api/auth/signout", controller.signout);       // đăng xuất tài kh
 app.get("/tochuc/login", (req, res) => {                // form login                                
   res.render("tochuc/login");
 });
+
+app.get('/canhan/login', (req, res) => {
+  res.render('nguoidung/login');
+});
 };

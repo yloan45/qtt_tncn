@@ -1,4 +1,4 @@
-const { authJwt } = require("../middleware");
+const { authJwt, validateInput, checkDateValidity } = require("../middleware");
 const { deleteUser, getAllUser, update, findOne, getUser } = require("../controllers/canhan.controller");
 const upload = require("../middleware/excelUpload");
 const excelController = require("../controllers/excel.controller");
@@ -81,7 +81,7 @@ module.exports = function (app) {
   app.put('/capnhattrangthai/:id', [authJwt.verifyToken, authJwt.isAdmin], duyettokhai);        // duyệt tờ khai
   app.put('/duyet-to-khai/:id', [authJwt.verifyToken, authJwt.isAdmin],tokhaikhongduocduyet);  // từ chối duyệt tờ khai
   app.post('/check-status/:id',[authJwt.verifyToken, authJwt.isAdmin], checkTokhai);
-
+  app.get('/list-de-nghi-hoan-thue',[authJwt.verifyToken, authJwt.isAdmin], tokhaithue.listHoanThue);
   app.get("/create-user", [authJwt.verifyToken, authJwt.isAdmin], (req, res) => {
     res.render("admin/create");                                                                 // form create cá nhân
   });
@@ -90,7 +90,8 @@ module.exports = function (app) {
     res.render("admin/auth/create.tochuc.ejs");
   });
 
-
+  app.post('/list-hoan-tra-thue', [authJwt.verifyToken,authJwt.isAdmin], tokhaithue.exportDanhSachHoanThue);
+  app.get('/hoan-tra-thue/:id', tokhaithue.hoanthueResultAdmin);
 
   // TRUY CẬP QUYỀN TỔ CHỨC
   app.get('/delete-nv/:id', [authJwt.verifyTokenTochuc, authJwt.isTochuc], deleteNhanVien);
@@ -158,7 +159,13 @@ module.exports = function (app) {
   app.get('/tra-cuu-to-khai-result', [authJwt.verifyTokenCanhan], (req, res) => {
     res.render('/nguoidung/resultsSearch');
   });
-  app.post('/tra-cuu-to-khai-qtt', [authJwt.verifyTokenCanhan], tokhaithue.tracuuTokhai);       // cá nhân tra cứu tờ khai
+
+ // app.post('/tra-cuu-to-khai-qtt', [authJwt.verifyTokenCanhan], tokhaithue.tracuuTokhai);       // cá nhân tra cứu tờ khai
+
+ app.post('/tra-cuu-to-khai-qtt', validateInput, checkDateValidity, tokhaithue.tracuuTokhai, (req, res) => {
+  const { searchResult } = res.locals;
+  res.render('nguoidung/resultsSearch', { searchResult });
+});
 
   app.get('/add-phu-luc/:id',  [authJwt.verifyTokenCanhan],  async (req, res) => {
     const id = req.params.id;
@@ -167,14 +174,17 @@ module.exports = function (app) {
   });
 
   app.post('/add-phu-luc/:id', [authJwt.verifyTokenCanhan], tokhaithue.createPhuluc);
-  app.get('/list-phuluc/:id', async (req, res) => {
+  
+ /* app.get('/list-phuluc/:id', async (req, res) => {
     const id = req.params.id;
     const phuluc = await Phuluc.findByPk(id);
     const filesArray = phuluc.files || [];
     console.log(phuluc);
     console.log("danh sách các file là", filesArray);
     res.render('phulucDetails', { phuluc, filesArray });
-  });
+  });*/
+
+  app.get('/thong-tin-hoan-tra-thue/:id', tokhaithue.hoanthueResult);
 
   app.get('/list-thu-nhap', [authJwt.verifyTokenCanhan], (req, res) => {
     const data = req.session.tochuckekhaithue || [];
@@ -210,6 +220,7 @@ module.exports = function (app) {
   });
 
 
+  app.post('/update-bank/:id', tokhaithue.updateBank);
 
   // nộp tờ khai quyết toán thuế nhu nhập cá nhân ==> CẬP NHẬT SAU
   app.get('/list-file-upload',[authJwt.verifyToken, authJwt.isAdmin], (req, res) => {
@@ -235,10 +246,6 @@ module.exports = function (app) {
       res.redirect('/list-file-upload');
     });
   });
-
-
-
-
 
 
 

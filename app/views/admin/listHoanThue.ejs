@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <%- include('./partials/head') %>
+  </head>
+  <body>
+    <div class="preloader">
+      <div class="lds-ripple">
+        <div class="lds-pos"></div>
+        <div class="lds-pos"></div>
+      </div>
+    </div>
+    <div id="main-wrapper" data-layout="vertical" >
+      <header class="topbar" data-navbarbg="skin5">
+        <%- include('./partials/header') %>
+      </header>
+      <aside class="left-sidebar" data-sidebarbg="skin5">
+        <div class="scroll-sidebar">
+          <%-include('./partials/sidebar') %>
+        </div>
+      </aside>
+      <div class="page-wrapper" style="background-color: white;">
+        <div class="page-breadcrumb">
+          <div class="row">
+            <div class="col-12 d-flex no-block align-items-center">
+              <h4 class="page-title">Danh sách NNT đề nghị hoàn trả thuế vào tài khoản</h4>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid">
+         
+            <table class="table table-bordered">
+                <tr style="text-align: center;">
+                    <th>STT</th>
+                    <th>Họ tên NNT</th>
+                    <th>Mã số thuế</th>
+                    <th>Email</th>
+                    <th>Ngân hàng</th>
+                    <th>Số tài khoản</th>
+                    <th>Số thuế nộp thừa trong kỳ <br>(VNĐ)</th>
+                    <th>Số thuế đề nghị hoàn vào tài khoản <br>(VNĐ)</th>
+                    <th>Ngày đề nghị hoàn trả thuế</th>
+                    <th>Action</th>
+                </tr>
+                <% let totalIndex = 0; %>
+                <% hoantrathue.forEach((user, index)=> { %>
+                    <tr style="text-align: center;">
+                        <td>
+                            <%= index+1 %>
+                        </td>
+                        <td>
+                            <%= user.to_khai_thue.fullname %>
+                        </td>
+                        <td>
+                            <%= user.to_khai_thue.ca_nhan.masothue %>
+                        </td>
+                        <td>
+                            <%= user.to_khai_thue.ca_nhan.email %>
+                        </td>
+                        <td>
+                            <%= user.to_khai_thue.nganhang %>
+                        </td>
+                        <td>
+                            <%= user.to_khai_thue.stk %>
+                        </td>
+                        <td><%= user.to_khai_thue.ct45 %></td>
+                        <td><%= user.to_khai_thue.ct46 %></td>
+                        <td>
+                            <%= user.createdAt.toLocaleString() %>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <% totalIndex++; %>
+                    <% }) %>
+                    <div class="d-flex justify-content-between align-items-center">
+                    <h5>Tổng cộng: <%= totalIndex %></h5>
+                    <form action="/list-hoan-tra-thue?export=excel" method="post">
+                      <button type="submit" class="btn btn-info" style="margin-bottom: 5px;">Export</button>
+                    </form>
+                    </div>
+            </table>
+          
+        </div>
+        <hr>
+<footer>
+  <p style="text-align: center;">Trang admin</p>
+</footer>
+  </body>
+</html>

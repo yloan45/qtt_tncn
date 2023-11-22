@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+  <%- include('./partials/head') %>
+  <style>
+    table {
+      width: 100%;
+    }
+
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      color: blue;
+      font-weight: bolder;
+      z-index: 1;
+    }
+
+    label {
+      font-size: 14px;
+      color: rgb(0, 0, 255, 0.784);
+      text-transform: capitalize;
+    }
+
+    tbody {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .table-row {
+      transition: background-color 0.3s;
+    }
+
+    .table-row:hover {
+      background-color: #c8d5ed;
+    }
+
+    .no-data-row {
+      background-color: #f0f0f0;
+      /* Màu nền của dòng "Không có dữ liệu hiển thị" */
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="preloader">
+    <div class="lds-ripple">
+      <div class="lds-pos"></div>
+      <div class="lds-pos"></div>
+    </div>
+  </div>
+  <div id="main-wrapper" data-layout="vertical">
+    <header class="topbar" data-navbarbg="skin5">
+      <%- include('./partials/header') %>
+    </header>
+    <aside class="left-sidebar" data-sidebarbg="skin5">
+      <div class="scroll-sidebar">
+        <%-include('./partials/sidebar') %>
+      </div>
+    </aside>
+    <div class="page-wrapper" style="background-color: white;">
+      <div class="page-breadcrumb">
+        <div class="row">
+          <div class="col-12 d-flex no-block align-items-center">
+            <h4 class="page-title">Thông tin hoàn trả thuế của cá nhân: <%= tokhai.fullname %>, tờ khai số: <%= tokhai.id %></h4>
+            <div class="ms-auto text-end">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Library</li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid">
+        <form action="" method="post" class="row g-3 needs-validation" novalidate>
+          <div class="container-fluid" style="width: 650px;">
+            <div class="mb-3">
+              <label style="font-weight: bolder;" class="form-label">TỜ KHAI THUẾ</label>
+              <input type="text" class="form-control" name="tokhai" value="<%= tokhai.tokhai %>">
+            </div>
+
+            <div class="row mt-3">
+              <div class="col">
+                <label class="form-label">HỌ TÊN NNT</label>
+                <input type="text" class="form-control" name="hoten" value="<%= tokhai.fullname %>">
+              </div>
+              <div class="col">
+                <label class="form-label">MÃ SỐ THUẾ</label>
+                <input type="text" name="masothue" value="<%= tokhai.ca_nhan.masothue %>" class="form-control">
+              </div>
+            </div>
+
+
+            <div class="row mt-3">
+              <div class="col">
+                <label class="form-label">NGÂN HÀNG</label>
+                <input type="text" class="form-control" name="nganhang" value="<%= tokhai.nganhang%>">
+              </div>
+              <div class="col">
+                <label class="form-label">SỐ TÀI KHOẢN</label>
+                <input type="text" name="stk" class="form-control" value="<%= tokhai.stk %>">
+              </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col">
+                  <label class="form-label">KỲ QUYẾT TOÁN THUẾ</label>
+                  <input type="text" class="form-control" name="namkekhai" value="<%= tokhai.namkekhai %>">
+                </div>
+                <div class="col">
+                  <label class="form-label">SỐ THUẾ NỘP THỪA TRONG KỲ</label>
+                  <input type="text" name="ct46" class="form-control" value="<%= tokhai.ct46 %> VNĐ">
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col">
+                  <label class="form-label">TRẠNG THÁI ĐỀ NGHỊ HOÀN</label>
+                  <input type="text" class="form-control" name="trangthai" value="<%= thongTinHoanTraThue.trangthai %>">
+                </div>
+                <div class="col">
+                  <label class="form-label">SỐ THUẾ ĐỀ NGHỊ HOÀN VÀO TÀI KHOẢN</label>
+                  <input type="text" name="tonghoantra" class="form-control" value="<%= thongTinHoanTraThue.tonghoantra %> VNĐ">
+                </div>
+              </div>
+              <br>
+
+
+              <%# submit %>
+              <div class="mt-5">
+                <a href="#" class="btn btn-primary" style="width: 150px; ">Check</a>
+              </div>
+            </div>
+
+        </form>
+      </div>
+      <%- include('check_tokhai') %>
+    </div>
+  </div>
+</body>
+
+<script src="js/check_tokhai.js"></script>
+<script src="js/index.js"></script>
+
+</html>

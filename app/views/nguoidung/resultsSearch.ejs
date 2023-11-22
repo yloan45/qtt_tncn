@@ -33,6 +33,7 @@
              <th>Điện thoại</th>
              <th>Cơ quan quyết toán thuế</th>
              <th>Trạng thái tờ khai</th>
+             <th>Hoàn trả thuế</th>
              <th>Ngày gửi</th>
              <th>Thêm phụ lục</th>
            </thead>
@@ -50,6 +51,7 @@
                   <td><%= result.ca_nhan.phone %></td>
                   <td><%= result.ca_nhan.cqqtthue %></td>
                   <td><%= result.trang_thai_xu_li.tentrangthai %></td>
+                  <td><a href="/thong-tin-hoan-tra-thue/<%= result.id %>">View</a></td>
                   <td><%= result.createdAt.toLocaleString() %></td>
                   <td><a href="/add-phu-luc/<%= result.id %>"><i class="fas fa-plus"></i></a></td>
                 </tr>

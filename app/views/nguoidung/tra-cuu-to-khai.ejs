@@ -13,6 +13,7 @@
       </header>
       <div class="container-fluid" style="width: 450px; margin-top: 1pc; margin-bottom: 1pc;">
         <h4 style="text-align: center; margin-bottom: 3pc;">Nhập thông tin tra cứu</h4>
+
         <form id="captchaForm" action="/tra-cuu-to-khai-qtt" method="post">
           <div class="row mt-3">
             <div class="col" style="margin-bottom: 5px;">
@@ -54,11 +55,17 @@
               <% } %>
             </div>
           </div>
+          <br>
+          <% if (messages.error) { %>
+            <span style=" color: red;" class="error-message"><%= messages.error[0] %></span>
+          <% } %>
+          <br>
           <div style="text-align: center;" class="mt-3">
             <button  class="btn btn-primary" style="width: 150px;">Tra cứu</button>
           </div>
         </form>
         <br><br><br>
+
         <br><br><br>
         <!--PHẦN NỘI DUNG-->
       </div>

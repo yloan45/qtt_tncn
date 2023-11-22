@@ -8,7 +8,10 @@ const Duyettokhai = db.duyettokhai;
 const Canhan = db.canhan;
 const { uploadPhuluc } = require("../controllers/upload.controller");
 const Trangthai = db.trangthaixuly;
-const {Op} = require('sequelize')
+const { Op } = require('sequelize')
+const flash = require('express-flash');
+const ExcelJS = require('exceljs');
+const e = require("connect-flash");
 
 const createTokhai = async (req, res) => {
   const loaitokhai = await Loaitokhai.findOne({
@@ -19,14 +22,10 @@ const createTokhai = async (req, res) => {
   const tokhaiData = {
     fullname: req.body.fullname,
     address: (req.body.xa_phuong || '') + ', ' + (req.body.quan_huyen || '') + ', ' + (req.body.tinh_tp || ''),
-    // dienthoai: req.body.phone,
-    // masothue: req.body.masothue,
-    // email: req.body.email,
     namkekhai: req.body.year,
     tokhai: req.body.tokhai,
     stk: req.body.stk,
     nganhang: req.body.nganhang,
-    // loaitokhai: req.body.loaitokhai,
     cucthue: req.body.cucthue,
     chicucthue: req.body.chicucthue,
     tuthang: req.body.tungay,
@@ -63,7 +62,7 @@ const createTokhai = async (req, res) => {
     loaiToKhaiId: loaitokhai.id,
     trangThaiXuLiId: 1,
   };
-  
+
   req.session.tokhaiData = tokhaiData;
   res.redirect('/tokhai/b2');
 }
@@ -98,13 +97,12 @@ async function createTokhaiStep3(req, res) {
   try {
     const phulucData = req.session.phulucData;
     const tokhaiData = req.session.tokhaiData;
-    console.log("đữ liệu nhập vào là: " + phulucData);
+    console.log("dữ liệu nhập vào là: " + phulucData);
     const tokhai = await Tokhai.create(tokhaiData);
-    const ct46 = tokhai;
-
+    const ct46 = parseFloat(tokhai.ct46);
     const hoantrathue = {
       tonghoantra: tokhai.ct46,
-      trangthai: "đang xét duyệt",
+      trangthai: ct46 > 0 ? "đề nghị hoàn trả thuế" : "không đề nghị hoàn trả thuế",
       toKhaiThueId: tokhai.id,
     };
     const hoantra = await Hoantrathue.create(hoantrathue);
@@ -133,21 +131,23 @@ async function createTokhaiStep3(req, res) {
         resolve();
       });
     });
-    
+
     delete req.session.tokhaiData;
     delete req.session.phulucData;
-   // res.redirect('/success');
+    // res.redirect('/success');
   } catch (error) {
     console.error(error);
     res.status(500).send(error.message);
   }
 }
 
+/*
 const tracuuTokhai = async (req, res) => {
   try{
     const {tokhai, trangthaixuly, startDate, endDate} = req.body;
-    if (!tokhai || !trangthaixuly || !startDate) {
-      return res.status(400).json({ message: 'Vui lòng nhập đầy đủ thông tin để tra cứu' });
+    if (!tokhai || !trangthaixuly || !startDate || !endDate) {
+      req.flash('error','Vui lòng nhập đầy đủ thông tin để tra cứu!');
+      return res.redirect('/tra-cuu-to-khai');
     }
     
     const currentDate = new Date();
@@ -182,6 +182,9 @@ const tracuuTokhai = async (req, res) => {
         },
         {
           model: Canhan, as: 'ca_nhan'
+        },
+        {
+          model: Hoantrathue, as: 'hoan_tra_thue'
         }
       ]
     });
@@ -193,14 +196,14 @@ const tracuuTokhai = async (req, res) => {
   } 
 
 };
-
+*/
 async function createPhuluc(req, res) {
   try {
     uploadPhuluc(req, res, async (err) => {
       if (err) {
         console.error(err);
         if (err.code === 'LIMIT_FILE_SIZE') {
-          const errorMessage = 'File size exceeds the limit.';
+          const errorMessage = 'Dung lượng file không được vượt quá 5MB';
           return res.send(`<script>alert('${errorMessage}'); window.location.href = window.location.href;</script>`);
         }
         return res.status(500).send(err.message);
@@ -246,11 +249,240 @@ async function createPhuluc(req, res) {
   }
 }
 
+const tracuuTokhai = async (req, res, next) => {
+  try {
+    const { trangthaixuly, startDate, endDate } = req.body;
+    const startDatetime = new Date(startDate + 'T00:00:00Z');
+    const endDatetime = new Date(endDate + 'T23:59:59Z');
+
+    const searchResult = await Tokhai.findAll({
+      where: {
+        createdAt: {
+          [Op.between]: [startDatetime, endDatetime],
+        },
+      },
+      include: [
+        {
+          model: Trangthai, as: 'trang_thai_xu_li',
+          where: {
+            tentrangthai: trangthaixuly
+          }
+        },
+        {
+          model: Loaitokhai, as: 'loai_to_khai'
+        },
+        {
+          model: Canhan, as: 'ca_nhan'
+        },
+        {
+          model: Hoantrathue, as: 'hoan_tra_thue'
+        }
+      ]
+    });
+
+    console.log('Kết quả tra cứu là: ', searchResult);
+
+    res.locals.searchResult = searchResult;
+    next();
+
+  } catch (error) {
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+
+const hoanTraThue = async (id) => {
+  try {
+    const hoanTraThue = await Tokhai.findOne({
+      where: {
+        id: id,
+      },
+      include: [
+        {
+          model: Hoantrathue, as: 'hoan_tra_thue'
+        },
+        {
+          model: Canhan, as: 'ca_nhan'
+        }
+      ]
+    });
+
+    if (hoanTraThue && hoanTraThue.hoan_tra_thue) {
+      const thongTinHoanTraThue = hoanTraThue.hoan_tra_thue;
+      return { thongTinHoanTraThue, tokhai: hoanTraThue, id };
+    } else {
+      console.log("Không có thông tin hoàn trả thuế");
+      return null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+const hoanthueResult = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await hoanTraThue(id);
+    if (result) {
+      const { thongTinHoanTraThue, tokhai, id } = result;
+      res.render('nguoidung/hoanTraThue', { thongTinHoanTraThue, tokhai, id });
+    } else {
+      console.log("Không có thông tin hoàn trả thuế");
+    }
+
+  } catch (error) {
+    throw error;
+  }
+}
+
+const hoanthueResultAdmin = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await hoanTraThue(id);
+    if (result) {
+      const { thongTinHoanTraThue, tokhai, id } = result;
+      res.render('admin/hoanTraThue', { thongTinHoanTraThue, tokhai, id });
+    } else {
+      console.log("Không có thông tin hoàn trả thuế");
+    }
+
+  } catch (error) {
+    throw error;
+  }
+}
+
+const updateBank = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { stk, nganhang } = req.body;
+    const tokhai = await Tokhai.findByPk(id);
+
+    if (!tokhai) {
+      return res.status(404).send('Tờ khai không tồn tại');
+    }
+
+    await tokhai.update({
+      stk: stk,
+      nganhang: nganhang,
+    });
+
+    res.status(200).redirect(`/thong-tin-hoan-tra-thue/${id}?success=true`);
+
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const listHoanThue = async (req, res) => {
+  try {
+    const listHoanThue = await Hoantrathue.findAll({
+      where: {
+        trangthai: "đề nghị hoàn trả thuế"
+      },
+      include: [
+        {
+          model: Tokhai, as: 'to_khai_thue',
+          include: [
+            {
+              model: Canhan, as: 'ca_nhan'
+            }
+          ]
+        },
+      ]
+    });
+    if (!listHoanThue) {
+      res.status(404).send("Not Found");
+    }
+  
+    console.log("danh sách cá nhân đề nghị hoàn trả thuế: " + listHoanThue);
+    res.render("admin/listHoanThue", { hoantrathue: listHoanThue });
+  } catch (error) {
+    throw error;
+  }
+};
+
+const exportDanhSachHoanThue = async (req, res) => {
+  try {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('HoanThue');
+
+    const listHoanThue = await Hoantrathue.findAll({
+      where: {
+        trangthai: "đề nghị hoàn trả thuế"
+      },
+      include: [
+        {
+          model: Tokhai, as: 'to_khai_thue',
+          include: [
+            {
+              model: Canhan, as: 'ca_nhan'
+            }
+          ]
+        },
+      ]
+    });
+
+    worksheet.columns = [
+      { header: 'STT', key: 'stt', width: 5 },
+      { header: 'Tên NNT', key: 'fullname', width: 25 },
+      { header: 'Mã số thuế', key: 'masothue', width: 25 },
+      { header: 'Email', key: 'email', width: 25 },
+      { header: 'Điện thoại', key: 'dienthoai', width: 25 },
+      { header: 'Kỳ quyết toán', key: 'namkekhai', width: 25 },
+      {
+        header: 'Số thuế nộp thừa trong kỳ', key: 'ct44', width: 25,
+        style: {
+          alignment: { wrapText: true }
+        }
+      },
+      {
+        header: 'Số thuế đề nghị hoàn trả vào tài khoản', key: 'ct46', width: 25,
+        style: {
+          alignment: { wrapText: true }
+        }
+      },
+      { header: 'Ngân hàng', key: 'nganhang', width: 25},
+      { header: 'Số tài khoản', key: 'stk' , width: 25},
+    ];
+    listHoanThue.forEach((hoanthue, index) => {
+      const rowData = {
+        stt: index + 1,
+        fullname: hoanthue.to_khai_thue.fullname,
+        masothue: hoanthue.to_khai_thue.ca_nhan.masothue,
+        email: hoanthue.to_khai_thue.ca_nhan.email,
+        dienthoai: hoanthue.to_khai_thue.ca_nhan.phone,
+        namkekhai: hoanthue.to_khai_thue.namkekhai,
+        ct44: hoanthue.to_khai_thue.ct44,
+        ct46: hoanthue.tonghoantra,
+        nganhang: hoanthue.to_khai_thue.nganhang,
+        stk: hoanthue.to_khai_thue.stk
+      };
+
+    worksheet.addRow(rowData);
+
+    });
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename=hoan_thue.xlsx');
+
+  await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    console.error("Export error:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
 
 module.exports = {
   create: createTokhai,
   createTokhaiStep2,
   createTokhaiStep3,
   tracuuTokhai,
-  createPhuluc
+  createPhuluc,
+  hoanTraThue, updateBank, hoanthueResult,
+  hoanthueResultAdmin, listHoanThue,
+  exportDanhSachHoanThue
 };

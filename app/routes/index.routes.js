@@ -17,9 +17,7 @@ router.get('/admin-login', (req, res) => {
 
 
 // CÁ NHÂN 
-router.get('/canhan/login', (req, res) => {
-    res.render('nguoidung/login')
-});
+
 router.get('/nd-register', (req, res) => {
     res.render('nguoidung/register')
 });

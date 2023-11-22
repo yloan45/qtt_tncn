@@ -19,6 +19,7 @@
           <nav style="color: #b9deff; background-color: #2886d3; height: 30px; border-radius: 5px; text-align: center;">
             <p style="margin-top: 3px;">Đăng nhập hệ thống</p>
           </nav>
+
           <div class="card-body px-4 py-5 px-md-5">
             <form action="/canhan/login" method="post">
 
@@ -39,12 +40,15 @@
                  
                 </div>
               </div>
-              <br>
+              <% if (messages.error) { %>
+                <span style=" color: red;" class="error-message"><%= messages.error[0] %></span>
+              <% } %>
+              <br><br>
               <button type="submit" class="btn btn-primary">
                 Đăng nhập
               </button>
-
             </form>
+
           </div>
         </div>
         <br><br><br>

@@ -3,6 +3,7 @@ const config = require("../config/auth.config");
 require('dotenv/config');
 const mailer = require('../utils/mailer');
 const crypto = require('crypto');
+const flash = require('express-flash');
 
 const User = db.user;
 const Role = db.role;
@@ -367,7 +368,8 @@ exports.CanhanSignin = async (req, res) => {
     );
 
     if (!user || !passwordIsValid) {
-      return res.status(404).send({ message: "User not found or Invalid password!" });
+      req.flash('error', 'Tên đăng nhập hoặc mật khẩu không đúng!');
+      return res.redirect('/canhan/login');
     }
 
     const token = jwt.sign({ id: user.id },
@@ -386,7 +388,7 @@ exports.CanhanSignin = async (req, res) => {
 
     req.session.token = token;
     req.session.user = user;
-    return res.redirect("/canhan/")
+    return res.redirect("/canhan")
   } catch (error) {
     return res.status(500).send({ message: error.message });
   }

@@ -1,7 +1,9 @@
 const express = require("express");
 const cors = require("cors");
+const flash = require('express-flash');
 const configViewEngine = require('./app/config/view.engine');
 const app = express();
+
 const session = require("express-session");
 
 global.__basedir = __dirname + "/.";
@@ -9,6 +11,7 @@ global.__basedir = __dirname + "/.";
 var corsOptions = {
   origin: "http://localhost:8081"
 };
+
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -23,7 +26,7 @@ app.use('/', homeRoutes);
 
 db.sequelize.sync();
 
-const svgCaptcha = require("svg-captcha");
+
 app.use(
   session({
     secret: "your secret",
@@ -31,6 +34,7 @@ app.use(
     saveUninitialized: true
   })
 );
+app.use(flash());
 
 const admin = require('./app/routes/admin.routes');
 app.use('/admin', admin);

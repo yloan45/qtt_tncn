@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head') %>
+  <style scoped>
+    /* Đặt lớp CSS hidden */
+    .step.hidden {
+      display: none;
+    }
+
+    .step {
+      background-color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="khungtong">
+      <header>
+        <%- include('./partials/header') -%>
+      </header>
+      <!--phan header-->
+      <div class="container-fluid" style="margin-top: 1pc; margin-bottom: 1pc;">
+        <h3>Thông tin hoàn trả thuế của <%= tokhai.fullname %>, năm <%= tokhai.namkekhai %></h3>
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 style="font-size: 16px; text-align: right; margin-right: 15px;"> </h5>
+          <a href="#" class="btn btn-success">View All</a>
+        </div>
+        <form action="/update-bank/<%= tokhai.id %>" method="post">
+          <table class="table table-striped table-bordered mt-3 " id="data-table" style="text-align: center;">
+            <thead>
+              <th>Tờ khai</th>
+              <th>Số thuế nộp thừa trong kỳ</th>
+              <th>Trạng thái đề nghị hoàn</th>
+              <th>Số thuế đề nghị hoàn trả</th>
+              <th>Hoàn trả vào tài khoản</th>
+              <th>Ngân hàng</th>
+              <th>Action</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td><%= tokhai.tokhai %></td>
+                <td><%= tokhai.ct44 %> VNĐ</td>
+                <td><%= thongTinHoanTraThue.trangthai %> </td>
+                <td><%= thongTinHoanTraThue.tonghoantra %> VNĐ</td>
+                <td><input type="text" name="stk" value="<%= tokhai.stk %>" class="form-control"></td>
+                
+                <td>
+                  <select name="nganhang" class="form-select">
+                    <option value="<%= tokhai.nganhang %>" selected><%= tokhai.nganhang %></option>
+                    <option value="Sacombank">Sacombank</option>
+                    <option value="Agribank">Agribank</option>
+                    <option value="Vietcombank">Vietcombank</option>
+                    <option value="MB Bank">MB Bank</option>
+                  </select>
+                </td>
+                <td>
+                  <form action="/update-bank" method="post"><button class="btn btn-success" type="submit">Save</button></form>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+        <br><br><br>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const params = new URLSearchParams(window.location.search);
+      const successMessage = params.get('success');
+      if (successMessage === 'true') {
+        alert('Cập nhật thành công!');
+      }
+    });
+  </script>
+  <footer>
+    <%- include('../partials/footer') %>
+  </footer>
+
+</body>
+
+</html>

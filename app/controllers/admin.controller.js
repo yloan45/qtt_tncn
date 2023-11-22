@@ -118,7 +118,7 @@ const getListThuNhap = async (req, res) => {
   }
 };
 
-let checkTokhaiResult = {};
+
 
 const checkTokhai = async (req, res) => {
   const id = req.params.id;
@@ -168,7 +168,8 @@ const checkTokhai = async (req, res) => {
   const tochuckekhaithue = await Tochuckekhaithue.findAll({
     where: {
       masothue: masothue
-    }
+    },
+    include: [{model: Tochuc, as: 'to_chuc'}]
   });
 
   console.log("Danh sách các tổ chức: ", tochuckekhaithue);
@@ -179,10 +180,19 @@ const checkTokhai = async (req, res) => {
     let tongthu = 0;
 
     // Tính tổng khấu trừ thuế
+    const organizationsInfo = [];
     tochuckekhaithue.forEach((banGhi) => {
       const khautruthue = parseFloat(banGhi.thunhaptinhthue);
       if (!isNaN(khautruthue)) {
         tongthu += khautruthue;
+        const organizationInfo = {
+          organizationName: banGhi.to_chuc.tentochuc,
+        };
+        console.log('Organization Name:', organizationInfo.organizationName);
+    
+        // Push organizationInfo to the array
+        organizationsInfo.push(organizationInfo);
+        result.organizationsInfo = organizationsInfo;
       }
     });
 
@@ -196,7 +206,9 @@ const checkTokhai = async (req, res) => {
       result = { message: 'Tờ khai thiếu phụ lục kèm theo', isSuccess: false };
     } else {
       console.log('ct22 !== tongthu:', ct22_number === tongthu);
-      result = { message: 'Tổng thu nhập chịu thuế không đúng', isSuccess: false };
+      result = { message: `Tổng thu nhập chịu thuế không đúng.
+      <br>Tổng thu nhập chịu thuế là: ${tongthu} vnđ
+      <br>Thu nhập từ các tổ chức: ${result.organizationsInfo.map(org => org.organizationName).join(', ')}</li>`, isSuccess: false };
     } 
   } else {
     result = { message: 'Không tìm thấy mã số thuế phù hợp', isSuccess: false };
@@ -210,6 +222,7 @@ const checkTokhai = async (req, res) => {
 
 const duyettokhai = async (req, res) => {
   try {
+    let checkTokhaiResult = {};
     const tokhaiId = req.params.id;
     const { username, adminId } = req.session.user;
     if (checkTokhaiResult.isSuccess) {
@@ -234,7 +247,7 @@ const duyettokhai = async (req, res) => {
         <li>Tổng thu nhập chịu thuế của bạn là: ${tokhai.ct22}</li>
        <li> Số thuế phải nộp là: ${tokhai.ct44} đồng </li>
        <li> Só thuế đề nghị hoàn trả vào tài khoản là: ${tokhai.ct46} đồng </li><br>
-       Bạn vui lòng đến cơ quan quản lý thuế tại ${tokhai.ca_nhan.cqqtthue} để hoàn tất thủ tục quyết toán thuế năm ${tokhai.namkekhai}`);
+        Vui lòng đến cơ quan quản lý thuế tại ${tokhai.ca_nhan.cqqtthue} để hoàn tất thủ tục quyết toán thuế năm ${tokhai.namkekhai}`);
       await Duyettokhai.create({
         username: username,
         adminId: adminId,
@@ -251,11 +264,13 @@ const duyettokhai = async (req, res) => {
   }
 }
 
+
+let checkTokhaiResult = {};
 const tokhaikhongduocduyet = async (req, res) => {
   try {
     const tokhaiId = req.params.id;
     const { username, adminId } = req.session.user;
-    if (checkTokhaiResult.isSuccess === false) {
+    if (checkTokhaiResult.isSuccess == false) {
       const tokhai = await Tokhaithue.findOne({
         where: {
           id: tokhaiId,
@@ -273,27 +288,13 @@ const tokhaikhongduocduyet = async (req, res) => {
       await tokhai.update({ trangThaiXuLiId: 3 });                        // trạng thái "không được duyệt"
       const email = tokhai.ca_nhan.email;
 
-      if (checkTokhaiResult.message === "Tờ khai thiếu phụ lục kèm theo") {
+      if (checkTokhaiResult.message) {
         mailer.sendMail(email, `Tờ khai QTT-TNCN năm ${tokhai.namkekhai} không được duyệt`,
           `Xin chào ${tokhai.fullname}, <br>
         Tờ khai quyết toán thuế của bạn không được duyệt, lý do:
-        <li>${checkTokhaiResult.message}</li>
-        Vui lòng kiểm tra và bổ sung các loại giáy tờ/chứng từ liên quan vào phụ lục trong mục tra cứu tờ khai
+        <br>${checkTokhaiResult.message}
+        <br>Vui lòng kiểm tra lại thông tin và cập nhật chính xác.
         `);
-      } else if (checkTokhaiResult.message === "Không tìm thấy mã số thuế phù hợp") {
-        mailer.sendMail(email, "Tờ khai không được duyệt",
-          `Xin chào ${tokhai.fullname}, <br>
-        Tờ khai quyết toán thuế của bạn không được duyệt, lý do:
-        <li>${checkTokhaiResult.message}</li>
-        Vui lòng kiểm tra và đối chiếu lại thông tin của bạn tại nơi làm việc.
-        `);
-      } else if (checkTokhaiResult.message === "Tổng thu nhập chịu thuế không đúng") {
-        mailer.sendMail(email, "Tờ khai không được duyệt",
-          `Xin chào ${tokhai.fullname}, <br>
-       Tờ khai quyết toán thuế của bạn không được duyệt, lý do:
-       <li>${checkTokhaiResult.message}</li>
-       Vui lòng kiểm tra và đối chiếu lại cá thông tin thu nhập của bạn tại nơi làm việc hoặc kiểm tra nhanh tại mục tra cứu thu nhập cá nhân.
-       `);
       }
       await Duyettokhai.create({
         username: username,
