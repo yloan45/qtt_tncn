@@ -11,7 +11,6 @@ const Trangthai = db.trangthaixuly;
 const { Op } = require('sequelize')
 const flash = require('express-flash');
 const ExcelJS = require('exceljs');
-const e = require("connect-flash");
 
 const createTokhai = async (req, res) => {
   const loaitokhai = await Loaitokhai.findOne({

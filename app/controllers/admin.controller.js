@@ -2,15 +2,12 @@ const db = require("../models");
 const config = require("../config/auth.config");
 require('dotenv/config');
 const mailer = require('../utils/mailer');
-const { isAdmin } = require("../middleware/authJwt");
 const Trangthaixuly = db.trangthaixuly;
 const User = db.user;
 const Op = db.Sequelize.Op;
 const Canhan = db.canhan;
-const Diachi = db.diachi;
 const Tokhaithue = db.tokhaithue;
 const Tochuckekhaithue = db.tochuckekhaithue;
-const Trangthaitokhai = db.trangthaixuly;
 const Duyettokhai = db.duyettokhai;
 const Tochuc = db.tochuc;
 const Phuluc = db.phuluc;
@@ -18,6 +15,8 @@ const Files = db.file;
 const path = require('path');
 const archiver = require('archiver');
 const fs = require('fs');
+const Hoanthue = db.hoantrathue;
+
 
 const getTokhaithue = async (req, res) => {
   const id = req.params.id;
@@ -119,7 +118,6 @@ const getListThuNhap = async (req, res) => {
 };
 
 
-
 const checkTokhai = async (req, res) => {
   const id = req.params.id;
   const tokhai = await Tokhaithue.findOne({
@@ -133,6 +131,9 @@ const checkTokhai = async (req, res) => {
       },
       {
         model: Phuluc, as: 'phu_lucs'
+      },
+      {
+        model: Hoanthue, as: 'hoan_tra_thue'
       }
     ]
   });
@@ -142,12 +143,7 @@ const checkTokhai = async (req, res) => {
     return;
   }
 
-  const { ct22, ct27, ct36 } = tokhai;
-  console.log('Attachments:', tokhai.phu_lucs);
-  console.log('Number of Attachments:', tokhai.phu_lucs.length);
-  console.log(' chỉ tiêu ct22 và ct36: ', ct22, ct36);
-
-  //let hasAttachment = false;
+  const { ct22, ct27, ct36, stk, nganhang } = tokhai;
   let hasAttachment = tokhai.phu_lucs && tokhai.phu_lucs.length > 0;
 
   if (ct27 > 0 || ct36 > 0) {
@@ -156,7 +152,9 @@ const checkTokhai = async (req, res) => {
     }
   }
 
+
   console.log('Has Attachment:', hasAttachment);
+
   const { masothue } = tokhai.ca_nhan;
   const ct22_temp = ct22; // Lấy ct22 từ đối tượng tokhai
   const ct22WithoutCommas = ct22_temp.replace(/,/g, '');
@@ -169,12 +167,29 @@ const checkTokhai = async (req, res) => {
     where: {
       masothue: masothue
     },
-    include: [{model: Tochuc, as: 'to_chuc'}]
+    include: [{ model: Tochuc, as: 'to_chuc' }]
   });
 
   console.log("Danh sách các tổ chức: ", tochuckekhaithue);
 
-  let result = { message: '', isSuccess: false, hasAttachment: hasAttachment };
+
+  let validationResult;
+  if( tokhai.ct46 <= tokhai.ct44 && tokhai.hoan_tra_thue.tonghoantra === tokhai.ct46){
+    validationResult = {
+      isValid: true,
+      message: '',
+    }
+  } else {
+    validationResult = {
+      isValid: false,
+      message: 'Đề nghị hoàn trả thuế không chính xác!',
+    }
+  }
+
+  let result = { message: '', isSuccess: false, hasAttachment: hasAttachment, validationResult };
+
+
+
 
   if (tochuckekhaithue.length > 0) {
     let tongthu = 0;
@@ -189,7 +204,7 @@ const checkTokhai = async (req, res) => {
           organizationName: banGhi.to_chuc.tentochuc,
         };
         console.log('Organization Name:', organizationInfo.organizationName);
-    
+
         // Push organizationInfo to the array
         organizationsInfo.push(organizationInfo);
         result.organizationsInfo = organizationsInfo;
@@ -198,18 +213,26 @@ const checkTokhai = async (req, res) => {
 
     console.log('Tổng khẩu trừ thuế:', tongthu);
 
-    if (ct22_number === tongthu && hasAttachment === true) {
-      console.log('ct22 === tongthu:', ct22_number === tongthu);
-      result = { message: 'Tờ khai hợp lệ', isSuccess: true, ct22: ct22_number, hasAttachment: hasAttachment };
+    if (ct22_number === tongthu && hasAttachment === true && validationResult.isValid === true) {
+      if(tokhai.stk === '' && tokhai.nganhang === '' && tokhai.hoan_tra_thue.tonghoantra == 0){
+        console.log('ct22 === tongthu:', ct22_number === tongthu);
+        result = { message: 'Tờ khai hợp lệ.', isSuccess: true, ct22: ct22_number, hasAttachment: hasAttachment, validationResult };
+      } else {
+        console.log('ct22 === tongthu:', ct22_number === tongthu);
+        result = { message: 'Tờ khai còn thiếu thông tin tài khoản ngân hàng.<br>', isSuccess: true, ct22: ct22_number, hasAttachment: hasAttachment, validationResult };
+      }
+      
     } else if (ct22_number === tongthu && hasAttachment === false) {
       console.log('ct22 === tongthu:', ct22_number === tongthu);
       result = { message: 'Tờ khai thiếu phụ lục kèm theo', isSuccess: false };
     } else {
       console.log('ct22 !== tongthu:', ct22_number === tongthu);
-      result = { message: `Tổng thu nhập chịu thuế không đúng.
+      result = {
+        message: `Tổng thu nhập chịu thuế không đúng.
       <br>Tổng thu nhập chịu thuế là: ${tongthu} vnđ
-      <br>Thu nhập từ các tổ chức: ${result.organizationsInfo.map(org => org.organizationName).join(', ')}</li>`, isSuccess: false };
-    } 
+      <br>Thu nhập từ các tổ chức: ${result.organizationsInfo.map(org => org.organizationName).join(', ')}</li>`, isSuccess: false
+      };
+    }
   } else {
     result = { message: 'Không tìm thấy mã số thuế phù hợp', isSuccess: false };
   }
@@ -263,7 +286,6 @@ const duyettokhai = async (req, res) => {
     return res.status(500).json({ error: 'Error' });
   }
 }
-
 
 let checkTokhaiResult = {};
 const tokhaikhongduocduyet = async (req, res) => {
@@ -333,18 +355,19 @@ const getPhuluc = async (req, res) => {
       }
     ]
   });
-  if(!tokhai){
-    res.json({ message: 'Không tìm thấy tờ khai!'});
+  if (!tokhai) {
+    res.json({ message: 'Không tìm thấy tờ khai!' });
     return;
   }
- 
+
   const listFiles = tokhai.phu_lucs.reduce((acc, phuluc) => {
     acc.push(...phuluc.files);
     return acc;
   }, []);
-  
+
   console.log("phụ lục của tờ khai là: ", listFiles);
-  res.render('admin/phuluc', { phuluc: listFiles,
+  res.render('admin/phuluc', {
+    phuluc: listFiles,
     user: tokhai
   });
 

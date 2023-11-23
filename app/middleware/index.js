@@ -30,10 +30,24 @@ const checkDateValidity = (req, res, next) => {
   next(); // Chuyển tiếp nếu không có lỗi
 };
 
+const isStrongPassword = (password) =>{
+  if (password.length < 6) {
+    return false;
+}
+  if (!/[A-Z]/.test(password)) {
+      return false;
+  }
+  if (!/[!@#$%^&*()-=_+]/.test(password)) {
+      return false;
+  }
+  return true;
+}
+
 
 module.exports = {
   authJwt,
   verifySignUp,
   checkDateValidity,
-  validateInput
+  validateInput,
+  isStrongPassword
 };

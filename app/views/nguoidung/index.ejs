@@ -1,43 +1,110 @@
 <html lang="en">
 
 <head>
-    <%- include('./partials/head') %>
-</head>
+  <%- include('./partials/head') %>
 
+  <style scoped>
+    .home {
+      font-size: 14px;
+      text-align: justify;
+      margin-left: 25px;
+      
+    }
+    .home p {
+      font-weight: bold;
+    }
+  </style>
+
+</head>
 <body>
-    <div class="container">
-        <div class="khungtong">
-            <!--phan header-->
-            <header>
-                <%- include('./partials/header') -%>
-            </header>
-            <!--PHẦN NỘI DUNG-->
-            <div class="container-fluid" style="width: 650px; margin-top: 1pc; margin-bottom: 1pc;">
-                <div class="card bg-glass" style="border-radius: 5px;">
-                    <nav
-                        style="color: #b9deff; background-color: #2886d3; height: 30px; border-radius: 5px; text-align: center;">
-                        <p style="margin-top: 3px; font-size: 16px; color: white;">Thông tin người dùng</p>
-                    </nav>
-                    <div class="card-body px-4 py-5 px-md-5">
-                        <h5>Bạn đã đăng nhập hệ thống thành công </h5>
-                        <h5>Mã số thuế</h5>
-                        <h5>Tên tổ chức</h5>
-                        <h5>Đại diện</h5>
-                        <h5>Cơ quan quản lý thuế</h5>
-                        <h5>Địa chỉ</h5>
-                        <h5>Email liên hệ</h5>
-                        <h5>Điện thoại</h5>
-                        <h5></h5> 
-                    </div>
+  <div class="container">
+    <div class="khungtong">
+      <header>
+        <%- include('./partials/header') -%>
+      </header>
+      <div class="container-fluid" style="width: 950px; margin-top: 1pc; margin-bottom: 1pc;">
+        <div class="card">
+          <div class="card-header">
+            <h5> Thông tin người dùng</h5>
+          </div>
+          <div class="card-body">
+            <div style="text-align: right;"><a href="/edit-profile" class="card-title" style="text-align: right; ">Chỉnh sửa thông tin <i class="fas fa-pencil"></i></a></div>
+            <div class="home">
+              <div class="row">
+                <div class="col">
+                  <p>Họ và tên: </p>
                 </div>
-                <br><br><br>
-                <!--PHẦN NỘI DUNG-->
+                <div class="col-9">
+                    <%= user.ca_nhan.fullname%>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  <p>Mã số thuế </p>
+                </div>
+                <div class="col-9">
+                    <%= user.ca_nhan.masothue%>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  <p>Email: </p>
+                </div>
+                <div class="col-9">
+                    <%= user.ca_nhan.email%>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  <p>Điện thoại: </p>
+                </div>
+                <div class="col-9">
+                    <%= user.ca_nhan.phone%>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col">
+                  <p>Địa chỉ: </p>
+                </div>
+                <div class="col-9">
+                    <%= user.ca_nhan.dia_chi.xa_phuong%>, <%= user.ca_nhan.dia_chi.quan_huyen%>,   <%= user.ca_nhan.dia_chi.tinh_tp%>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="col">
+                  <p>Cơ quan quản lý thuế </p>
+                </div>
+                <div class="col-9">
+                    <%= user.ca_nhan.cqqtthue%>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  <p>Số người phụ thuộc: </p>
+                </div>
+                <div class="col-9">
+                    <%= user.ca_nhan.phuthuoc%>
+                </div>
+              </div>
+
             </div>
+          </div>
         </div>
-        <footer>
-            <%- include('../partials/footer') %>
-        </footer>
-        <script src="js/formwizard.js"></script>
+      </div>
+      <br><br><br>
+    </div>
+  </div>
+  <footer>
+    <%- include('../partials/footer') %>
+  </footer>
+  <script src="js/formwizard.js"></script>
 
 </body>
 

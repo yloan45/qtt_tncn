@@ -1,0 +1,166 @@
+<html lang="en">
+
+<head>
+  <%- include('./partials/head') %>
+
+  <style scoped>
+    .home {
+      font-size: 14px;
+      text-align: justify;
+      margin-left: 100px;
+    }
+    .home p {
+      font-weight: bold;
+    }
+    .home input {
+        width: 450px;
+        margin-bottom: 15px;
+    }
+
+    .home select {
+        width: 450px;
+        margin-bottom: 15px;
+    }
+
+
+  </style>
+
+</head>
+<body>
+  <div class="container">
+    <div class="khungtong">
+      <header>
+        <%- include('./partials/header') -%>
+      </header>
+      <div class="container-fluid" style="width: 1000px; margin-top: 1pc; margin-bottom: 1pc;">
+        <div class="card">
+          <div class="card-header">
+            <h5> Thông tin người dùng</h5>
+          </div>
+
+          <% if (messages.success) { %>
+            <span style="margin-right: 25px; margin-left: 25px; margin-top: 25px; font-size: 16px; color: seagreen;" class="alert alert-success"><%= messages.success[0] %></span>
+          <% } %>
+
+          <% if (messages.error) { %>
+            <span style="margin-right: 25px; margin-left: 25px; margin-top: 25px; font-size: 16px; color: seagreen;" class="alert alert-success"><%= messages.error[0] %></span>
+          <% } %>
+
+
+          <form action="/update-profile/<%= user.ca_nhan.id %>" method="post">
+            <div class="card-body">
+                <div class="home">
+                  <div class="row">
+                    <div class="col">
+                      <p>Họ và tên: </p>
+                    </div>
+                    <div class="col-9">
+                        <input type="fullname" name="fullname" class="form-control" value="<%= user.ca_nhan.fullname %>">
+                    </div>
+                  </div>
+    
+                  <div class="row">
+                    <div class="col">
+                      <p>Mã số thuế </p>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" name="masothue"  class="form-control" style="background: white;" value="<%= user.ca_nhan.masothue %>" readonly>
+                    </div>
+                  </div>
+    
+                  <div class="row">
+                    <div class="col">
+                      <p>CMT/CCCD: </p>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" name="cccd" class="form-control" value="<%= user.ca_nhan.cccd %>">
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col">
+                      <p>Email: </p>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" name="email" style="background: white;" class="form-control" value="<%= user.ca_nhan.email %>" readonly>
+                    </div>
+                  </div>
+    
+                  <div class="row">
+                    <div class="col">
+                      <p>Điện thoại: </p>
+                    </div>
+                    <div class="col-9">
+                      <input type="text" name="phone" style="background: white;" class="form-control" value="<%= user.ca_nhan.phone %>" readonly>
+                    </div>
+                  </div>
+    
+                  <div class="row">
+                    <div class="col">
+                      <p>Cơ quan quản lý thuế </p>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" name="cqqtthue"  class="form-control" value="<%= user.ca_nhan.cqqtthue %>">
+                    </div>
+                  </div>
+    
+                  <div class="row">
+                    <div class="col">
+                      <p>Số người phụ thuộc: </p>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" name="phuthuoc"  class="form-control" value="<%= user.ca_nhan.phuthuoc %>">
+                    </div>
+                  </div>
+    
+                  <div class="row">
+                    <div class="col">
+                      <p>Địa chỉ: </p>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" name="xa_phuong" value="<%= user.ca_nhan.dia_chi.xa_phuong %>" class="form-control">
+                    </div>
+                  </div>
+    
+                  <div class="row">
+                    <div class="col">
+                      <p>Quận/Huyện: </p>
+                    </div>
+                    <div class="col-9">
+                        <select name="quan_huyen" class="form-select" id="district">
+                            <option value=""><%= user.ca_nhan.dia_chi.quan_huyen %></option>
+                        </select>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col">
+                      <p>Tỉnh/TP: </p>
+                    </div>
+                    <div class="col-9">
+                        <select name="tinh_tp" class="form-select" id="city">
+                            <option value=""><%= user.ca_nhan.dia_chi.tinh_tp %></option>
+                        </select>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div class="container mt-3">
+                <button style="width: 150px;" class="btn btn-primary mx-auto d-block">Cập nhật</button>
+            </div>
+            
+          </form>
+        </div>
+      </div>
+      <br><br><br>
+    </div>
+  </div>
+  <footer>
+    <%- include('../partials/footer') %>
+  </footer>
+  <script src="js/address.js"></script>
+
+</body>
+
+</html>

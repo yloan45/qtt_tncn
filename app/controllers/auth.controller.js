@@ -16,11 +16,9 @@ const Tokhaithue =  db.tokhaithue;
 const Loaitokhai = db.loaitokhai;
 const Trangthaixuly = db.trangthaixuly;
 const express = require('express');
-const app = express;
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { checkUserRole } = require("../middleware/authJwt");
 
 function generateRandomPassword() {
   return crypto.randomBytes(4).toString('hex');
@@ -360,6 +358,10 @@ exports.CanhanSignin = async (req, res) => {
       where: {
         username: req.body.username,
       },
+      include: [{
+        model: Canhan, as: 'ca_nhan',
+        include: [{model: Diachi, as: 'dia_chi'}]
+      }]
     });
 
     const passwordIsValid = bcrypt.compareSync(
@@ -403,6 +405,10 @@ exports.signout = async (req, res) => {
     this.next(err);
   }
 };
+
+
+
+
 
 /*
 exports.getAllTokhai = async (req, res) => {

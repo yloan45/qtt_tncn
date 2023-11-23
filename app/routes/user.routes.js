@@ -1,5 +1,5 @@
 const { authJwt, validateInput, checkDateValidity } = require("../middleware");
-const { deleteUser, getAllUser, update, findOne, getUser } = require("../controllers/canhan.controller");
+const { deleteUser, getAllUser, update, findOne, getUser, updateCanhan, changePassword, forgotPassword } = require("../controllers/canhan.controller");
 const upload = require("../middleware/excelUpload");
 const excelController = require("../controllers/excel.controller");
 const tokhaithue = require("../controllers/tokhai.controller");
@@ -13,6 +13,7 @@ const { uploadTokhai, previewFiles } = require("../controllers/upload.controller
 const Phuluc = db.phuluc;
 const Files = db.noptokhai;
 const svgCaptcha = require("svg-captcha");
+const otpDatabase = new Map();
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -22,6 +23,35 @@ module.exports = function (app) {
     );
     next();
   });
+
+
+app.get("/otp",[authJwt.verifyTokenCanhan], ( req, res) => {
+  res.render("nguoidung/otp");
+})
+
+app.post("/otp",[authJwt.verifyTokenCanhan], forgotPassword);
+
+
+  app.post('/validate-otp', (req, res) => {
+    const { email, otp } = req.body;
+    const storedData = otpDatabase.get(email);
+    if (storedData && storedData.otp === otp && Date.now() < storedData.expirationTime) {
+      res.render('reset-password-form', { email: email });
+    } else {
+      req.flash('error', 'Mã OTP không đúng hoặc đã hết hạn.');
+      return res.redirect("/");
+    }
+  });
+  
+  app.post('/reset-password', (req, res) => {
+    const email = req.body.email;
+    const newPassword = req.body.newPassword;
+    otpDatabase.delete(email);
+  
+    res.send('Password reset successful. You can now log in with your new password.');
+  });
+
+
 
   // HOMEPAGE
   app.get('/admin', [authJwt.verifyToken, authJwt.isAdmin], (req, res) => {             // homepage admin
@@ -109,8 +139,22 @@ module.exports = function (app) {
   app.post("/upload", [authJwt.verifyTokenTochuc, authJwt.isTochuc], upload.single("file"), excelController.upload);
 
 
+app.get("/change-password",[authJwt.verifyTokenCanhan], (req, res) => {
+  res.render('nguoidung/changePassword');
+});
+
+app.post("/forgot-password/:id", [authJwt.verifyTokenCanhan], changePassword);
 
 // TRUY CẬP QUYỀN CÁ NHÂN
+
+
+app.get("/edit-profile",[authJwt.verifyTokenCanhan], (req, res) => {      // update profile
+  const user = req.session.user;
+  res.render("nguoidung/editProfile", {user});
+});
+
+app.post("/update-profile/:id", [authJwt.verifyToken], updateCanhan);
+
 
   // tạo tờ khai quyết toán thuế
 
