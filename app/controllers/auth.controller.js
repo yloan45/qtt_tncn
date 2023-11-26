@@ -134,7 +134,6 @@ exports.CaNhanSignup = async (req, res) => {
         return res.redirect('/');
       }
     }
-
     else {
       // user has role = 3
       const result = user.setRoles([1]);

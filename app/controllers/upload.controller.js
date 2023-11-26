@@ -11,16 +11,20 @@ const storage = multer.diskStorage({
 });
 
 const uploadTokhai = multer({ storage });
+
 const uploadPhuluc = multer({ 
     storage: storage,
     limits: { fileSize: 1024 * 1024 * 5 },
  }).array('filename'); // Cho phep upload toi da 25 tep tin
+
+
 
 const previewFiles = (req, res) => {
     const filename = req.params.filename;
     const filePath = path.join(__dirname, '../../public/uploads/', filename);
     res.sendFile(filePath);
   };
+
 
 module.exports = {
     uploadTokhai, uploadPhuluc,

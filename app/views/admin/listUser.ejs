@@ -1,110 +1,138 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-  <head>
-    <%- include('./partials/head') %>
-  </head>
-  <body>
-    <div class="preloader">
-      <div class="lds-ripple">
-        <div class="lds-pos"></div>
-        <div class="lds-pos"></div>
-      </div>
+
+<head>
+  <%- include('./partials/head') %>
+</head>
+
+<body>
+  <div class="preloader">
+    <div class="lds-ripple">
+      <div class="lds-pos"></div>
+      <div class="lds-pos"></div>
     </div>
-    <div id="main-wrapper" data-layout="vertical" >
-      <header class="topbar" data-navbarbg="skin5">
-        <%- include('./partials/header') %>
-      </header>
-      <aside class="left-sidebar" data-sidebarbg="skin5">
-        <div class="scroll-sidebar">
-          <%-include('./partials/sidebar') %>
+  </div>
+  <div id="main-wrapper" data-layout="vertical">
+    <header class="topbar" data-navbarbg="skin5">
+      <%- include('./partials/header') %>
+    </header>
+    <aside class="left-sidebar" data-sidebarbg="skin5">
+      <div class="scroll-sidebar">
+        <%-include('./partials/sidebar') %>
+      </div>
+    </aside>
+    <div class="page-wrapper" style="background-color: white;">
+      <div class="page-breadcrumb">
+        <div class="row">
+          <div class="col-12 d-flex no-block align-items-center">
+            <h4 class="page-title">Danh sách người nộp thuế cá nhân</h4>
+            <div class="ms-auto text-end">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Library
+                  </li>
+                </ol>
+              </nav>
+            </div>
+          </div>
         </div>
-      </aside>
-      <div class="page-wrapper" style="background-color: white;">
-        <div class="page-breadcrumb">
-          <div class="row">
-            <div class="col-12 d-flex no-block align-items-center">
-              <h4 class="page-title">Danh sách người nộp thuế cá nhân</h4>
-              <div class="ms-auto text-end">
-                <nav aria-label="breadcrumb">
-                  <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">
-                      Library
-                    </li>
-                  </ol>
-                </nav>
+      </div>
+      <div class="container-fluid">
+        <div style="text-align: right;">
+          <a href="#" class="btn btn-info" style="color: white;" id="importBtn">Import</a>
+          <input type="file" id="fileInput" style="display:none;" name="file">
+
+          <a href="#" class="btn btn-danger" style="color: white;">Export</a>
+        </div>
+        <table class="table table-bordered mt-3">
+          <tr style="text-align: center;">
+            <th>
+              STT
+            </th>
+            <th>Mã số thuế</th>
+            <th>Họ tên NNT</th>
+            <th>Căn cước công dân</th>
+            <th>Email</th>
+            <th>Địa chỉ</th>
+            <th>Cơ quan quản lý thuế</th>
+            <th>Điện thoại</th>
+            <th>Username</th>
+            <th>Số người phụ thuộc</th>
+            <th>Action</th>
+          </tr>
+          <% let totalIndex = 0; %>
+          <% user.forEach((user, index)=> { %>
+          <tr>
+            <td>
+              <%= index+1 %>
+            </td>
+            <td>
+              <%= user.masothue %>
+            </td>
+            <td>
+              <%= user.fullname %>
+            </td>
+            <td>
+              <%= user.cccd %>
+            </td>
+            <td>
+              <%= user.email %>
+            </td>
+            <td>
+              <%= user.dia_chi.xa_phuong %>
+              <%= user.dia_chi.quan_huyen %>
+              <%= user.dia_chi.tinh_tp %>
+            </td>
+            <td>
+              <%= user.cqqtthue%>
+            </td>
+            <td>
+              <%= user.phone %>
+            </td>
+            <td>
+              <%= user.user.username %>
+            </td>
+            <td>
+              <%= user.phuthuoc %>
+            </td>
+            <td>
+              <a href="#" class="edit-link" data-id="<%= user.id %>"><i class="fas fa-edit"></i></a>
+
+              <a href="/deletecn/<%= user.id %>" class="delete-link" data-id="<%= user.id %>"><i class="fas fa-trash"></i></a>
+
+
+            </td>
+            <% totalIndex++; %>
+
+          </tr>
+          <% }) %>
+          <h5>Tổng cộng: <%= totalIndex %></h5>
+        </table>
+
+        <!-- Modal -->
+        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Thành công!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p id="successMessage"></p>
               </div>
             </div>
           </div>
         </div>
-        <div class="container-fluid">
-<div style="text-align: right;">
-  <a href="#" class="btn btn-info" style="color: white;" name="file">Import</a>
-  <a href="#" class="btn btn-danger" style="color: white;">Export</a>
-</div>
-       <table class="table table-bordered mt-3">
-            <tr style="text-align: center;">
-                <th>
-                    STT
-                </th>
-                <th>Mã số thuế</th>
-                <th>Họ tên NNT</th>
-                <th>Căn cước công dân</th>
-                <th>Email</th>
-                <th>Địa chỉ</th>
-                <th>Cơ quan quản lý thuế</th>
-                <th>Điện thoại</th>
-                <th>Username</th>
-                <th>Số người phụ thuộc</th>
-                <th>Action</th>
-            </tr>
-            <% let totalIndex = 0; %>
-                <% user.forEach((user, index)=> { %>
-                 <tr>
-                    <td>
-                        <%= index+1 %>
-                    </td>
-                    <td>
-                    <%= user.masothue %>
-                    </td>
-                    <td>
-                      <%= user.fullname %>
-                      </td>
-                      <td>
-                        <%= user.cccd %>
-                      </td>
-                      <td>
-                        <%= user.email %>
-                      </td>
-                     <td>
-                        <%= user.dia_chi.xa_phuong %> 
-                        <%= user.dia_chi.quan_huyen %>
-                        <%= user.dia_chi.tinh_tp %>
-                     </td>
-                     <td>
-                    <%= user.cqqtthue%>
-                     </td>
-                     <td>
-                      <%= user.phone %>
-                   </td>
-                   <td>
-                    <%= user.user.username %>
-                 </td>
-                 <td>
-                  <%= user.phuthuoc %>
-               </td>
-                    <td>
-                        <a href="/update/<%= user.id %>" ><i class="fas fa-edit"></i></a>
-                        <a href="/deletecn/<%= user.id %>"><i class="fas fa-trash"></i></a>
-                        
-                    </td>
-                    <% totalIndex++; %>
-                   
-                </tr>
-                <% }) %>
-                <h5>Tổng cộng: <%= totalIndex %></h5>
-          </table>
-        </div>
 
-  </body>
+
+      </div>
+
+</body>
+
+<script src="js/admin.js"></script>
+
 </html>

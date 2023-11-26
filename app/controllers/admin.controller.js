@@ -212,15 +212,19 @@ const checkTokhai = async (req, res) => {
     });
 
     console.log('Tổng khẩu trừ thuế:', tongthu);
+/*
+    if(tokhai.stk && tokhai.nganhang && tokhai.hoan_tra_thue.tonghoantra == 0){
+      console.log('ct22 === tongthu:', ct22_number === tongthu);
+      result = { message: 'Tờ khai hợp lệ.', isSuccess: true, ct22: ct22_number, hasAttachment: hasAttachment, validationResult };
+    } else {
+      console.log('ct22 === tongthu:', ct22_number === tongthu);
+      result = { message: 'Tờ khai còn thiếu thông tin tài khoản ngân hàng.<br>', isSuccess: true, ct22: ct22_number, hasAttachment: hasAttachment, validationResult };
+    }
+*/
 
-    if (ct22_number === tongthu && hasAttachment === true && validationResult.isValid === true) {
-      if(tokhai.stk === '' && tokhai.nganhang === '' && tokhai.hoan_tra_thue.tonghoantra == 0){
+    if (ct22_number === tongthu && hasAttachment === true ) {
         console.log('ct22 === tongthu:', ct22_number === tongthu);
-        result = { message: 'Tờ khai hợp lệ.', isSuccess: true, ct22: ct22_number, hasAttachment: hasAttachment, validationResult };
-      } else {
-        console.log('ct22 === tongthu:', ct22_number === tongthu);
-        result = { message: 'Tờ khai còn thiếu thông tin tài khoản ngân hàng.<br>', isSuccess: true, ct22: ct22_number, hasAttachment: hasAttachment, validationResult };
-      }
+        result = { message: 'Tờ khai hợp lệ.', isSuccess: true, ct22: ct22_number, hasAttachment: hasAttachment };
       
     } else if (ct22_number === tongthu && hasAttachment === false) {
       console.log('ct22 === tongthu:', ct22_number === tongthu);
@@ -241,14 +245,14 @@ const checkTokhai = async (req, res) => {
   console.log(result);
   res.json(result);
 
-}
+}    
 
 const duyettokhai = async (req, res) => {
   try {
-    let checkTokhaiResult = {};
+
     const tokhaiId = req.params.id;
     const { username, adminId } = req.session.user;
-    if (checkTokhaiResult.isSuccess) {
+    if (checkTokhaiResult.isSuccess == true) {
       const tokhai = await Tokhaithue.findOne({
         where: {
           id: tokhaiId,
@@ -264,6 +268,7 @@ const duyettokhai = async (req, res) => {
       }
       await tokhai.update({ trangThaiXuLiId: 2 });        // trạng thái "đã duyệt"
       const email = tokhai.ca_nhan.email;
+      if (checkTokhaiResult.message) {
       mailer.sendMail(email, "Tờ khai của bạn đã được duyệt",
         `Xin chào ${tokhai.fullname} <br>
         Tờ khai quyết toán thuế thu nhập cá nhân của bạn đã được duyệt, thông tin chi tiết như sau:
@@ -271,6 +276,7 @@ const duyettokhai = async (req, res) => {
        <li> Số thuế phải nộp là: ${tokhai.ct44} đồng </li>
        <li> Só thuế đề nghị hoàn trả vào tài khoản là: ${tokhai.ct46} đồng </li><br>
         Vui lòng đến cơ quan quản lý thuế tại ${tokhai.ca_nhan.cqqtthue} để hoàn tất thủ tục quyết toán thuế năm ${tokhai.namkekhai}`);
+      } 
       await Duyettokhai.create({
         username: username,
         adminId: adminId,
