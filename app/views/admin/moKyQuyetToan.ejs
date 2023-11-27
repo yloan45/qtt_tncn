@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mở Kỳ Đăng Ký</title>
+</head>
+
+<body>
+  <h1>Mở Kỳ Đăng Ký</h1>
+  <form action="/mo-ky-quyet-toan" method="post">
+    <input name="adminId" value="<%= admin.adminId %>">
+    <label for="ngaymo">Thời gian bắt đầu:</label>
+    <input type="date" id="ngaymo" name="ngaymo" required>
+
+    <label for="ngaydong">Thời gian kết thúc:</label>
+    <input type="date" id="ngaydong" name="ngaydong" required>
+
+    <button type="submit">Mở Kỳ Đăng Ký</button>
+  </form>
+</body>
+
+</html>

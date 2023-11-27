@@ -24,76 +24,80 @@
             <div class="container-fluid" style="width: 900px; margin-top: 1pc; margin-bottom: 1pc;">
                 <div class="card">
                     <div class="card-header">
-                      <h5> Thông tin người dùng</h5>
+                      <h5> Cập nhật thông tin tổ chức/doanh nghiệp</h5>
                     </div>
+                    <form action="/cap-nhat-thong-tin" method="post">
+                        <input type="text" name="id" value="<%= user.to_chuc.id%>" style="display: none;">
                     <div class="card-body">
-                      <div style="text-align: right;"><a href="/tochuc/cap-nhat-thong-tin" class="card-title" style="text-align: right; ">Chỉnh sửa thông tin <i class="fas fa-pencil"></i></a></div>
                       <div class="home">
                         <div class="row">
-                          <div class="col">
+                          <div class="col mt-3">
                             <p>Họ và tên: </p>
                           </div>
-                          <div class="col-9">
-                            <%= user.to_chuc.tentochuc %>
+                          <div class="col-9 ">
+                            <input type="text" name="tentochuc" class="form-control mt-3" value=" <%= user.to_chuc.tentochuc %>">
                           </div>
                         </div>
           
                         <div class="row">
-                          <div class="col">
+                          <div class="col mt-3">
                             <p>Mã số thuế </p>
                           </div>
-                          <div class="col-9">
-                            <%= user.to_chuc.masothue %>
+                          <div class="col-9 ">
+                            <input type="text" name="masothue" class="form-control mt-3" value="  <%= user.to_chuc.masothue %>" readonly>
+                           
                           </div>
                         </div>
           
                         <div class="row">
-                          <div class="col">
+                          <div class="col mt-3">
                             <p>Email: </p>
                           </div>
-                          <div class="col-9">
-                            <%= user.to_chuc.email %>
+                          <div class="col-9 ">
+                            <input type="text" name="email" class="form-control mt-3" value="  <%= user.to_chuc.email %>" readonly>
                           </div>
                         </div>
           
                         <div class="row">
-                          <div class="col">
+                          <div class="col  mt-3">
                             <p>Điện thoại: </p>
                           </div>
                           <div class="col-9">
-                            <%= user.to_chuc.phone %>
+                            <input type="text" name="phone" class="form-control mt-3" value="  <%= user.to_chuc.phone %>">
                           </div>
                         </div>
                         
                         <div class="row">
-                          <div class="col">
+                          <div class="col  mt-3">
                             <p>Địa chỉ: </p>
                           </div>
                           <div class="col-9">
-                            <%= user.to_chuc.address %>
+                            <input type="text" name="address" class="form-control mt-3" value="  <%= user.to_chuc.address %>">
                           </div>
                         </div>
                         <div class="row">
-                          <div class="col">
+                          <div class="col  mt-3">
                             <p>Cơ quan quản lý thuế </p>
                           </div>
                           <div class="col-9">
-                            <%= user.to_chuc.cqqtthue %>
+                            <input type="text" name="cqqtthue" class="form-control mt-3" value="  <%= user.to_chuc.cqqtthue %>">
                           </div>
                         </div>
           
                         <div class="row">
-                          <div class="col">
+                          <div class="col  mt-3">
                             <p>Số lượng nhân viên</p>
                           </div>
                           <div class="col-9">
-                            <%= user.to_chuc.nhanvien %>
+                            <input type="text" name="nhanvien" class="form-control mt-3" value="  <%= user.to_chuc.nhanvien %>">
                           </div>
                         </div>
 
 
                       </div>
                     </div>
+                    <button type="submit" class="btn btn-primary" style="width: 175px; margin-left: 25pc;">Cập nhật</button>
+                    </form>
                   </div>
                 <br><br><br>
                 <!--PHẦN NỘI DUNG-->

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+  <%- include('./partials/head') %>
+  <style>
+    /* Add your custom styles here */
+  </style>
+</head>
+
+<body>
+  <div class="preloader">
+    <div class="lds-ripple">
+      <div class="lds-pos"></div>
+      <div class="lds-pos"></div>
+    </div>
+  </div>
+  <div id="main-wrapper" data-layout="vertical">
+    <header class="topbar" data-navbarbg="skin5">
+      <%- include('./partials/header') %>
+    </header>
+    <aside class="left-sidebar" data-sidebarbg="skin5">
+      <div class="scroll-sidebar">
+        <%- include('./partials/sidebar') %>
+      </div>
+    </aside>
+    <div class="page-wrapper" style="background-color: white;">
+      <div class="page-breadcrumb">
+        <div class="row">
+          <div class="col-12 d-flex no-block align-items-center">
+            <h4 class="page-title">Danh sách tổng hợp các kỳ quyết toán thuế</h4>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid">
+        <div style="text-align: right;">
+
+
+          <table class="table table-bordered mt-3 table-hover"  >
+            <tr style="text-align: center; ">
+              <th style="font-weight: bold;">
+                STT
+              </th>
+              <th style="font-weight: bold;">Thời gian mở kỳ <br> quyết toán cá nhân</th>
+              <th style="font-weight: bold;">Thời gian đóng kỳ <br> quyết toán cá nhân</th>
+              <th style="font-weight: bold;">Thời gian mở kỳ <br> quyết toán tổ chức</th>
+              <th style="font-weight: bold;">Thời gian đóng kỳ <br> quyết toán tổ chức</th>
+              <th style="font-weight: bold;">Người tạo</th>
+              <th style="font-weight: bold;">Ngày tạo</th>
+              <th style="font-weight: bold;">Hành động</th>
+            </tr>
+            <% let totalIndex = 0; %>
+            <% listOpen.forEach((dateOpen, index)=> { %>
+            <tr style="text-align: center;">
+              <td><%= index +1 %></td>
+              <td><%= dateOpen.ngaymo  %></td>
+              <td><%=  dateOpen.ngaydong %></td>
+              <td><%= dateOpen.ngaymotochuc %></td>
+              <td><%= dateOpen.ngaydongtochuc %></td>
+              <td><%= admin.username %></td>
+              <td><%= dateOpen.createdAt.toLocaleString() %></td>
+              <td>
+                <a href="#"><i class="fas fa-edit"></i></a>
+                <a href="#"><i class="fas fa-trash"></i></a>
+              </td>
+              <% totalIndex++; %>
+            </tr>
+            <% }) %>
+            <div class="d-flex justify-content-between align-items-center">
+              <h5>Tổng cộng: <%= totalIndex %></h5>
+              <div>
+                <button type="button" id="openModalBtn" class="btn btn-info" style="color: white;" data-bs-toggle="modal" data-bs-target="#kyquyettoan">Cá nhân</button>
+                <input type="file" id="fileInput" style="display:none;" name="file">
+                <a href="#" class="btn btn-danger" id="openModalBtn" style="color: white;" data-bs-toggle="modal" data-bs-target="#kyquyettoantochuc">Tổ chức</a>
+  
+              </div>
+            </div>
+          </table>
+        </div>
+      </div>
+    </div>
+    <input name="adminId" style="display: none;" value="<%= admin.adminId %>">
+
+    <%- include('kyquyettoan.canhan.ejs') %>
+    <%- include('kyquyettoan.tochuc.ejs') %>
+  </div>
+</body>
+
+<script>
+  document.getElementsByClassName('.currentYear').innerHTML += new Date().getFullYear();
+</script>
+
+</html>

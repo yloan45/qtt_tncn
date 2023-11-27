@@ -41,7 +41,7 @@ db.cucthue = require("../models/cucthue.model.js")(sequelize, Sequelize);
 db.chicucthue = require("../models/chicucthue.model.js")(sequelize, Sequelize);
 db.phanhoi = require("../models/phanhoi.model.js")(sequelize, Sequelize);
 db.chitietphanhoi = require("../models/chitietphanhoi.model.js")(sequelize, Sequelize);
-
+db.kyquyettoan = require("../models/kyquyettoan.js")(sequelize, Sequelize);
 
 db.file = require("../models/file.model.js")(sequelize,Sequelize);
 
@@ -52,6 +52,18 @@ db.phuluc.hasMany(db.file, {
 });
 
 db.file.belongsTo(db.phuluc, {
+  onUpdate: "CASCADE",
+});
+
+// admin mở kỳ quyết toán thuế
+
+db.admin.hasMany(db.kyquyettoan, {
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+
+db.kyquyettoan.belongsTo(db.admin, {
+  onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
 

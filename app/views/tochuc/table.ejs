@@ -1,11 +1,10 @@
 <html lang="en">
+
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
-  <%- include('head') %>
+    <%- include('head') %>
 </head>
-
 <body>
   <div class="container">
     <div class="khungtong">
@@ -14,17 +13,18 @@
         <%- include('./partials/header') -%>
       </header>
       <!--phan header-->
-      <h4 style="text-align: left;"> Thông tin doanh nghiệp kê khai trả trả lương cho cá nhân/tổ chức</h4>
+      <h4 style="text-align: left;"> Thông tin doanh nghiệp kê khai trả trả lương cho cá nhân/tổ chức năm <span id="currentYear"></span></h4>
       <!--PHẦN NỘI DUNG-->
       <div class="container-fluid" style="margin-top: 1pc; margin-bottom: 1pc;">
         <div class="input-group" style="margin-left: 20px; width: 250px;">
-          <input class="form-control"type="search" id="search-input" placeholder=" Tìm kiếm...">
-          <button class="btn btn-primary"><i class="fas fa-search" ></i></button>
+          <input class="form-control" type="search" id="search-input" placeholder=" Tìm kiếm...">
+          <button class="btn btn-primary"><i class="fas fa-search"></i></button>
         </div>
         <h5 style="font-size: 16px; text-align: right; margin-right: 15px;">Tổng cộng: </h5>
-        <table   class="table table-striped table-bordered mt-3 "  id="data-table" style="text-align: center;">
+
+        <table class="table table-striped table-bordered mt-3 " id="data-table" style="text-align: center;">
           <thead>
-            <th></th>
+            <th><input type="checkbox" id="selectAllCheckbox"></th>
             <th>STT</th>
             <th style="display: none;">ID</th>
             <th>Họ tên</th>
@@ -33,41 +33,60 @@
             <th>Email</th>
             <th>Điện thoại</th>
             <th>Thu nhập tính thuế</th>
-            <th>Action</th>
+            <th>Năm kê khai</th>
+            <th>Hành động</th>
           </thead>
           <tbody>
-            <% data.forEach((data, index) => { %>
-              <tr>
-                <td><input type="checkbox" name="" id=""></td>
-                <td><%= index + 1 %></td>
-                <td style="display: none;"><%= data.id %></td>
-                <td><%= data.hoten %></td>
-                <td><%= data.masothue %></td>
-                <td><%= data.diachi %></td>
-                <td><%= data.email %></td>
-                <td><%= data.dienthoai %></td>
-                <td><%= data.thunhaptinhthue %></td>
-                <td>
-                    <a  href="#" class="edit-user" data-toggle="modal" data-target="#editModal" data-id="<%= data.id %>">
-                      <i class="fas fa-edit"></i>
-                    </a>
-                    <a href="/delete-nv/<%= data.id %>"><i class="fas fa-trash"></i></a>
-                </td>
-              </tr>
+            <a href="#" class="btn btn-success" style="color: white;" id="importBtn">Import</a>
+            <input type="file" id="fileInput" style="display:none;" name="file">&nbsp;
+            <button id="deleteButton" class="btn btn-danger">Delete</button>
+            <% if (data && data.length > 0) { %>
+            <% data.forEach((data, index)=> { %>
+            <tr>
+              <td>
+                <input type="checkbox" class="delete-checkbox" data-id="<%= data.id %>">
+              </td>
+              <td>
+                <%= index + 1 %>
+              </td>
+              <td style="display: none;">
+                <%= data.id %>
+              </td>
+              <td>
+                <%= data.hoten %>
+              </td>
+              <td>
+                <%= data.masothue %>
+              </td>
+              <td>
+                <%= data.diachi %>
+              </td>
+              <td>
+                <%= data.email %>
+              </td>
+              <td>
+                <%= data.dienthoai %>
+              </td>
+              <td>
+                <%= data.thunhaptinhthue %>
+              </td>
+              <td></td>
+              <td>
+                <a href="#" class="edit-user" data-toggle="modal" data-target="#editModal" data-id="<%= data.id %>">
+                  <i class="fas fa-edit"></i>
+                </a>
+                <a href="/delete-nv/<%= data.id %>"><i class="fas fa-trash"></i></a>
+
+              </td>
+            </tr>
             <% }) %>
-            
+            <% } else { %>
+            <td colspan="10">Không có dữ liệu hiển thị.</td>
+            <% } %>
           </tbody>
         </table>
         <%- include('update_modal.ejs') %>
-        <nav aria-label="Page navigation example">
-          <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-          </ul>
-        </nav>
+
         <br><br><br>
         <!--PHẦN NỘI DUNG-->
       </div>
@@ -81,17 +100,17 @@
       searchInput.addEventListener('input', function() {
         const searchTerm = searchInput.value.toLowerCase();
         const rows = dataTable.querySelectorAll('tbody tr');
-    
+
         rows.forEach(row => {
           const columns = row.querySelectorAll('td');
           let found = false;
-    
+
           columns.forEach(column => {
             if (column.textContent.toLowerCase().includes(searchTerm)) {
               found = true;
             }
           });
-    
+
           if (found) {
             row.style.display = '';
           } else {
@@ -102,44 +121,44 @@
     </script>
 </body>
 <script>
-document.querySelectorAll('.edit-user').forEach(function(editLink) {
+  document.querySelectorAll('.edit-user').forEach(function(editLink) {
     editLink.addEventListener('click', function() {
-        const id = this.getAttribute('data-id');
-        const modal = document.getElementById("editModal");
-        const modalTitle = modal.querySelector('.modal-title');
-        const editUserId = modal.querySelector('#editUserId');
-        const hoten = modal.querySelector('#hoten');
-        const masothue = modal.querySelector('#masothue');
-        const diachi = modal.querySelector('#diachi');
-        const cccd = modal.querySelector('#cccd');
-        const email = modal.querySelector('#email');
-        const dienthoai = modal.querySelector('#dienthoai');
-        const thunhaptinhthue = modal.querySelector('#thunhaptinhthue');
-        const ghichu = modal.querySelector('#ghichu');
-        const nldIdInput = modal.querySelector('#nldId');
-        nldIdInput.value = id;
+      const id = this.getAttribute('data-id');
+      const modal = document.getElementById("editModal");
+      const modalTitle = modal.querySelector('.modal-title');
+      const editUserId = modal.querySelector('#editUserId');
+      const hoten = modal.querySelector('#hoten');
+      const masothue = modal.querySelector('#masothue');
+      const diachi = modal.querySelector('#diachi');
+      const cccd = modal.querySelector('#cccd');
+      const email = modal.querySelector('#email');
+      const dienthoai = modal.querySelector('#dienthoai');
+      const thunhaptinhthue = modal.querySelector('#thunhaptinhthue');
+      const ghichu = modal.querySelector('#ghichu');
+      const nldIdInput = modal.querySelector('#nldId');
+      nldIdInput.value = id;
 
-        //Fetch API để lấy dữ liệu từ server theo userId
-        fetch(`/tochuc/update/${id}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data) {
-                    modalTitle.textContent = `Duyệt khai quyêt toán thuế thu nhập cá nhân mẫu 02/QTT-TNCN - Tờ khai số:${data.excelupload.id}`;
-                    editUserId.value = data.excelupload.id;
-                    thunhaptinhthue.value = data.excelupload.thunhaptinhthue;
-                    ghichu.value = data.excelupload.ghichu;
-                    hoten.value = data.excelupload.hoten;
-                    masothue.value = data.excelupload.masothue;
-                    cccd.value = data.excelupload.cccd;
-                    email.value = data.excelupload.email;
-                    dienthoai.value = data.excelupload.dienthoai;
-                    diachi.value = data.excelupload.diachi;
-                }
-            });
+      //Fetch API để lấy dữ liệu từ server theo userId
+      fetch(`/tochuc/update/${id}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data) {
+            modalTitle.textContent = `Duyệt khai quyêt toán thuế thu nhập cá nhân mẫu 02/QTT-TNCN - Tờ khai số:${data.excelupload.id}`;
+            editUserId.value = data.excelupload.id;
+            thunhaptinhthue.value = data.excelupload.thunhaptinhthue;
+            ghichu.value = data.excelupload.ghichu;
+            hoten.value = data.excelupload.hoten;
+            masothue.value = data.excelupload.masothue;
+            cccd.value = data.excelupload.cccd;
+            email.value = data.excelupload.email;
+            dienthoai.value = data.excelupload.dienthoai;
+            diachi.value = data.excelupload.diachi;
+          }
+        });
     });
-});
+  });
 
-function updateNhanvien() {
+  function updateNhanvien() {
     // Lấy dữ liệu từ các trường form
     var editUserId = document.getElementById('nldId').value;
     var thunhaptinhthue = document.getElementById('thunhaptinhthue').value;
@@ -153,37 +172,172 @@ function updateNhanvien() {
 
     // Tạo một đối tượng chứa dữ liệu cập nhật
     var updateData = {
-        id: editUserId,
-        thunhaptinhthue: thunhaptinhthue,
-        ghichu: ghichu,
-        hoten: hoten,
-        masothue: masothue,
-        cccd: cccd,
-        email: email,
-        dienthoai: dienthoai,
-        diachi: diachi
+      id: editUserId,
+      thunhaptinhthue: thunhaptinhthue,
+      ghichu: ghichu,
+      hoten: hoten,
+      masothue: masothue,
+      cccd: cccd,
+      email: email,
+      dienthoai: dienthoai,
+      diachi: diachi
     };
 
     fetch(`/update/nv/${editUserId}`, {
-        method: 'POST', 
+        method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(updateData),
-    })
-    .then(response => response.json())
-    .then(data => {
+      })
+      .then(response => response.json())
+      .then(data => {
         document.getElementById('updateMessage').style.display = 'block';
-       // alert("Cập nhật thông tin thành công!");
-       // location.reload();
-    })
-    .catch(error => {
+      })
+      .catch(error => {
         console.error('Lỗi khi cập nhật:', error);
-    });
-}
-
+      });
+  }
 </script>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var deleteCheckboxes = document.querySelectorAll('.delete-checkbox');
+    var deleteButton = document.getElementById('deleteButton');
+    var selectAllCheckbox = document.getElementById('selectAllCheckbox');
+
+    selectAllCheckbox.addEventListener('change', function() {
+      deleteCheckboxes.forEach(function(checkbox) {
+        checkbox.checked = selectAllCheckbox.checked;
+      });
+      deleteButton.disabled = !selectAllCheckbox.checked && !Array.from(deleteCheckboxes).some(checkbox => checkbox.checked);
+    });
+
+    deleteCheckboxes.forEach(function(checkbox) {
+      checkbox.addEventListener('change', function() {
+        selectAllCheckbox.checked = Array.from(deleteCheckboxes).every(checkbox => checkbox.checked);
+        deleteButton.disabled = !selectAllCheckbox.checked && !Array.from(deleteCheckboxes).some(checkbox => checkbox.checked);
+      });
+    });
+
+    deleteButton.addEventListener('click', function() {
+      Swal.fire({
+        title: 'Xác nhận xóa',
+        text: 'Bạn có chắc chắn muốn xóa các mục đã chọn?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Đồng ý',
+        cancelButtonText: 'Hủy bỏ'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          var checkedIds = Array.from(deleteCheckboxes).filter(checkbox => checkbox.checked).map(checkbox => checkbox.getAttribute('data-id'));
+          deleteSelectedItems(checkedIds);
+        }
+      });
+    });
+
+    function deleteSelectedItems(ids) {
+      fetch('/delete-multiple', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ids: ids
+          }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Thành công!',
+              text: 'Xóa thành công!',
+            }).then(() => {
+              location.reload();
+            });
+          } else {
+            console.error('Deletion failed:', data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error during deletion:', error);
+        });
+    }
+  });
+</script>
+
+<script>
+document.getElementById('currentYear').innerHTML += new Date().getFullYear();
+
+  document.getElementById('importBtn').addEventListener('click', function() {
+    document.getElementById('fileInput').click();
+    event.preventDefault();
+  });
+
+  document.getElementById('fileInput').addEventListener('change', function() {
+    var fileInput = document.getElementById('fileInput');
+    var file = fileInput.files[0];
+
+    if (file) {
+
+      Swal.fire({
+        title: 'Xác nhận',
+        text: 'Bạn có chắc chắn muốn upload file đã chọn?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Đồng ý',
+        cancelButtonText: 'Hủy bỏ'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          var formData = new FormData();
+          formData.append('file', file);
+
+          fetch('/upload', {
+              method: 'POST',
+              body: formData
+            })
+            .then(response => response.json())
+
+            .then(data => {
+              if (data.error) {
+                Swal.fire({
+                  icon: 'warning',
+                  title: 'Thông báo',
+                  text: data.error,
+                });
+              } else {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Thành công!',
+                  text: 'Import thành công!',
+                }).then(() => {
+                  window.location.reload();
+                });
+              }
+
+            })
+            .catch(error => {
+              console.error('Error during import:', error);
+              Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: 'Import thành công!',
+              }).then(() => {
+                window.location.reload();
+              });
+            });
+        }
+      });
+    }
+  });
+</script>
 <script src="js/index.js"></script>
+
+</html>
 
 </html>

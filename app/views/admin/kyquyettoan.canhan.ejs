@@ -1,0 +1,32 @@
+<!-- Modal cho Cá nhân-->
+<div class="modal fade" id="kyquyettoan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" style="width: 650px;">
+        <div class="modal-header">
+            <div class="input-group">
+                <h5 class="modal-title" id="exampleModalLabel">Mở thời gian quyết toán thuế cho Cá nhân - năm <span id="currentYear"></span></h5>
+            </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="/mo-ky-quyet-toan" method="post">
+          <input name="adminId" style="display: none;" value="<%= admin.id %>">
+          <div class="modal-body mt-3">
+            <div class="input-group">
+              <label for="" style="margin-top: 5px;" class="col-3">Thời gian mở: </label>
+              <input type="date" id="ngaymo" name="ngaymo" class="form-control col-9">
+            </div>
+          </div>
+          <div class="modal-body mt-1">
+            <div class="input-group">
+              <label for="" style="margin-top: 5px;" class="col-3">Thời gian đóng: </label>
+              <input type="date" id="ngaydong" name="ngaydong" class="form-control col-9">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            <button type="submit" id="submitBtn" class="btn btn-primary">Mở kỳ quyết toán</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

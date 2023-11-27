@@ -2,6 +2,7 @@ const { verifySignUp } = require("../middleware");
 const controller = require("../controllers/auth.controller");
 const { TCsignup } = require("../controllers/signup.controller");
 const { verifyToken } = require("../middleware/authJwt");
+const { changePassword } = require("../controllers/canhan.controller");
 
 module.exports = function (app) {
 app.use(function (req, res, next) {
@@ -39,4 +40,13 @@ app.get("/tochuc/login", (req, res) => {                // form login
 app.get('/canhan/login', (req, res) => {
   res.render('nguoidung/login');
 });
+
+
+app.get("/change-password", (req, res) => {
+  res.render('nguoidung/changePassword');
+});
+
+app.post("/change-password/:id", changePassword);
+
+
 };

@@ -10,17 +10,15 @@
 <div>
   <nav class="navbar" style="background-color: #2886d3">
     <span style="margin-left: 18px; color: white; font-size: 15px; font-weight: bold;"><a href="/tochuc"
-        style="color: white; font-size: 18px;"><i class="fas fa-home"></i> Trang chủ</a></span>
+        style="color: white; font-size: 18px; text-decoration: none;"><i class="fas fa-home"></i> Trang chủ</a></span>
     <span style="margin-left: 15px; font-size: 15px; margin-right: 1pc; color: white;">
       <div class="btn-group">
         <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
           style="color: white; font-weight: bold;">
-          <%= user.username %>
+          <%= user.to_chuc.tentochuc %>
         </button>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">Action</a></li>
-          <li><a class="dropdown-item" href="#">Another action</a></li>
-          <li><a class="dropdown-item" href="#">Something else here</a></li>
+          <li><a class="dropdown-item" href="/change-password">Đổi mật khẩu</a></li>
           <li>
             <hr class="dropdown-divider">
           </li>
@@ -33,8 +31,8 @@
 </div>
 
 <nav style="background-color: hsl(204, 49%, 89%); margin-top: 1px; padding-left: 10px; padding-bottom: 4px;">
-  <a href="/tochuc/upload-file">Kê khai trả thuế |</a>
-  <a href="/tochuc/upload">Danh sách</a>
+  <!--<a id="tokhaithue-link" href="#">Kê khai trả thuế |</a>-->
+  <a href="/tochuc/upload">Danh sách kê khai</a>
 </nav>
 
 <style>
@@ -49,4 +47,34 @@
       event.preventDefault();
     }
   });
+
+
+  document.getElementById('tokhaithue-link').addEventListener('click', function (event) {
+  event.preventDefault();
+
+  fetch('/tochuc/upload-file')
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Thông báo',
+          text: data.error,
+        });
+      } else {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Chuyển hướng đến /tokhaithue',
+        }).then(() => {
+          window.location.href = '/tochuc/upload-file';
+        });
+      }
+    })
+    .catch(error => {
+      window.location.href = '/tochuc/upload-file';
+    });
+});
+
+
 </script>

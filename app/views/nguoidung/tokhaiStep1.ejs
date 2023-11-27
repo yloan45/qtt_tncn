@@ -20,7 +20,7 @@
                 <span class="thongtintokhai">Điện thoại liên lạc
                   <font style="color: red;">(*)</font>
                 </span>
-                <input style="width: 600px;" type="tel" name="phone" value="<%= user.ca_nhan.phone %>" readonly>
+                <input style="width: 600px;" type="tel" name="dienthoai" value="<%= user.ca_nhan.phone %>" readonly>
               </div>
 
               <%# EMAIL - NAME="email" %>
@@ -35,15 +35,15 @@
               <div class="input-group" style="margin-top: 15px;">
                 <span class="thongtintokhai">Chọn tờ khai</span>
                 <select  class="" style="margin-right: 250px; width: 600px;" name="tokhai" id="">
-                  <option value="Mẫu tờ khai 02/QTT-TNCN(TT92/2015)">02/QTT-TNCN- Tờ khai quyết toán thuế thu nhập cá nhân(TT92/2015)</option>
+                  <option value="Tờ khai quyết toán thuế 02/QTT-TNCN(TT92/2015)">02/QTT-TNCN- Tờ khai quyết toán thuế thu nhập cá nhân(TT92/2015)</option>
                 </select>
               </div>
 
               <!--CỤC THUẾ - CHI CỤC THUẾ-->
-              <div class="input-group" style="margin-top: 15px; display: none;">
-                <span class="thongtintokhai">Cục thuế</span>
+              <div class="input-group" style="margin-top: 15px">
+                <span class="thongtintokhai">Cơ quan quản lý thuế</span>
                 <select class="" style="margin-right: 240px; width: 600px;" name="cucthue" id="">
-                  <option value="" disabled></option>
+                  <option value="<%= user.ca_nhan.cqqtthue %>"><%= user.ca_nhan.cqqtthue %></option>
                 </select>
               </div>
 
@@ -53,7 +53,6 @@
                   <option value="" disabled></option>
                 </select>
               </div>
-
 
               <!--LOẠI TỜ KHAI-->
               <div class="input-group" style="margin-top: 15px;">
@@ -67,7 +66,7 @@
               <%# NAME KÊ KHAI - NAME="year" %>
               <div class="input-group" style="margin-top: 15px;">
                 <span class="thongtintokhai">Năm kê khai</span>
-                <input style="width: 150px;" name="year" type="text" id="yearInput"  oninput="updateMonths()">
+                <select style="width: 150px;"  name="year"  id="yearInput" oninput="updateMonths()"></select>
                 <div id="yearError" style="margin-left: 15px; color: red;"></div>
               </div>
 
@@ -83,3 +82,14 @@
               <br>
               <button class="next-button btn btn-primary" style="width: 150px; margin-left: 35pc;" data-step="2">Tiếp tục</button>
             </div>
+
+            <script>
+              const currentYear = new Date().getFullYear();
+              const yearSelect = document.getElementById("yearInput");
+              for (let year = currentYear - 1; year <= currentYear; year++) {
+                const option = document.createElement("option");
+                option.value = year;
+                option.text = year;
+                yearSelect.add(option);
+              }
+            </script>

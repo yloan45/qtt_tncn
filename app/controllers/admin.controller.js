@@ -16,6 +16,154 @@ const path = require('path');
 const archiver = require('archiver');
 const fs = require('fs');
 const Hoanthue = db.hoantrathue;
+const Kyquyettoan = db.kyquyettoan;
+
+/*
+const moKyQuyetToan = async (req, res, ngaymo, ngaydong) => {
+  try {
+    const adminId = req.body.adminId;
+
+    if (!adminId) {
+      req.flash('error', 'Admin không tồn tại!');
+      return res.redirect('/admin');
+    }
+
+    const currentYear = new Date().getFullYear();
+
+    const kyQuyetToanCount = await Kyquyettoan.count({
+      where: {
+        trangthai: true,
+        adminId: adminId,
+        ngaymo: {
+          [Op.between]: [new Date(`${currentYear}-01-01`), new Date(`${currentYear}-12-31`)],
+        },
+      },
+    });
+
+    if (kyQuyetToanCount >= 1) {
+      req.flash('error', 'Chỉ được mở QTT-TCCN 1 lần trong năm');
+      return res.redirect('/admin');
+    }
+
+    const kyQuyetToan = await Kyquyettoan.create({
+      trangthai: true,
+      ngaymo: ngaymo.toISOString(),
+      ngaydong: ngaydong.toISOString(),
+      adminId: adminId,
+    });
+
+    req.flash('success', 'Kỳ đăng ký đã được mở thành công!');
+    return res.redirect('/admin');
+  } catch (error) {
+    console.error(error);
+    req.flash('error', 'Lỗi khi tạo Kỳ Đăng Ký');
+    return res.redirect('/admin');
+  }
+};
+*/
+
+const listOpenKyQuyetToan = async (req, res) => {
+  try {
+    const adminId = req.session.user;
+
+    console.log("admin id là:", adminId);
+    const listOpen = await Kyquyettoan.findAll();
+    if (listOpen) {
+      res.render('admin/kyquyettoan', { listOpen: listOpen, admin: adminId });
+    }
+  } catch (error) {
+    console.log(error);
+    req.redirect('/admin');
+  }
+
+};
+
+const moKyQuyetToan = async (req, res) => {
+  try {
+    const adminId = req.body.adminId;
+    const { ngaymo, ngaydong } = req.body;
+    if (!adminId) {
+      req.flash('error', 'Admin không tồn tại!');
+      return res.redirect('/admin');
+    }
+    const currentYear = new Date().getFullYear();
+    const kyQuyetToanCount = await Kyquyettoan.count({
+      where: {
+        trangthai: true,
+        adminId: adminId,
+        ngaymo: {
+          [Op.between]: [new Date(`${currentYear}-01-01`), new Date(`${currentYear}-12-31`)],
+        },
+      },
+    });
+
+    /*
+    if (kyQuyetToanCount >= 1) {
+      req.flash('error', 'Chỉ được mở QTT-TCCN 1 lần trong năm');
+      return res.redirect('/admin');
+    }
+    */
+
+    const kyQuyetToan = await Kyquyettoan.create({
+      trangthai: true,
+      ngaymo: ngaymo,
+      ngaydong: ngaydong,
+      adminId: adminId,
+    });
+
+    req.flash('success', 'Kỳ đăng ký đã được mở thành công!');
+
+    /*
+      const currentDate = new Date();
+      if (currentDate > ngaydong) {
+        await Kyquyettoan.update({ trangthai: false }, { where: { id: kyQuyetToan.id } });
+        req.flash('info', 'Kỳ quyết toán đã đóng.');
+      } */
+
+    return res.redirect('/ky-quyet-toan');
+
+
+  } catch (error) {
+    console.error(error);
+    req.flash('error', 'Lỗi khi tạo Kỳ Đăng Ký');
+    return res.redirect('/ky-quyet-toan');
+  }
+};
+
+const moKyQuyetToanTochuc = async (req, res) => {
+  try {
+    const adminId = req.body.adminId;
+    const { ngaymo, ngaydong, selectOpenTochuc, openTochuc, closeTochuc } = req.body;
+
+    console.log(req.body);
+    if (!adminId) {
+      console.log("admin không tồn tại");
+      req.flash('error', 'Admin không tồn tại!');
+      return res.redirect('/admin');
+    }
+
+    if (new Date(ngaymo) < new Date(closeTochuc)) {
+      return alert("Sai cú pháp.")
+    }
+
+    const kyQuyetToanTochuc = await Kyquyettoan.create({
+      trangthai: true,
+      ngaymo: ngaymo,
+      ngaydong: ngaydong,
+      kymo: selectOpenTochuc,
+      ngaymotochuc: openTochuc,
+      ngaydongtochuc: closeTochuc,
+      adminId: adminId,
+    });
+
+    req.flash('success', 'Kỳ đăng ký đã được mở thành công!');
+    return res.redirect('/ky-quyet-toan');
+  } catch (error) {
+    console.error(error);
+    req.flash('error', 'Lỗi khi tạo Kỳ Đăng Ký');
+    return res.redirect('/admin');
+  }
+};
 
 
 const getTokhaithue = async (req, res) => {
@@ -90,7 +238,6 @@ const getListAllTongThuNhap = async (req, res) => {
     res.send('Không tìm thấy mã số thuế phù hợp');
   }
 }
-
 // còn update
 const getListThuNhap = async (req, res) => {
   const id = req.session.user.caNhanId;
@@ -116,7 +263,6 @@ const getListThuNhap = async (req, res) => {
     return tochuckekhaithue;
   }
 };
-
 
 const checkTokhai = async (req, res) => {
   const id = req.params.id;
@@ -174,7 +320,7 @@ const checkTokhai = async (req, res) => {
 
 
   let validationResult;
-  if( tokhai.ct46 <= tokhai.ct44 && tokhai.hoan_tra_thue.tonghoantra === tokhai.ct46){
+  if (tokhai.ct46 <= tokhai.ct44 && tokhai.hoan_tra_thue.tonghoantra === tokhai.ct46) {
     validationResult = {
       isValid: true,
       message: '',
@@ -212,16 +358,20 @@ const checkTokhai = async (req, res) => {
     });
 
     console.log('Tổng khẩu trừ thuế:', tongthu);
+    /*
+        if(tokhai.stk && tokhai.nganhang && tokhai.hoan_tra_thue.tonghoantra == 0){
+          console.log('ct22 === tongthu:', ct22_number === tongthu);
+          result = { message: 'Tờ khai hợp lệ.', isSuccess: true, ct22: ct22_number, hasAttachment: hasAttachment, validationResult };
+        } else {
+          console.log('ct22 === tongthu:', ct22_number === tongthu);
+          result = { message: 'Tờ khai còn thiếu thông tin tài khoản ngân hàng.<br>', isSuccess: true, ct22: ct22_number, hasAttachment: hasAttachment, validationResult };
+        }
+    */
 
-    if (ct22_number === tongthu && hasAttachment === true && validationResult.isValid === true) {
-      if(tokhai.stk === '' && tokhai.nganhang === '' && tokhai.hoan_tra_thue.tonghoantra == 0){
-        console.log('ct22 === tongthu:', ct22_number === tongthu);
-        result = { message: 'Tờ khai hợp lệ.', isSuccess: true, ct22: ct22_number, hasAttachment: hasAttachment, validationResult };
-      } else {
-        console.log('ct22 === tongthu:', ct22_number === tongthu);
-        result = { message: 'Tờ khai còn thiếu thông tin tài khoản ngân hàng.<br>', isSuccess: true, ct22: ct22_number, hasAttachment: hasAttachment, validationResult };
-      }
-      
+    if (ct22_number === tongthu && hasAttachment === true) {
+      console.log('ct22 === tongthu:', ct22_number === tongthu);
+      result = { message: 'Tờ khai hợp lệ.', isSuccess: true, ct22: ct22_number, hasAttachment: hasAttachment };
+
     } else if (ct22_number === tongthu && hasAttachment === false) {
       console.log('ct22 === tongthu:', ct22_number === tongthu);
       result = { message: 'Tờ khai thiếu phụ lục kèm theo', isSuccess: false };
@@ -245,10 +395,10 @@ const checkTokhai = async (req, res) => {
 
 const duyettokhai = async (req, res) => {
   try {
-    let checkTokhaiResult = {};
+
     const tokhaiId = req.params.id;
     const { username, adminId } = req.session.user;
-    if (checkTokhaiResult.isSuccess) {
+    if (checkTokhaiResult.isSuccess == true) {
       const tokhai = await Tokhaithue.findOne({
         where: {
           id: tokhaiId,
@@ -264,13 +414,15 @@ const duyettokhai = async (req, res) => {
       }
       await tokhai.update({ trangThaiXuLiId: 2 });        // trạng thái "đã duyệt"
       const email = tokhai.ca_nhan.email;
-      mailer.sendMail(email, "Tờ khai của bạn đã được duyệt",
-        `Xin chào ${tokhai.fullname} <br>
+      if (checkTokhaiResult.message) {
+        mailer.sendMail(email, "Tờ khai của bạn đã được duyệt",
+          `Xin chào ${tokhai.fullname} <br>
         Tờ khai quyết toán thuế thu nhập cá nhân của bạn đã được duyệt, thông tin chi tiết như sau:
         <li>Tổng thu nhập chịu thuế của bạn là: ${tokhai.ct22}</li>
        <li> Số thuế phải nộp là: ${tokhai.ct44} đồng </li>
        <li> Só thuế đề nghị hoàn trả vào tài khoản là: ${tokhai.ct46} đồng </li><br>
         Vui lòng đến cơ quan quản lý thuế tại ${tokhai.ca_nhan.cqqtthue} để hoàn tất thủ tục quyết toán thuế năm ${tokhai.namkekhai}`);
+      }
       await Duyettokhai.create({
         username: username,
         adminId: adminId,
@@ -373,6 +525,7 @@ const getPhuluc = async (req, res) => {
 
 
 };
+
 const downloadPhuluc = async (req, res) => {
   const tokhaiId = req.params.id;
   const tokhai = await Tokhaithue.findOne({
@@ -417,5 +570,6 @@ const downloadPhuluc = async (req, res) => {
 
 module.exports = {
   duyettokhai, getTokhaithue, tokhaikhongduocduyet,
-  checkTokhai, getListAllTongThuNhap, getListThuNhap, getPhuluc, downloadPhuluc
+  checkTokhai, getListAllTongThuNhap, getListThuNhap, getPhuluc, downloadPhuluc,
+  moKyQuyetToan, moKyQuyetToanTochuc, listOpenKyQuyetToan
 }

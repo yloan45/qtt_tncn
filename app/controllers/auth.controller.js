@@ -312,6 +312,9 @@ exports.TochucSignin = async (req, res) => {
       where: {
         username: req.body.username,
       },
+      include: [{
+        model: Tochuc, as: 'to_chuc'
+      },]
     });
 
     if (!user) {

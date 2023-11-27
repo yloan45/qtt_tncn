@@ -18,7 +18,7 @@
           <%= user.username %>
         </button>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="/forgot-password">Đổi mật khẩu</a></li>
+          <li><a class="dropdown-item" href="/change-password">Đổi mật khẩu</a></li>
           <li>
             <hr class="dropdown-divider">
           </li>
@@ -30,8 +30,8 @@
 </div>
 
 <nav style="background-color: hsl(204, 49%, 89%); margin-top: 1px; padding-left: 15px; padding-bottom: 4px;">
-  <a href="/tokhaithue">Kê khai thuế trực tuyến |</a>
-  <a href="/noptokhai">Nộp tờ khai |</a>
+<a id="tokhaithue-link" href="#">Kê khai thuế trực tuyến |</a>
+ <%# <a href="/noptokhai">Nộp tờ khai |</a> %> 
   <a href="/tra-cuu-to-khai">Tra cứu tờ khai |</a>
   <a href="/tra-cuu-thu-nhap">Tra cứu thu nhập</a>
 </nav>
@@ -48,4 +48,33 @@
       event.preventDefault();
     }
   });
+
+  document.getElementById('tokhaithue-link').addEventListener('click', function (event) {
+  event.preventDefault();
+
+  fetch('/tokhaithue')
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Thông báo',
+          text: data.error,
+        });
+      } else {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Chuyển hướng đến /tokhaithue',
+        }).then(() => {
+          window.location.href = '/tokhaithue';
+        });
+      }
+    })
+    .catch(error => {
+      window.location.href = '/tokhaithue';
+    });
+});
+
 </script>
+

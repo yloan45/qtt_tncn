@@ -3,7 +3,9 @@ const db = require("../models");
 const Excelupload = db.tochuckekhaithue;
 const readXlsxFile = require("read-excel-file/node");
 const Tochuc = db.tochuc;
+const Op = db.Sequelize.Op;
 
+/*
 const upload = async (req, res) => {
   try {
     if (req.file == undefined) {
@@ -42,6 +44,49 @@ const upload = async (req, res) => {
             error: error.message,
           });
         });
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: "Could not upload the file: " + req.file.originalname,
+    });
+  }
+};
+*/
+const upload = async (req, res) => {
+  try {
+    if (req.file == undefined) {
+      return res.status(400).send("Please upload an excel file!");
+    }
+    let path = __basedir + "/uploads/excel/" + req.file.filename;
+    readXlsxFile(path).then(async (rows) => {
+      rows.shift();
+      let excelupload = [];
+      const toChucId = req.session.user.toChucId;
+      console.log("Tổ chức có ID là: ", toChucId);
+
+      rows.forEach((row) => {
+        let excelfile = {
+          hoten: row[1],
+          cccd: row[3],
+          masothue: row[2],
+          email: row[4],
+          dienthoai: row[5],
+          diachi: row[6],
+          thunhaptinhthue: row[8],
+          ghichu: row[9],
+          toChucId: toChucId,
+        };
+        excelupload.push(excelfile);
+      });
+
+      await Excelupload.destroy({
+        where: { masothue: { [Op.in]: excelupload.map((row) => row.masothue) }, toChucId: toChucId }
+      });
+
+      await Excelupload.bulkCreate(excelupload);
+      res.redirect("/tochuc/upload");
+
     });
   } catch (error) {
     console.log(error);

@@ -86,7 +86,7 @@
             <th style="font-weight: bolder;"> Phụ lục </th>
             <th style="font-weight: bolder;"> Hoàn trả thuế </th>
             <th style="font-weight: bolder;" class="status-cell"> Trạng thái tờ khai </th>
-            <th style="font-weight: bolder;"> Action </th>
+            <th style="font-weight: bolder;"> Hành động </th>
           </thead>
           <tbody>
             <% let totalIndex = 0; %>
@@ -101,10 +101,10 @@
                 <td><%= tokhaithue.namkekhai %></td>
                 <td><%= tokhaithue.loai_to_khai.tenloai %></td>
                 <td><a href="/phu-luc-to-khai/<%= tokhaithue.id %>">Xem chi tiết</a></td>
-                <td><a href="/hoan-tra-thue/<%= tokhaithue.id %>">View</a></td>
+                <td><a href="/hoan-tra-thue/<%= tokhaithue.id %>">Xem chi tiết</a></td>
                 <td class="status-cell"><%= tokhaithue.trang_thai_xu_li.tentrangthai %></td>
                 <td>
-                  <a href="/check"><i class="fa-solid fa-eye" style="color: rgb(114, 114, 216);"></i></a>
+                 
                   <a href="#" class="edit-user" data-toggle="modal" data-target="#editModal" data-id="<%= tokhaithue.id %>">
                     <i class="fa fa-pencil"></i>
                   </a>

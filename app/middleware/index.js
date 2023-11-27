@@ -1,5 +1,8 @@
+const db = require("../models");
 const authJwt = require("./authJwt");
 const verifySignUp = require("./verifySignUp");
+const Kyquyettoan = db.kyquyettoan;
+const Op = db.Sequelize.Op;
 
 const validateInput = (req, res, next) => {
   const { tokhai, trangthaixuly, startDate, endDate } = req.body;
@@ -30,24 +33,101 @@ const checkDateValidity = (req, res, next) => {
   next(); // Chuyển tiếp nếu không có lỗi
 };
 
-const isStrongPassword = (password) =>{
+const isStrongPassword = (password) => {
   if (password.length < 6) {
     return false;
-}
+  }
   if (!/[A-Z]/.test(password)) {
-      return false;
+    return false;
   }
   if (!/[!@#$%^&*()-=_+]/.test(password)) {
-      return false;
+    return false;
   }
   return true;
 }
 
+const isOpen = async (req, res, next) => {
+  try {
+    const currentYear = new Date().getFullYear();
+    const kyQuyetToan = await Kyquyettoan.findOne({
+      where: {
+        trangthai: true,
+        ngaymo: {
+          [Op.between]: [new Date(`${currentYear}-01-01`), new Date(`${currentYear}-12-31`)],
+        },
+      },
+    });
+
+    if (!kyQuyetToan) {
+     // req.flash('error', 'Chưa đến thời gian quyết toán hoặc đã qua thời gian quyết toán');
+     // console.log('Chưa đến thời gian quyết toán hoặc đã qua thời gian quyết toán');
+     // return res.redirect('/canhan'); 
+     return res.status(403).json({
+      error: 'Chưa đến thời gian quyết toán thuế!',
+    });
+
+    }
+
+    const endDate = new Date(kyQuyetToan.ngaydong);
+    if (new Date() > endDate) {
+      return res.status(403).json({
+        error: 'Bạn đã quá hạn quyết toán thuế!',
+      });
+      //req.flash('error', 'Quá hạn quyết toán');
+     // console.log('Quá hạn quyết toán');
+     // return res.redirect('/canhan');
+    }
+
+    req.kyQuyetToan = kyQuyetToan;
+    next();
+  } catch (error) {
+    console.error(error);
+    req.flash('error', 'Lỗi khi kiểm tra thời gian quyết toán');
+    return res.redirect('/canhan');
+  }
+};
+
+
+
+const isOpenTochuc = async (req, res, next) => {
+  try {
+    const currentYear = new Date().getFullYear();
+    const kyQuyetToan = await Kyquyettoan.findOne({
+      where: {
+        trangthai: true,
+        ngaymo: {
+          [Op.between]: [new Date(`${currentYear}-01-01`), new Date(`${currentYear}-12-31`)],
+        },
+      },
+    });
+
+    if (!kyQuyetToan) {
+     return res.status(403).json({
+      error: 'Chưa đến thời gian quyết toán thuế!',
+    });
+    }
+
+    const endDate = new Date(kyQuyetToan.ngaydong);
+    if (new Date() > endDate) {
+      return res.status(403).json({
+        error: 'Bạn đã quá hạn quyết toán thuế!',
+      });
+    }
+
+    req.kyQuyetToan = kyQuyetToan;
+    next();
+  } catch (error) {
+    console.error(error);
+    req.flash('error', 'Lỗi khi kiểm tra thời gian quyết toán');
+    return res.redirect('/tochu/upload');
+  }
+};
 
 module.exports = {
   authJwt,
   verifySignUp,
   checkDateValidity,
   validateInput,
-  isStrongPassword
+  isStrongPassword,
+  isOpen, isOpenTochuc
 };

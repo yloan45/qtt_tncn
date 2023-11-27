@@ -44,7 +44,6 @@ exports.getAllUser = (req, res) => {
     .catch((err) => console.log(err));
 }
 
-
 exports.getAllTokhaithue = (req, res) => {
   Tokhaithue.findAll({
     include: [
@@ -60,7 +59,6 @@ exports.getAllTokhaithue = (req, res) => {
   })
     .catch((err) => console.log(err));
 }
-
 
 exports.findOne = (req, res) => {
   const id = req.params.id;
@@ -114,8 +112,6 @@ exports.update = (req, res) => {
     })
 }
 
-
-
 exports.updateCanhan = async (req, res) => {
   const id = req.params.id;
   const user = await Canhan.findByPk(id, {
@@ -148,15 +144,13 @@ exports.updateCanhan = async (req, res) => {
   }
 };
 
-
 exports.changePassword = async (req, res) => {
   const id = req.body.id;
   const user = await User.findByPk(id);
-
   const { oldPassword, newPassword, confirmPassword } = req.body;
   if (!user || !oldPassword || !bcrypt.compareSync(oldPassword, user.password)) {
     req.flash('oldPasswordError', 'Mật khẩu không đúng');
-    return res.redirect('/forgot-password');
+    return res.redirect('/change-password');
   }
   console.log('Provided Old Password:', oldPassword);
   console.log('Stored Hashed Password:', user.password);
@@ -171,12 +165,12 @@ exports.changePassword = async (req, res) => {
       'newPasswordError',
       'Mật khẩu không đúng định dạng. Mật khẩu phải có ít nhất 6 ký tự, 1 ký tự in hoa và 1 ký tự đặt biệt'
     );
-    return res.redirect('/forgot-password');
+    return res.redirect('/change-password');
   }
 
   if (!(confirmPassword === newPassword)) {
     req.flash('confirmPasswordError', 'Xác nhận mật khẩu không trùng khớp');
-    return res.redirect('/forgot-password');
+    return res.redirect('/change-password');
   }
 
   const hashedPassword = bcrypt.hashSync(newPassword, 8);
@@ -185,11 +179,11 @@ exports.changePassword = async (req, res) => {
 
   req.session.token = null;
   req.session.user = null;
-  return res.redirect("/canhan")
+  return res.redirect("/")
 };
 
-
 const otpDatabase = new Map();
+
 exports.forgotPassword = async (req, res) => {
   
   const { masothue } = req.body;
@@ -228,8 +222,6 @@ exports.forgotPassword = async (req, res) => {
     return res.redirect("/");
   }
 };
-
-
 
 exports.getUser = async (req, res) => {
   const userId = req.session.user.id;

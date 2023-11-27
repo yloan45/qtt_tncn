@@ -11,6 +11,8 @@ const Trangthai = db.trangthaixuly;
 const { Op } = require('sequelize')
 const flash = require('express-flash');
 const ExcelJS = require('exceljs');
+const mailer = require('../utils/mailer');
+
 
 const createTokhai = async (req, res) => {
   const loaitokhai = await Loaitokhai.findOne({
@@ -20,6 +22,8 @@ const createTokhai = async (req, res) => {
   });
   const tokhaiData = {
     fullname: req.body.fullname,
+    email: req.body.email,
+    dienthoai: req.body.dienthoai,
     address: (req.body.xa_phuong || '') + ', ' + (req.body.quan_huyen || '') + ', ' + (req.body.tinh_tp || ''),
     namkekhai: req.body.year,
     tokhai: req.body.tokhai,
@@ -131,6 +135,13 @@ async function createTokhaiStep3(req, res) {
       });
     });
 
+    if(tokhai){
+      mailer.sendMail(tokhaiData.email, "Tờ khai quyết toán đã được tạo",
+      `Xin chào ${tokhaiData.fullname}, <br> 
+      Tờ khai quyết toán của bạn đã được ghi nhận.<br>
+      Vui lòng theo kiểm tra lại email sau 3 ngày làm việc.
+      `)
+    }
     delete req.session.tokhaiData;
     delete req.session.phulucData;
     // res.redirect('/success');

@@ -99,11 +99,7 @@
       let value = input.value.replace(/[^0-9]/g, '');
       const formattedValue = parseInt(value).toLocaleString("en-US");
       input.value = formattedValue;
-
-      // Thêm giá trị đã chuyển đổi vào biến numberValue
       const numberValue = parseInt(value);
-
-      // Gọi hàm createTokhai và chuyển giá trị đã chuyển đổi
       createTokhai(req, res, numberValue);
     });
   });
@@ -140,8 +136,6 @@
 
 </script>
 
-
-<%# định dạng năm ke khai cho tờ khai thuế %>
 <script>
   const yearInput = document.getElementById("yearInput");
   const fromMonth = document.getElementById("fromMonth");

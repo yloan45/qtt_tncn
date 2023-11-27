@@ -36,6 +36,7 @@
     "sequelize": "^6.32.1",
     "sequelize-pagination": "^1.1.0",
     "svg-captcha": "^1.4.0",
+    "sweetalert2": "^11.10.1",
     "vietqr": "^1.1.9"
   }
 }

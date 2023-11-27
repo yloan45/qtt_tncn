@@ -40,11 +40,8 @@
             <th>Điện thoại</th>
             <th>Tổng thu nhập nhận được</th>
             <th>Ghi chú</th>
-            <th>Phản hồi</th>
-            <th>Action</th>
           </thead>
           <tbody>
-
             <% tochuckekhaithue.forEach((canhan, index) => { %>
             <tr>
               <td><%= index + 1 %></td>
@@ -55,17 +52,7 @@
               <td><%= canhan.to_chuc.phone %></td>
               <td><%= canhan.thunhaptinhthue %></td>
               <td><%= canhan.ghichu %></td>
-              <td>
-                <select name="" id="" style="width: 85%;">
-                    <option value=""></option>
-                    <option value="">Thu nhập nhận được không đúng</option>
-                    <option value="">Đã được khấu trừ thuế tại nguồn</option>
-                    <option value="">Thông tin nơi làm việc không chính xác</option>
-                </select>
-              </td>
-              <td>
-                <button class="btn btn-danger">Send</button>
-              </td>
+             
             </tr>
             <% }) %>
           </tbody>
