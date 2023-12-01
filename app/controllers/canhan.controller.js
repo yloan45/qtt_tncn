@@ -27,6 +27,9 @@ exports.deleteUser = (req, res) => {
 
 exports.getAllUser = (req, res) => {
   Canhan.findAll({
+    where: {
+      status: null,
+    },
     include: [
       {
         model: Diachi, as: 'dia_chi' // Sử dụng alias đúng ở đây

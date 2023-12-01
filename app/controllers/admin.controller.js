@@ -15,6 +15,7 @@ const Files = db.file;
 const path = require('path');
 const archiver = require('archiver');
 const fs = require('fs');
+const { formatDate } = require("../middleware");
 const Hoanthue = db.hoantrathue;
 const Kyquyettoan = db.kyquyettoan;
 
@@ -65,7 +66,6 @@ const moKyQuyetToan = async (req, res, ngaymo, ngaydong) => {
 const listOpenKyQuyetToan = async (req, res) => {
   try {
     const adminId = req.session.user;
-
     console.log("admin id là:", adminId);
     const listOpen = await Kyquyettoan.findAll();
     if (listOpen) {
@@ -133,7 +133,7 @@ const moKyQuyetToan = async (req, res) => {
 const moKyQuyetToanTochuc = async (req, res) => {
   try {
     const adminId = req.body.adminId;
-    const { ngaymo, ngaydong, selectOpenTochuc, openTochuc, closeTochuc } = req.body;
+    const { ngaymo, ngaydong, openTochuc, closeTochuc } = req.body;
 
     console.log(req.body);
     if (!adminId) {
@@ -142,22 +142,21 @@ const moKyQuyetToanTochuc = async (req, res) => {
       return res.redirect('/admin');
     }
 
-    if (new Date(ngaymo) < new Date(closeTochuc)) {
-      return alert("Sai cú pháp.")
+    if ((new Date(ngaymo) <= new Date(closeTochuc)) || (new Date(ngaydong) < new Date(ngaymo)) || (new Date(closeTochuc) < new Date(openTochuc)) ){
+      return res.redirect('/ky-quyet-toan?=failed');
     }
 
     const kyQuyetToanTochuc = await Kyquyettoan.create({
       trangthai: true,
       ngaymo: ngaymo,
       ngaydong: ngaydong,
-      kymo: selectOpenTochuc,
       ngaymotochuc: openTochuc,
       ngaydongtochuc: closeTochuc,
       adminId: adminId,
     });
 
     req.flash('success', 'Kỳ đăng ký đã được mở thành công!');
-    return res.redirect('/ky-quyet-toan');
+    return res.redirect('/ky-quyet-toan?=success');
   } catch (error) {
     console.error(error);
     req.flash('error', 'Lỗi khi tạo Kỳ Đăng Ký');
@@ -165,6 +164,63 @@ const moKyQuyetToanTochuc = async (req, res) => {
   }
 };
 
+const findOneQTT = async (req, res) => {
+  const id = req.params.id;
+  const admin = req.session.user;
+  console.log("id là: ", admin);
+  const kyquyettoan = await Kyquyettoan.findByPk(id);
+  if(!kyquyettoan){
+    req.flash('error',"Không tìm thấy dữ liệu.");
+    return res.redirect('/admin');
+  }
+  console.log("thông tin kỳ quyết toán là:" + kyquyettoan);
+  return res.render('admin/edit_QTT', {kyquyettoan, admin});
+};
+
+const updateQTT = async (req, res) => {
+  const id = req.params.id;
+  const { openCN, closeCN, openTC, closeC } = req.body;
+
+  try {
+    const updateResult = await Kyquyettoan.update(
+      {
+        ngaymo: openCN,
+        ngaydong: closeCN,
+        ngaymotochuc: openTC,
+        ngaydongtochuc: closeC
+      },
+      {
+        where: { id: id }
+      }
+    );
+    if (updateResult[0] > 0) {
+      console.log('Update successful');
+      res.redirect('/ky-quyet-toan?=update-success');
+    } else {
+      console.log('No records were updated');
+      res.redirect('/admin?=false');
+    }
+  } catch (error) {
+    console.error('Error updating record:', error);
+    res.redirect('/admin?=error');
+  }
+};
+
+module.exports = { updateQTT };
+
+const deleteQTT = (req, res) => {
+  Kyquyettoan.destroy({
+    where: {
+      id: req.params.id
+    }
+  })
+    .then(function (rowDeleted) {
+      if (rowDeleted == 1) {
+        console.log("deleted!!!");
+        res.redirect('/ky-quyet-toan');
+      }
+    })
+};
 
 const getTokhaithue = async (req, res) => {
   const id = req.params.id;
@@ -571,5 +627,6 @@ const downloadPhuluc = async (req, res) => {
 module.exports = {
   duyettokhai, getTokhaithue, tokhaikhongduocduyet,
   checkTokhai, getListAllTongThuNhap, getListThuNhap, getPhuluc, downloadPhuluc,
-  moKyQuyetToan, moKyQuyetToanTochuc, listOpenKyQuyetToan
+  moKyQuyetToan, moKyQuyetToanTochuc, listOpenKyQuyetToan, deleteQTT,
+  findOneQTT, updateQTT
 }

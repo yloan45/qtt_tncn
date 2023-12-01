@@ -1,0 +1,161 @@
+<html lang="en">
+
+<head>
+  <%- include('../partials/head') %>
+</head>
+
+<body>
+  <div class="container">
+    <div class="khungtong">
+      <header>
+        <%- include('../partials/header') -%>
+      </header>
+
+      <div class="container-fluid" style=" width: 850px;margin-top: 1pc; margin-bottom: 1pc;">
+        <div class="card">
+          <h5 class="card-header" style="text-align: center;  background-color: #2886d3; color: white; font-size: 16px;">Đăng ký tài khoản lần đầu</h5>
+          <div class="card-body">
+            <form action="/dang-ky-mst" method="post">
+              <div class="row mt-3">
+                <div class="col"></div>
+                <div class="col-3">
+                  <label for="" style="font-size: 16px;">Họ tên<font style="color: red;">(*)</font></label>
+                </div>
+                <div class="col-7">
+                  <input type="text" name="fullname" class="form-control" required>
+                </div>
+                <div class="col"></div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col"></div>
+                <div class="col-3">
+                  <label for="" style="font-size: 16px; ">Căn cước công dân<font style="color: red;">(*)</font></label>
+                </div>
+                <div class="col-7">
+                  <input type="text" class="form-control" name="cccd" required>
+                </div>
+                <div class="col"></div>
+              </div>
+              <div class="row mt-3">
+                <div class="col"></div>
+                <div class="col-3">
+                  <label for="" style="font-size: 16px; ">Tỉnh/TP<font style="color: red;">(*)</font></label>
+                </div>
+                <div class="col-7">
+                  <select name="tinh_tp" id="city" style="height: 95%;" class="form-select">
+                    <option value="">Tỉnh/TP</option>
+                  </select>
+                </div>
+                <div class="col"></div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col"></div>
+                <div class="col-3">
+                  <label for="" style="font-size: 16px; ">Quận/Huyện<font style="color: red;">(*)</font></label>
+                </div>
+                <div class="col-7">
+                  <select name="quan_huyen" id="district" style="height: 95%;" class="form-select">
+                    <option value="">Quận/Huyện</option>
+                  </select>
+                </div>
+                <div class="col"></div>
+              </div>
+
+
+              <div class="row mt-3">
+                <div class="col"></div>
+                <div class="col-3">
+                  <label for="" style="font-size: 16px; ">Xã/Thị trấn<font style="color: red;">(*)</font></label>
+                </div>
+                <div class="col-7">
+                  <select name="xa_phuong" id="ward" style="height: 95%;" class="form-select">
+                    <option value="">Xã/Thị trấn</option>
+                  </select>
+                </div>
+                <div class="col"></div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col"></div>
+                <div class="col-3">
+                  <label for="" style="font-size: 16px; ">Số điện thoại<font style="color: red;">(*)</font></label>
+                </div>
+                <div class="col-7">
+                  <input type="text" name="phone" class="form-control" required>
+                </div>
+                <div class="col"></div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col"></div>
+                <div class="col-3">
+                  <label for="" style="font-size: 16px; ">Email<font style="color: red;">(*)</font></label>
+                </div>
+                <div class="col-7">
+                  <input type="email" name="email" class="form-control" required>
+                </div>
+                <div class="col"></div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col"></div>
+                <div class="col-3">
+                  <label for="" style="font-size: 16px;">Mã kiểm tra <font style="color: red;">(*)</font></label>
+                </div>
+                <div class="col-7">
+                  <input type="text" class="form-control" name="captcha" required>
+                </div>
+                <div class="col"></div>
+              </div>
+              <div class="row mt-3">
+                <div class="col"></div>
+                <div class="col-3">
+                </div>
+                <div class="col-7">
+                  <img style="border: 1px; background-color: rgba(113, 146, 213, 0.125);" id="captchaImage" src="/captcha" alt="">
+                  <img id="reload" src="https://cdn-icons-png.flaticon.com/512/2546/2546705.png" alt="" style=" margin-left: 15px; height: 30px; width: 30px;">
+                </div>
+                <div class="col"></div>
+              </div><br>
+            <!-- THÔNG BÁO LỖI -->
+            <div style="text-align: center;">
+
+
+
+              <div class="container text-center mt-5">
+                <button class="btn btn-primary mx-auto" type="submit" style="width: 150px;">Đăng ký</button>
+              </div>
+
+            </form>
+
+
+            </div>
+          </div>
+        </div>
+        <br><br><br>
+      </div>
+    </div>
+    <footer>
+      <%- include('../partials/footer') %>
+    </footer>
+    <script src="js/index.js"></script>
+    <script src="js/address.js"></script>
+    <script>
+      function togglePasswordVisibility() {
+        var passwordField = document.getElementById("password");
+        var passwordIcon = document.getElementById("password-icon");
+
+        if (passwordField.type === "password") {
+          passwordField.type = "text";
+          passwordIcon.className = "fa fa-eye-slash";
+        } else {
+          passwordField.type = "password";
+          passwordIcon.className = "fa fa-eye";
+        }
+      }
+    </script>
+</body>
+
+</html>

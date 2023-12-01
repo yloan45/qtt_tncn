@@ -46,6 +46,7 @@ const isStrongPassword = (password) => {
   return true;
 }
 
+
 const isOpen = async (req, res, next) => {
   try {
     const currentYear = new Date().getFullYear();
@@ -59,23 +60,30 @@ const isOpen = async (req, res, next) => {
     });
 
     if (!kyQuyetToan) {
-     // req.flash('error', 'Chưa đến thời gian quyết toán hoặc đã qua thời gian quyết toán');
-     // console.log('Chưa đến thời gian quyết toán hoặc đã qua thời gian quyết toán');
-     // return res.redirect('/canhan'); 
-     return res.status(403).json({
-      error: 'Chưa đến thời gian quyết toán thuế!',
-    });
-
+      return res.status(403).json({
+        error: 'Chưa đến thời gian quyết toán thuế!',
+      });
     }
 
-    const endDate = new Date(kyQuyetToan.ngaydong);
-    if (new Date() > endDate) {
+    const startDate = kyQuyetToan.ngaymo;
+    const endDate = kyQuyetToan.ngaydong;
+
+    const currentDate = new Date(kyQuyetToan.ngaymo);
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1; 
+    const year = currentDate.getFullYear();
+    const formattedDate = `${day}-${month}-${year}`;
+
+    const currentDate1 = new Date(kyQuyetToan.ngaydong);
+    const day1 = currentDate1.getDate();
+    const month1 = currentDate1.getMonth() + 1; 
+    const year1 = currentDate1.getFullYear();
+    const formattedDate1 = `${day1}-${month1}-${year1}`;
+
+    if (new Date() < startDate || new Date() > endDate) {
       return res.status(403).json({
-        error: 'Bạn đã quá hạn quyết toán thuế!',
+        error: `Chưa đến thời gian quyết toán thuế! Thời gian mở quyết toán thuế từ ${formattedDate} đến ${formattedDate1}`,
       });
-      //req.flash('error', 'Quá hạn quyết toán');
-     // console.log('Quá hạn quyết toán');
-     // return res.redirect('/canhan');
     }
 
     req.kyQuyetToan = kyQuyetToan;
@@ -87,9 +95,7 @@ const isOpen = async (req, res, next) => {
   }
 };
 
-
-
-const isOpenTochuc = async (req, res, next) => {
+const isOpenCaNhan = async (req, res, next) => {
   try {
     const currentYear = new Date().getFullYear();
     const kyQuyetToan = await Kyquyettoan.findOne({
@@ -102,15 +108,34 @@ const isOpenTochuc = async (req, res, next) => {
     });
 
     if (!kyQuyetToan) {
-     return res.status(403).json({
-      error: 'Chưa đến thời gian quyết toán thuế!',
-    });
+      return res.status(403).json({
+        error: `Chưa đến thời gian quyết toán thuế!`,
+      });
     }
 
-    const endDate = new Date(kyQuyetToan.ngaydong);
-    if (new Date() > endDate) {
+    const startDate = new Date(kyQuyetToan.ngaymo);
+    const endDate = new Date(kyQuyetToan.ngaydong); //
+
+    const currentDate = new Date(kyQuyetToan.ngaymo);
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1; 
+    const year = currentDate.getFullYear();
+    const formattedDate = `${day}-${month}-${year}`;
+
+
+    const currentDate1 = new Date(kyQuyetToan.ngaydong);
+    const day1 = currentDate1.getDate();
+    const month1 = currentDate1.getMonth() + 1; 
+    const year1 = currentDate1.getFullYear();
+    const formattedDate1 = `${day1}-${month1}-${year1}`;
+
+    if (new Date() < startDate) {
       return res.status(403).json({
-        error: 'Bạn đã quá hạn quyết toán thuế!',
+        error: `Chưa đến thời gian quyết toán thuế. Ngày bắt đầu từ ${formattedDate} đến ${formattedDate1}`,
+      });
+    } else if (new Date() > endDate){
+      return res.status(403).json({
+        error: `Đã kết thúc thời gian quyết toán thuế năm ${year}`,
       });
     }
 
@@ -119,8 +144,71 @@ const isOpenTochuc = async (req, res, next) => {
   } catch (error) {
     console.error(error);
     req.flash('error', 'Lỗi khi kiểm tra thời gian quyết toán');
-    return res.redirect('/tochu/upload');
+    return res.redirect('/canhan');
   }
+};
+
+const isOpenTochuc = async (req, res, next) => {
+  try {
+    const currentYear = new Date().getFullYear();
+    const kyQuyetToan = await Kyquyettoan.findOne({
+      where: {
+        trangthai: true,
+        ngaymotochuc: {
+          [Op.between]: [new Date(`${currentYear}-01-01`), new Date(`${currentYear}-12-31`)],
+        },
+      },
+    });
+
+    if (!kyQuyetToan) {
+      return res.status(403).json({
+        error: `Chưa đến thời gian quyết toán thuế!`,
+      });
+    }
+
+    const startDate = new Date(kyQuyetToan.ngaymotochuc);
+    const endDate = new Date(kyQuyetToan.ngaydongtochuc); //
+
+    const currentDate = new Date(kyQuyetToan.ngaymotochuc);
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1; 
+    const year = currentDate.getFullYear();
+    const formattedDate = `${day}-${month}-${year}`;
+
+
+    const currentDate1 = new Date(kyQuyetToan.ngaydongtochuc);
+    const day1 = currentDate1.getDate();
+    const month1 = currentDate1.getMonth() + 1; 
+    const year1 = currentDate1.getFullYear();
+    const formattedDate1 = `${day1}-${month1}-${year1}`;
+
+    if (new Date() < startDate) {
+      return res.status(403).json({
+        error: `Chưa đến thời gian quyết toán thuế. Ngày bắt đầu từ ${formattedDate} đến ${formattedDate1}`,
+      });
+    } else if (new Date() > endDate){
+      return res.status(403).json({
+        error: `Bạn đã quá hạn kê khai quyết toán thuế.`,
+      });
+    }
+
+    req.kyQuyetToan = kyQuyetToan;
+    next();
+  } catch (error) {
+    console.error(error);
+    req.flash('error', 'Lỗi khi kiểm tra thời gian quyết toán');
+    return res.redirect('/canhan');
+  }
+};
+
+const validateCCCD = (cccd) => {
+  const cccdRegex = /^[0-9]{12}$/;
+  return cccdRegex.test(cccd);
+};
+
+const validatePhone = (phone) => {
+  const phoneRegex = /^[0-9]{10}$/;
+  return phoneRegex.test(phone);
 };
 
 module.exports = {
@@ -129,5 +217,7 @@ module.exports = {
   checkDateValidity,
   validateInput,
   isStrongPassword,
-  isOpen, isOpenTochuc
+  isOpen, isOpenTochuc,
+  validateCCCD, validatePhone,
+  isOpenCaNhan
 };

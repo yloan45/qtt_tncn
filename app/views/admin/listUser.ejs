@@ -43,71 +43,48 @@
         <div style="text-align: right;">
           <a href="#" class="btn btn-info" style="color: white; font-weight: bold; margin-top: 3px;" id="importBtn">Thêm</a>
           <input type="file" id="fileInput" style="display:none;" name="file">
-
           <a href="#" class="btn btn-danger" style="color: white; font-weight: bold; margin-top: 3px;">Xuất</a>
         </div>
         <table class="table table-bordered mt-3">
-          <tr style="text-align: center;">
-            <th>
-              STT
-            </th>
-            <th>Mã số thuế</th>
-            <th>Họ tên NNT</th>
-            <th>Căn cước công dân</th>
-            <th>Email</th>
-            <th>Địa chỉ</th>
-            <th>Cơ quan quản lý thuế</th>
-            <th>Điện thoại</th>
-            <th>Username</th>
-            <th>Số người phụ thuộc</th>
-            <th>Hành động</th>
+          <tr style="text-align: center;font-weight: bold;  background-color: #2886d3; color: white;"  >
+           
+            <th style="font-weight: bolder;">STT</th>
+            <th style="font-weight: bolder;">Mã số thuế</th>
+            <th style="font-weight: bolder;">Họ tên NNT</th>
+            <th style="font-weight: bolder;">Căn cước công dân</th>
+            <th style="font-weight: bolder;">Email</th>
+            <th style="font-weight: bolder;">Địa chỉ</th>
+            <th style="font-weight: bolder;">Cơ quan quản lý thuế</th>
+            <th style="font-weight: bolder;">Điện thoại</th>
+            <th style="font-weight: bolder;">Số người phụ thuộc</th>
+            <th style="font-weight: bolder;">Hành động</th>
           </tr>
           <% let totalIndex = 0; %>
+          <% if (user.length > 0) { %>
           <% user.forEach((user, index)=> { %>
           <tr>
-            <td>
-              <%= index+1 %>
-            </td>
-            <td>
-              <%= user.masothue %>
-            </td>
-            <td>
-              <%= user.fullname %>
-            </td>
-            <td>
-              <%= user.cccd %>
-            </td>
-            <td>
-              <%= user.email %>
-            </td>
-            <td>
-              <%= user.dia_chi.xa_phuong %>
-              <%= user.dia_chi.quan_huyen %>
-              <%= user.dia_chi.tinh_tp %>
-            </td>
-            <td>
-              <%= user.cqqtthue%>
-            </td>
-            <td>
-              <%= user.phone %>
-            </td>
-            <td>
-              <%= user.user.username %>
-            </td>
-            <td>
-              <%= user.phuthuoc %>
-            </td>
+            <td><%= index+1 %> </td>
+            <td><%= user.masothue %></td>
+            <td><%= user.fullname %> </td>
+            <td><%= user.cccd %></td>
+            <td><%= user.email %></td>
+            <td><%= user.dia_chi.xa_phuong %> - <%= user.dia_chi.quan_huyen %> - <%= user.dia_chi.tinh_tp %></td>
+            <td><%= user.cqqtthue%></td>
+            <td><%= user.phone %></td>
+            <td><%= user.phuthuoc %></td>
             <td>
               <a href="#" class="edit-link" data-id="<%= user.id %>"><i class="fas fa-edit"></i></a>
-
               <a href="/deletecn/<%= user.id %>" class="delete-link" data-id="<%= user.id %>"><i class="fas fa-trash"></i></a>
-
-
             </td>
             <% totalIndex++; %>
-
           </tr>
           <% }) %>
+          
+          <% } else {  %> 
+            <td colspan="10" style="text-align: center; background-color: rgb(220, 229, 229); font-size: 16px;">Không có dữ liệu hiển thị</td>
+            <% } %>
+           
+            
           <h5>Tổng cộng: <%= totalIndex %></h5>
         </table>
 

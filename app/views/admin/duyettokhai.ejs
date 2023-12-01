@@ -33,10 +33,11 @@
     }
 
     .no-data-row {
-      background-color: #f0f0f0; /* Màu nền của dòng "Không có dữ liệu hiển thị" */
+      background-color: #f0f0f0;
+      /* Màu nền của dòng "Không có dữ liệu hiển thị" */
     }
   </style>
-  
+
 </head>
 
 <body>
@@ -47,7 +48,7 @@
     </div>
   </div>
   <div id="main-wrapper" data-layout="vertical">
-    <header class = "topbar" data-navbarbg="skin5">
+    <header class="topbar" data-navbarbg="skin5">
       <%- include('./partials/header') %>
     </header>
     <aside class="left-sidebar" data-sidebarbg="skin5">
@@ -60,66 +61,70 @@
         <div class="row">
           <div class="col-12 d-flex no-block align-items-center">
             <h4 class="page-title">Danh sách tổng hợp thông tin người được trả thuế</h4>
-            <div class="ms-auto text-end">
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Library</li>
-                </ol>
-              </nav>
-            </div>
           </div>
         </div>
       </div>
 
       <div class="container-fluid">
-        <table class="table table-bordered">
-          <thead class="sticky-header" style="text-align: center; font-weight: bolder;">
-            <th style="font-weight: bolder;"> STT </th>
-            <th style="font-weight: bolder;"> Họ và tên NNT </th>
-            <th style="font-weight: bolder;"> Mã số thuế </th>
-            <th style="font-weight: bolder;"> Địa chỉ </th>
-            <th style="font-weight: bolder;"> Email </th>
-            <th style="font-weight: bolder;"> Điện thoại </th>
-            <th style="font-weight: bolder;"> Năm kê khai </th>
-            <th style="font-weight: bolder;"> Loại tờ khai </th>
-            <th style="font-weight: bolder;"> Phụ lục </th>
-            <th style="font-weight: bolder;"> Hoàn trả thuế </th>
-            <th style="font-weight: bolder;" class="status-cell"> Trạng thái tờ khai </th>
-            <th style="font-weight: bolder;"> Hành động </th>
+        <table class="table table-bordered ">
+          <thead class="sticky-header " style="text-align: center; background-color: #2886d3">
+            <th style="font-weight: bolder; color: white;"> STT </th>
+            <th style="font-weight: bolder; color: white;"> Họ và tên NNT </th>
+            <th style="font-weight: bolder; color: white;"> Mã số thuế </th>
+            <th style="font-weight: bolder; color: white;"> Địa chỉ </th>
+            <th style="font-weight: bolder; color: white;"> Email </th>
+            <th style="font-weight: bolder; color: white;"> Điện thoại </th>
+            <th style="font-weight: bolder; color: white;"> Năm kê khai </th>
+            <th style="font-weight: bolder; color: white;"> Loại tờ khai </th>
+            <th style="font-weight: bolder; color: white;"> Phụ lục </th>
+            <th style="font-weight: bolder; color: white;"> Hoàn trả thuế </th>
+            <th style="font-weight: bolder; color: white;" class="status-cell"> Trạng thái tờ khai </th>
+            <th style="font-weight: bolder; color: white;"> Hành động </th>
           </thead>
           <tbody>
             <% let totalIndex = 0; %>
+
             <% tokhaithue.items.forEach((tokhaithue, index) => { %>
-              <tr class="table-row" style="text-align: center;">
-                <td><%= index + 1 %></td>
-                <td><%= tokhaithue.fullname %></td>
-                <td><%= tokhaithue.ca_nhan.masothue %></td>
-                <td><%= tokhaithue.address %></td>
-                <td><%= tokhaithue.ca_nhan.email %></td>
-                <td><%= tokhaithue.ca_nhan.phone %></td>
-                <td><%= tokhaithue.namkekhai %></td>
-                <td><%= tokhaithue.loai_to_khai.tenloai %></td>
-                <td><a href="/phu-luc-to-khai/<%= tokhaithue.id %>">Xem chi tiết</a></td>
-                <td><a href="/hoan-tra-thue/<%= tokhaithue.id %>">Xem chi tiết</a></td>
-                <td class="status-cell"><%= tokhaithue.trang_thai_xu_li.tentrangthai %></td>
-                <td>
-                 
-                  <a href="#" class="edit-user" data-toggle="modal" data-target="#editModal" data-id="<%= tokhaithue.id %>">
-                    <i class="fa fa-pencil"></i>
-                  </a>
-                </td>
-              </tr>
-              <% totalIndex++; %>
+
+            <tr class="table-row" style="text-align: center;">
+              <td><%= index + 1 %></td>
+              <td><%= tokhaithue.fullname %></td>
+              <td><%= tokhaithue.ca_nhan.masothue %></td>
+              <td><%= tokhaithue.address %></td>
+              <td><%= tokhaithue.ca_nhan.email %></td>
+              <td><%= tokhaithue.ca_nhan.phone %></td>
+              <td ><%= tokhaithue.namkekhai %></td>
+              <td><%= tokhaithue.loai_to_khai.tenloai %></td>
+              <td><a href="/phu-luc-to-khai/<%= tokhaithue.id %>">Xem</a></td>
+              <td><a href="/hoan-tra-thue/<%= tokhaithue.id %>">Xem</a></td>
+              <td class="status-cell">
+                <% if (tokhaithue.trang_thai_xu_li.tentrangthai === 'đã duyệt') { %>
+                <span class="check-mark" style="color: green; font-size: 2em;">&#10004;</span>
+                <% } else if (tokhaithue.trang_thai_xu_li.tentrangthai === 'không được duyệt') { %>
+                <span class="cross-mark" style="color: red; font-size: 2em;">&#10008;</span>
+                <% } else { %>
+                <%= tokhaithue.trang_thai_xu_li.tentrangthai%>
+                <% } %>
+              </td>
+
+              <td>
+                <a href="#" class="edit-user" data-toggle="modal" data-target="#editModal" data-id="<%= tokhaithue.id %>">
+                  <i class="fa fa-pencil"></i>
+                </a>
+              </td>
+
+            </tr>
+            <% totalIndex++; %>
             <% }) %>
             <% if (totalIndex === 0) { %>
-              <tr class="no-data-row" style="text-align: center;">
-                <td colspan="9">Không có dữ liệu tờ khai</td>
-              </tr>
+            <tr class="no-data-row" style="text-align: center; background-color: white; font-size: 16px; font-weight: bold;">
+              <td colspan="12">Không có dữ liệu tờ khai</td>
+            </tr>
             <% } %>
+
             <div class="input-group justify-content-between">
               <h5>Tổng cộng: <%= totalIndex %></h5>
-              <select id="filterStatus" class="form-control-sm" style="margin-bottom: 5px;">
+              <select id="filterStatus" class=" col-sm-3 form-select" style="margin-bottom: 5px;">
                 <option value="all">Tất cả</option>
                 <option value="đã duyệt">Đã duyệt</option>
                 <option value="đang chờ duyệt">Đang chờ duyệt</option>
@@ -132,12 +137,13 @@
         <div class="pagination">
           <ul class="pagination">
             <% for(let i = 1; i <= tokhaithue.totalPages; i++) { %>
-              <li class="page-item <% if (i === tokhaithue.currentPage) { %> active <% } %>">
-                <a class="page-link" href="/duyet-to-khai?page=<%= i %>"><%= i %></a>
-              </li>
+            <li class="page-item <% if (i === tokhaithue.currentPage) { %> active <% } %>">
+              <a class="page-link" href="/duyet-to-khai?page=<%= i %>"><%= i %></a>
+            </li>
             <% } %>
           </ul>
         </div>
+
       </div>
       <%- include('check_tokhai') %>
     </div>
@@ -148,33 +154,40 @@
 <script src="js/index.js"></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-  const filterStatus = document.getElementById('filterStatus');
-  const tableRows = document.querySelectorAll('table tbody tr');
+  document.addEventListener('DOMContentLoaded', function() {
+    const filterStatus = document.getElementById('filterStatus');
+    const tableRows = document.querySelectorAll('table tbody tr');
 
-  filterStatus.addEventListener('change', function () {
-    const selectedStatus = filterStatus.value;
-    let dataFound = false;
+    filterStatus.addEventListener('change', function() {
+      const selectedStatus = filterStatus.value;
+      let dataFound = false;
 
-    tableRows.forEach(row => {
-      const statusCell = row.querySelector('.status-cell');
-      if (selectedStatus === 'all' || statusCell.textContent === selectedStatus) {
-        row.style.display = '';
-        dataFound = true;
-      } else {
-        row.style.display = 'none';
-      }
+      tableRows.forEach(row => {
+        const statusCell = row.querySelector('.status-cell');
+        const icon = statusCell.querySelector('span');
+        let statusText;
+        if (icon) {
+          if (icon.classList.contains('check-mark')) {
+            statusText = 'đã duyệt';
+          } else if (icon.classList.contains('cross-mark')) {
+            statusText = 'không được duyệt';
+          }
+        } else {
+          statusText = statusCell.textContent.trim();
+        }
+
+        if (selectedStatus === 'all' || statusText === selectedStatus) {
+          row.style.display = '';
+          dataFound = true;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
     });
 
-    if (!dataFound) {
-      const noDataRow = document.querySelector('.no-data-row');
-      noDataRow.style.display = 'table-row';
-    } else {
-      const noDataRow = document.querySelector('.no-data-row');
-      noDataRow.style.display = 'none';
-    }
-  });
-});
 
+  });
 </script>
+
 </html>

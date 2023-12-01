@@ -29,8 +29,7 @@
           </div>
         </div>
         <div class="container-fluid">
-         
-            <table class="table table-bordered">
+            <table class="table table-bordered ">
                 <tr>
                     <th>
                         STT
@@ -48,27 +47,13 @@
                 <% let totalIndex = 0; %>
                 <% files.forEach((user, index)=> { %>
                     <tr>
-                        <td>
-                            <%= index+1 %>
-                        </td>
-                        <td>
-                            <%= user.fullname %>
-                        </td>
-                        <td>
-                            <%= user.address %>
-                        </td>
-                        <td>
-                            <%= user.email %>
-                        </td>
-                        <td>
-                            <%= user.filename %>
-                        </td>
-                        <td>
-                            <%= user.createdAt.toLocaleString() %>
-                        </td>
-                        <td>
-                            <%= user.updatedAt.toLocaleString() %>
-                        </td>
+                      <td><%= index+1 %></td>
+                        <td><%= user.fullname %></td>
+                        <td><%= user.address %></td>
+                        <td><%= user.email %></td>
+                        <td><%= user.filename %></td>
+                        <td><%= user.createdAt.toLocaleString() %></td>
+                        <td><%= user.updatedAt.toLocaleString() %></td>
                         <td></td>
                         <td></td>
                         <td>

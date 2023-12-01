@@ -1,3 +1,8 @@
+document.getElementById('reload').addEventListener('click', function() {
+  var captchaImage = document.getElementById('captchaImage');
+  var newImageUrl = '/captcha?' + new Date().getTime();
+  captchaImage.src = newImageUrl;
+});
 
 // tìm kiếm trong bảng(table)
 const searchInput = document.getElementById('search-input');

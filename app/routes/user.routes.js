@@ -1,13 +1,13 @@
-const { authJwt, validateInput, checkDateValidity, isOpen, isOpenTochuc } = require("../middleware");
+const { authJwt, validateInput, checkDateValidity, isOpen, isOpenTochuc, isOpenCaNhan } = require("../middleware");
 const { deleteUser, getAllUser, update, findOne, getUser, updateCanhan, changePassword, forgotPassword } = require("../controllers/canhan.controller");
 const upload = require("../middleware/excelUpload");
 const excelController = require("../controllers/excel.controller");
 const tokhaithue = require("../controllers/tokhai.controller");
 const db = require("../models");
 const { getAllToChuc, deleteToChuc, deleteNhanVien, updateNhanvien, getTochuc, deleteMultiple, updateToChuc } = require("../controllers/tochuc.controller");
-const { getAllTokhai } = require("../controllers/auth.controller");
+const { getAllTokhai, register, getListRegisterMST, deleteRegisterMST, capMST, createAccount } = require("../controllers/auth.controller");
 const TochucUpload = db.tochuckekhaithue;
-const { getTokhaithue, duyettokhai, tokhaikhongduocduyet, checkTokhai, getListThuNhap, getPhuluc, downloadPhuluc, moKyQuyetToan, moKyQuyetToanTochuc, listOpenKyQuyetToan } = require("../controllers/admin.controller");
+const { getTokhaithue, duyettokhai, tokhaikhongduocduyet, checkTokhai, getListThuNhap, getPhuluc, downloadPhuluc, moKyQuyetToan, moKyQuyetToanTochuc, listOpenKyQuyetToan, deleteQTT, findOneQTT, updateQTT } = require("../controllers/admin.controller");
 const Tokhai = db.tokhaithue;
 const { uploadTokhai, previewFiles } = require("../controllers/upload.controller");
 const Phuluc = db.phuluc;
@@ -16,6 +16,7 @@ const svgCaptcha = require("svg-captcha");
 const otpDatabase = new Map();
 const { Sequelize } = require('sequelize');
 const importController = require("../controllers/import.controller");
+const { isAdmin } = require("../middleware/authJwt");
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -27,11 +28,11 @@ module.exports = function (app) {
   });
 
 
-  app.get("/otp", [authJwt.verifyTokenCanhan], (req, res) => {
+  app.get("/otp", (req, res) => {
     res.render("nguoidung/otp");
   })
 
-  app.post("/otp", [authJwt.verifyTokenCanhan], forgotPassword);
+  app.post("/otp", forgotPassword);
 
 
   app.post('/validate-otp', (req, res) => {
@@ -52,7 +53,6 @@ module.exports = function (app) {
 
     res.send('Password reset successful. You can now log in with your new password.');
   });
-
 
 
   // HOMEPAGE
@@ -104,6 +104,8 @@ module.exports = function (app) {
     res.render("admin/auth/create.tochuc.ejs");
   });
 
+  app.get('/list-dang-ky-cap-mst', [authJwt.verifyToken, authJwt.isAdmin], getListRegisterMST);
+  app.get('/delete-mst/:id', [authJwt.verifyToken, authJwt.isAdmin], deleteQTT);
 
   app.get("/update/:id", [authJwt.verifyToken, authJwt.isAdmin], findOne);                      // lấy thông tin update cá nhân
   app.get("/deletecn/:id", [authJwt.verifyToken, authJwt.isAdmin], deleteUser);                 // xóa cá nhân
@@ -124,9 +126,11 @@ module.exports = function (app) {
   app.get('/hoan-tra-thue/:id', tokhaithue.hoanthueResultAdmin);                                                // truy xuất thông tin hoàn trả thuế thuộc tờ khai
   app.post("/import-canhan", [authJwt.verifyToken, authJwt.isAdmin], upload.single("file"), importController.importCanhan);   // import file excel tạo tài khoản cá nhân
 
-  app.get('/ky-quyet-toan', [authJwt.verifyToken, authJwt.isAdmin],listOpenKyQuyetToan);
-
-
+  app.get('/ky-quyet-toan', [authJwt.verifyToken, authJwt.isAdmin], listOpenKyQuyetToan);
+  app.get('/delete-qtt/:id', [authJwt.verifyToken, authJwt.isAdmin], deleteQTT);
+  app.get('/update-qtt/:id', [authJwt.verifyToken, authJwt.isAdmin], findOneQTT);
+  app.post('/update-qtt/:id', [authJwt.verifyToken, authJwt.isAdmin], updateQTT);
+  app.post('/create-user/:id', [authJwt.verifyToken, authJwt.isAdmin], createAccount);
   app.get('/mo-ky-quyet-toan', [authJwt.verifyToken, authJwt.isAdmin], (req, res) => {
     const user = req.session.user;
     res.render('admin/moKyQuyetToan', { admin: user });
@@ -146,20 +150,20 @@ module.exports = function (app) {
   app.post('/update/nv/:id', [authJwt.verifyTokenTochuc, authJwt.isTochuc], updateNhanvien);                                    // select -  xóa nhiều 
   app.post("/upload", [authJwt.verifyTokenTochuc, authJwt.isTochuc, isOpenTochuc], upload.single("file"), excelController.upload); // upload file excel 
 
-  app.get("/tochuc/upload-file", [authJwt.verifyTokenTochuc, authJwt.isTochuc, isOpen], (req, res) => {               // form upload file excel
+  app.get("/tochuc/upload-file", [authJwt.verifyTokenTochuc, authJwt.isTochuc, isOpenTochuc], (req, res) => {               // form upload file excel
     const user = req.session.user;
     console.log(user);
     res.render('tochuc/upload', { user: user });
   });
 
-app.get('/tochuc/cap-nhat-thong-tin', (req, res) => {
-  res.render('tochuc/update');
-});
+  app.get('/tochuc/cap-nhat-thong-tin', (req, res) => {
+    res.render('tochuc/update');
+  });
 
-app.post('/cap-nhat-thong-tin', [authJwt.verifyTokenTochuc, authJwt.isTochuc], updateToChuc);
+  app.post('/cap-nhat-thong-tin', [authJwt.verifyTokenTochuc, authJwt.isTochuc], updateToChuc);
   app.post('/delete-multiple', async (req, res) => {
     const idsToDelete = req.body.ids;
-  
+
     try {
       const result = await TochucUpload.destroy({
         where: {
@@ -180,6 +184,11 @@ app.post('/cap-nhat-thong-tin', [authJwt.verifyTokenTochuc, authJwt.isTochuc], u
 
 
   // TRUY CẬP QUYỀN CÁ NHÂN
+  app.get('/dang-ky', (req, res) => {
+    res.render('nguoidung/register');
+  });
+
+  app.post('/dang-ky-mst', register);
 
   app.get('/check-is-open-tochuc', isOpen);
   app.get("/edit-profile", [authJwt.verifyTokenCanhan], (req, res) => {             // form update profile
@@ -189,9 +198,9 @@ app.post('/cap-nhat-thong-tin', [authJwt.verifyTokenTochuc, authJwt.isTochuc], u
 
   app.post("/update-profile/:id", [authJwt.verifyToken], updateCanhan);             // upload profile
 
-  app.get('/tokhaithue', [authJwt.verifyTokenCanhan, isOpenTochuc], getUser);       // tờ khai step 1  
+  app.get('/tokhaithue', [authJwt.verifyTokenCanhan, isOpenCaNhan], getUser);             // tờ khai step 1  
   app.get("/tokhai/b2", [authJwt.verifyTokenCanhan], (req, res) => {                // tờ khai step 2
-    res.render('nguoidung/upload_phuluc')                                 
+    res.render('nguoidung/upload_phuluc')
   });
 
   app.get('/tokhai/b3', [authJwt.verifyTokenCanhan], (req, res) => {                // tờ khai step 3
@@ -268,7 +277,7 @@ app.post('/cap-nhat-thong-tin', [authJwt.verifyTokenTochuc, authJwt.isTochuc], u
         return res.redirect(`/list-thu-nhap?result`);
       }
       else {
-        return res.render('nguoidung/tracuu', { noDataError: true, error: 'Không tìm thấy thông tin thu nhập!' });
+        return res.render('nguoidung/tracuu', { noDataError: true, error: 'Mã số thuế không đúng!.' });
       }
 
     } catch (error) {

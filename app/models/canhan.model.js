@@ -40,7 +40,6 @@ module.exports = (sequelize, Sequelize) => {
     },
     phuthuoc: {
       type: Sequelize.INTEGER,
-      allowNull: false,
       validate: {
         notEmpty: {
          }
@@ -63,6 +62,9 @@ module.exports = (sequelize, Sequelize) => {
           msg: "Co quan quyet toan thue khong duoc de trong"
         }
       }
+    },
+    status: {
+      type: Sequelize.STRING,
     }
   });
   return Canhan;

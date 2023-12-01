@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <%- include('./partials/head') %>
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 300px;
+            }
+
+            th,
+            td {
+                border: 1px solid rgb(214, 209, 209);
+                text-align: center;
+                padding: 8px;
+            }
+
+            th {
+                font-weight: bold;
+            }
+            td {
+                font-weight: bold;
+                color: white;
+            }
+        </style>
+</head>
+
+<body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <div id="main-wrapper" data-layout="vertical">
+        <header class="topbar" data-navbarbg="skin5">
+            <%- include('./partials/header') %>
+        </header>
+        <aside class="left-sidebar" data-sidebarbg="skin5">
+            <div class="scroll-sidebar">
+                <%- include('./partials/sidebar') %>
+            </div>
+        </aside>
+        <div class="page-wrapper" style="background-color: white;">
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-12 d-flex no-block align-items-center">
+                        <h4 class="page-title">CẬP NHẬT THỜI GIAN QUYẾT TOÁN THUẾ NĂM <span id="currentYear"></span></h4>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div style="text-align: right;">
+                    <form action="/update-qtt/<%= kyquyettoan.id %>" method="post">
+                        <input type="text" value="<%= admin.id %>" name="adminId"  style="display: none;">
+                        <table class="table">
+                            <tr>
+                            <tr style="background-color: #2886d3;">
+                                <td colspan="2">Cá nhân</td>
+                                <td colspan="2">Doanh nghiệp/Tổ chức</td>
+                            </tr>
+    
+                            <th class="combined-header">
+                                <span>Bắt đầu</span>
+                            </th>
+    
+                            <th class="combined-header">
+                                <span>Kết thúc</span>
+                            </th>
+    
+                            <th class="combined-header">
+                                <span>Bắt đầu</span>
+                            </th>
+    
+                            <th class="combined-header">
+                                <span>Kết thúc</span>
+                            </th>
+                            </tr>
+                            <tr>
+                                <th><input name="openCN" class="form-control" type="date" value="<%= kyquyettoan.ngaymo%>"></th>
+                                <th><input name="closeCN" class="form-control" type="date" value="<%= kyquyettoan.ngaydong%>"></th>
+                                <th><input name="openTC" class="form-control" type="date" value="<%= kyquyettoan.ngaymotochuc%>"></th>
+                                <th><input name="closeTC" class="form-control" type="date"value="<%= kyquyettoan.ngaydongtochuc%>"></th>
+                                
+                            </tr>
+                            <tr>
+                                <th colspan="4"><button class="btn btn-warning" style="width: 250px; font-weight: bolder;">Cập nhật</button></th>
+                            </tr>
+    
+    
+                            <!-- Thêm các dòng khác nếu cần -->
+                        </table>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    document.getElementById('#currentYear').innerHTML += new Date().getFullYear();
+</script>
+
+</html>

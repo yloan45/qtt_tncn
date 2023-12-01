@@ -1,49 +1,61 @@
 <!-- Modal Cho tổ chức-->
 <div class="modal fade" id="kyquyettoantochuc" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content" style="width: 650px;">
+      <div class="modal-content" style="width: 850px;">
         <div class="modal-header">
             <div class="input-group">
-                <h5 class="modal-title" id="exampleModalLabel">Mở thời gian quyết toán thuế cho Tổ chức - năm <span class="currentYear"></span></h5>
+                <h5 class="modal-title" id="exampleModalLabel" style="text-transform: uppercase;">Mở thời gian quyết toán thuế cho Tổ chức - năm <span class="currentYear"></span></h5>
             </div>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <% if (typeof error !== 'undefined') { %>
+            <p><%= error %></p>
+          <% } %>
         <form action="/mo-ky-quyet-toan-to-chuc" method="post">
             <input name="adminId"  value="<%= admin.id %>" style="display: none;">
             <div class="modal-body mt-2">
                 <div class="input-group">
-                    <label for="" style="margin-top: 5px;" class="col-3">Thời gian mở: </label>
-                    <input type="date" id="ngaymo" name="ngaymo" class="form-control col-9">
+                    <label for="" style="margin-top: 5px;" class="col-3">Thời gian bắt đầu quyết toán của cá nhân  <font style="color: red;">(*)</font></label>
+                    <input type="date" id="ngaymo" style="margin-left: 15px;" name="ngaymo" class="form-control col-9" required>
                   </div>
                 </div>
                 <div class="modal-body mt-2">
                   <div class="input-group">
-                    <label for="" style="margin-top: 5px;" class="col-3">Thời gian đóng: </label>
-                    <input type="date" id="ngaydong" name="ngaydong" class="form-control col-9">
+                    <label for="" style="margin-top: 5px;" class="col-3">Thời gian kết thúc quyết toán của cá nhân  <font style="color: red;">(*)</font></label>
+                    <input type="date" id="ngaydong" name="ngaydong" style="margin-left: 15px;" class="form-control col-9" required>
                   </div>
 
                 <div class="input-group mt-1" style="display: none;">
                     <label for="selectOpenTochuc" style="margin-top: 5px;" class="col-3">Chọn kỳ quyết toán: </label>
-                    <select name="selectOpenTochuc" id="selectOpenTochuc" class="form-select col-9" onchange="updateDateFields()">
+                    <select name="selectOpenTochuc" id="selectOpenTochuc" class="form-select col-8" onchange="updateDateFields()" required>
                         <option value="thang">Theo tháng</option>
                         <option value="quy">Theo quý</option>
                         <option value="nam">Theo năm</option>
                     </select>
                 </div>
                 <div class="input-group mt-4">
-                    <label for="openTochuc" style="margin-top: 5px;" class="col-3">Thời gian mở <font style="color: red;">(*)</font></label>
-                    <input type="date" id="openTochuc" name="openTochuc" class="form-control col-9" value="">
+                    <label for="openTochuc" style="margin-top: 5px;" class="col-3">Thời gian bắt đầu quyết toán của tổ chức <font style="color: red;">(*)</font></label>
+                    <input type="date" id="" style="margin-left: 15px;" name="openTochuc" class="form-control col-9" value="">
                 </div>
             </div>
             <div class="modal-body mt-1">
                 <div class="input-group">
-                    <label for="closeTochuc" style="margin-top: 5px;" class="col-3">Thời gian đóng <font style="color: red;">(*)</font></label>
-                    <input type="date" id="closeTochuc" name="closeTochuc" class="form-control col-9" value="">
+                    <label for="closeTochuc" style="margin-top: 5px;" class="col-3">Thời gian kết thúc quyết toán của tổ chức<font style="color: red;">(*)</font></label>
+                    <input type="date" id="" style="margin-left: 15px;" name="closeTochuc" class="form-control col-9" value="" required>
                 </div>
             </div>
+            
+            <div class="modal-body mt-1">
+                <div class="input-group">
+                    <span style="color: red; font-style: italic;">LƯU Ý:&nbsp;&nbsp;Thời gian Cá nhân bắt đầu quyết toán chỉ khi Doanh nghiệp/Tổ chức đã kết thúc thời gian quyết toán. CBT vui lòng nhập đúng theo thời gian quy định.</span>
+                    
+                </div>
+            </div>
+
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <button type="submit" id="submitBtn" class="btn btn-primary">Mở kỳ quyết toán</button>
+                <button type="submit" id="submitBtn" class="btn btn-info">Mở kỳ quyết toán</button>
             </div>
         </form>
       </div>
@@ -60,21 +72,6 @@
         var year = currentDate.getFullYear();
         var month = currentDate.getMonth() + 1; 
         var lastDayOfMonth = new Date(year, month, 0).getDate();
-
-        if (selectOpenTochuc.value === 'thang') {
-            openTochuc.value = year + '-' + (month < 10 ? '0' : '') + month + '-01';
-            closeTochuc.value = year + '-' + (month < 10 ? '0' : '') + month + '-' + lastDayOfMonth;
-        } else if (selectOpenTochuc.value === 'quy') {
-            var startMonth = Math.floor((month - 1) / 3) * 3 + 1;
-            var endMonth = startMonth + 2;
-            endMonth = endMonth > 12 ? 12 : endMonth;
-
-            openTochuc.value = year + '-' + (startMonth < 10 ? '0' : '') + startMonth + '-01';
-            closeTochuc.value = year + '-' + (endMonth < 10 ? '0' : '') + endMonth + '-' + new Date(year, endMonth, 0).getDate();
-        } else if (selectOpenTochuc.value === 'nam') {
-            openTochuc.value = year + '-01-01';
-            closeTochuc.value = year + '-12-31';
-        }
     }
 
     updateDateFields();

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-
 <head>
   <%- include('./partials/head') %>
 </head>
@@ -31,16 +30,16 @@
       </div>
 
       <div class="container-fluid">
-        <table class="table table-bordered  table-striped "  id="data-table">
-          <tr style="text-align: center; font-weight: bolder; ">
+        <table class="table table-bordered  table-striped "  >
+          <tr style="text-align: center; background-color: #2886d3; color: white;"  >
             <th style="text-align: center; font-weight: bolder; "> STT </th>
-            <th style="text-align: center; font-weight: bolder; ">Tên tổ chức</th>
+            <th style="text-align: center; font-weight: bolder; " >Đơn vị kê khai</th>
             <th style="text-align: center; font-weight: bolder; ">Tên NLĐ</th>
             <th style="text-align: center; font-weight: bolder; ">Mã số thuế</th>
             <th style="text-align: center; font-weight: bolder; ">Địa chỉ</th>
             <th style="text-align: center; font-weight: bolder; ">Điện thoại</th>
             <th style="text-align: center; font-weight: bolder; ">Email</th>
-            <th style="text-align: center; font-weight: bolder; ">Lương</th>
+            <th style="text-align: center; font-weight: bolder; " >Lương</th>
           </tr>
           <% let totalIndex=0; %>
             <% data.forEach((user, index)=> { %>
