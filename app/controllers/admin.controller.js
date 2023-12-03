@@ -179,15 +179,14 @@ const findOneQTT = async (req, res) => {
 
 const updateQTT = async (req, res) => {
   const id = req.params.id;
-  const { openCN, closeCN, openTC, closeC } = req.body;
-
+  const { openCN, closeCN, openTC, closeTC } = req.body;
   try {
     const updateResult = await Kyquyettoan.update(
       {
         ngaymo: openCN,
         ngaydong: closeCN,
         ngaymotochuc: openTC,
-        ngaydongtochuc: closeC
+        ngaydongtochuc: closeTC
       },
       {
         where: { id: id }

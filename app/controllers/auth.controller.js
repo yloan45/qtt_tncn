@@ -19,77 +19,13 @@ const express = require('express');
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { validateCCCD, validatePhone } = require("../middleware");
+const { validateCCCD, validatePhone, paginate } = require("../middleware");
 const { findOne } = require("./canhan.controller");
 
 function generateRandomPassword() {
   return crypto.randomBytes(4).toString('hex');
 }
-/*
-exports.CaNhanSignup = async (req, res) => {
-  // Save User to Database
-  try {
 
-    const canhan = await Canhan.create({
-      email: req.body.email,
-      masothue: req.body.masothue,
-      address: req.body.address,
-      cccd: req.body.cccd,
-      phone: req.body.phone,
-      cqqtthue: req.body.cqqtthue,
-      phuthuoc: req.body.phuthuoc,
-      fullname: req.body.fullname,
-    });
-
-    const user = await User.create({
-      username: req.body.username,
-      password: bcrypt.hashSync(req.body.password, 8),
-      canhanId: canhan.id
-    });
-
-    if (req.body.roles) {
-      const roles = await Role.findAll({
-        where: {
-          name: {
-            [Op.or]: req.body.roles,
-          },
-        },
-      });
-
-      const result = user.setRoles(roles);
-      if (result) {
-        mailer.sendMail(canhan.email, "Đăng ký tài khoản thành công",
-          `Xin chào ${canhan.fullname} <br>
-      Bạn vừa được tạo tài khoản Quyết toán thuế TNCN thành công! <br>
-      Tài khoản đăng nhập hệ thống của bạn:<br>
-      - username: ${user.username} <br>
-      - password: ${req.body.password}`);
-        return res.redirect('/');
-      }
-
-
-    }
-
-    else {
-      // user has role = 1
-      const result = user.setRoles([1]);
-      if (result) {
-        mailer.sendMail(canhan.email, "Đăng ký tài khoản thành công",
-          `Xin chào ${canhan.fullname} <br>
-        Bạn vừa được tạo tài khoản Quyết toán thuế TNCN thành công! <br>
-        Tài khoản đăng nhập hệ thống của bạn:<br>
-        - username: ${user.username} <br>
-        - password: ${req.body.password}`);
-        return res.render('admin/success-modal', { showSuccessModal: true });
-      }
-    }
-
-
-  } catch (error) {
-    res.status(500).send({ message: error.message });
-  }
-};
-*/
 exports.CaNhanSignup = async (req, res) => {
   try {
     const masothue = await this.randomMasothue();
@@ -255,59 +191,6 @@ exports.AdminSignup = async (req, res) => {
   }
 };
 
-/*
-exports.signin = async (req, res) => {
-  try {
-    const user = await User.findOne({
-      where: {
-        username: req.body.username,
-      },
-    });
-
-    if (!user) {
-      return res.status(404).send({ message: "User Not found." });
-    }
-
-    const passwordIsValid = bcrypt.compareSync(
-      req.body.password,
-      user.password
-    );
-
-    if (!passwordIsValid) {
-      return res.status(401).send({
-        message: "Invalid Password!",
-      });
-    }
-
-    const token = jwt.sign({ id: user.id },
-      config.secret,
-      {
-        algorithm: 'HS256',
-        allowInsecureKeySizes: true,
-        expiresIn: 86400, // 24 hours
-      });
-
-    let authorities = [];
-    const roles = await user.getRoles();
-    for (let i = 0; i < roles.length; i++) {
-      authorities.push("ROLE_" + roles[i].name.toUpperCase());
-    }
-
-    req.session.token = token;
-    req.session.user = {
-      id: user.id,
-      username: user.username,
-      toChucId: user.toChucId,
-      adminId: user.adminId,
-      caNhanId: user.caNhanId
-    };
-
-    return res.redirect("/admin")
-  } catch (error) {
-    return res.status(500).send({ message: error.message });
-  }
-};*/
-
 exports.TochucSignin = async (req, res) => {
   try {
     const user = await User.findOne({
@@ -356,57 +239,6 @@ exports.TochucSignin = async (req, res) => {
   }
 };
 
-/*
-exports.CanhanSignin = async (req, res) => {
-  try {
-    const user = await User.findOne({
-      where: {
-        username: req.body.username,
-      },
-      include: [{
-        model: Canhan, as: 'ca_nhan',
-        include: [{ model: Diachi, as: 'dia_chi' }]
-      }]
-    });
-
-    const passwordIsValid = bcrypt.compareSync(
-      req.body.password,
-      user.password
-    );
-
-    if (!user) {
-      req.flash('error', 'Mã số thuế không đúng!');
-      return res.redirect('/canhan/login');
-    }
-
-    if (!passwordIsValid) {
-      req.flash('error', 'Mã số thuế không đúng!');
-      return res.redirect('/canhan/login');
-    }
-
-
-    const token = jwt.sign({ id: user.id },
-      config.secret,
-      {
-        algorithm: 'HS256',
-        allowInsecureKeySizes: true,
-        expiresIn: 86400, // 24 hours
-      });
-
-    let authorities = [];
-    const roles = await user.getRoles();
-    for (let i = 0; i < roles.length; i++) {
-      authorities.push("ROLE_" + roles[i].name.toUpperCase());
-    }
-
-    req.session.token = token;
-    req.session.user = user;
-    return res.redirect("/canhan")
-  } catch (error) {
-    return res.status(500).send({ message: error.message });
-  }
-};
-*/
 
 exports.CanhanSignin = async (req, res) => {
   try {
@@ -457,7 +289,6 @@ exports.CanhanSignin = async (req, res) => {
   }
 };
 
-
 exports.signout = async (req, res) => {
   try {
     req.session.token = null;
@@ -467,7 +298,6 @@ exports.signout = async (req, res) => {
     this.next(err);
   }
 };
-
 
 exports.signin = async (req, res) => {
   try {
@@ -518,27 +348,9 @@ exports.register = async (req, res) => {
       }
     });
 
-    const errorMessages = {};
     if (existingCanhan) {
-      errorMessages.push('Thông tin người dùng đã được đăng ký!');
-    }
-
-    if (existingCanhan) {
-      errorMessages.duplicateUser = 'Thông tin người dùng đã được đăng ký!';
-    }
-
-    if (!validateCCCD(cccd)) {
-      errorMessages.invalidCCCD = 'CCCD không hợp lệ. Vui lòng nhập đúng 12 chữ số.';
-    }
-
-    if (!validatePhone(phone)) {
-      errorMessages.invalidPhone = 'Số điện thoại không hợp lệ. Vui lòng nhập đúng 10 chữ số.';
-    }
-
-    if (Object.keys(errorMessages).length > 0) {
-      req.flash('error', errorMessages);
-      return res.render('nguoidung/register', { req: req, errorMessages });
-
+      req.flash('error','Thông tin người dùng đã được đăng ký!');
+      return res.render('nguoidung/register');
     }
 
     const canhan = await Canhan.create({
@@ -562,7 +374,7 @@ exports.register = async (req, res) => {
     });
 
     req.flash('success', 'Thông tin đăng ký cấp Mã số thuế của bạn đã được ghi nhập. Vui lòng chờ phản hồi từ Cơ Quan Thuế');
-    return res.render('nguoidung/register');
+    return res.redirect('/');
 
   } catch (error) {
     console.log(error);
@@ -580,19 +392,45 @@ exports.createAccount = async (req, res) => {
     const canhan = await Canhan.findByPk(id);
     const randomPassword = generateRandomPassword();
 
-    const existingCanhan = await Canhan.findOne({
+    const existingCanhanPending = await Canhan.findOne({
       where: {
-        [Op.or]: [
-          { masothue: canhan.masothue },
-          { email: canhan.email },
-          { phone: canhan.phone }
+        [Op.and]: [
+          {
+            [Op.or]: [
+              { masothue: canhan.masothue },
+              { email: canhan.email },
+              { phone: canhan.phone }
+            ]
+          },
+          { status: 'đang chờ' }
         ]
       }
     });
-    console.log('existingCanhan:', existingCanhan);
-    if (existingCanhan.masothue !== canhan.masothue || existingCanhan.email !== canhan.email || existingCanhan.phone !== canhan.phone) {
 
-      return res.redirect('/list-dang-ky-cap-mst?=failed');
+    const existingCanhan = await Canhan.findOne({
+      where: {
+        [Op.and]: [
+          {
+            [Op.or]: [
+              { masothue: canhan.masothue },
+              { email: canhan.email },
+              { phone: canhan.phone }
+            ]
+          },
+          { status: null }
+        ]
+      }
+    });
+    
+    console.log('existingCanhan:', existingCanhan);
+    if (existingCanhanPending && existingCanhan) {
+      await Canhan.update({ status: "rejected" }, { where: { id: id } });
+      const success = false;
+      mailer.sendMail(canhan.email, "V/v đăng ký thuế lần đầu",`
+        Xin chào ${canhan.fullname},<br>
+        Đề nghị cấp mã số thuế của bạn không được duyệt. Thông tin đăng ký đã tồn tại, vui lòng kiểm tra lại thông tin hoặc đến Cơ quan thuế gần nhất để biết thông tin chi tiết,
+      `)
+      res.json({ success });
     } else {
       const user = await User.create({
         username: canhan.masothue,
@@ -600,6 +438,9 @@ exports.createAccount = async (req, res) => {
         caNhanId: canhan.id
       });
 
+      const success = true;
+      res.json({ success });
+      
       const date = new Date(canhan.createdAt);
       const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
       const formattedTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
@@ -613,11 +454,7 @@ exports.createAccount = async (req, res) => {
     Ban được cấp Mã số thế cá nhân là ${canhan.masothue}. Cơ quan quản lý thuế trực tiếp: ${canhan.cqqtthue}<br>
     Đăng nhập hệ thống quyết toán thuế thu nhập cá nhân bằng mã số thuế được cấp. Mật khẩu đăng nhập là: ${randomPassword}<br>`
       );
-
-      return res.redirect('/list-user');
     }
-
-    // Create a new user
 
   } catch (error) {
     console.error(error);
@@ -626,6 +463,11 @@ exports.createAccount = async (req, res) => {
   }
 };
 
+
+exports.registerPage = (req, res) => {
+  req.flash('error', '');
+  res.render('nguoidung/register');
+};
 
 exports.randomMasothue = async (req, res) => {
   let isUnique = false;
@@ -641,43 +483,22 @@ exports.randomMasothue = async (req, res) => {
 }
 
 
-// Trong hàm paginate
-const paginate = async (model, condition, page = 1, perPage = 5) => {
-  try {
-    const result = await model.findAndCountAll({
-      where: condition,
-      limit: perPage,
-      offset: (page - 1) * perPage,
-      include: [
-        { model: Loaitokhai, as: 'loai_to_khai' },
-        { model: Canhan, as: 'ca_nhan' },
-        { model: Trangthaixuly, as: 'trang_thai_xu_li' },
-      ],
-    });
-
-    const totalPages = Math.ceil(result.count / perPage);
-
-    return {
-      items: result.rows,
-      totalItems: result.count,
-      totalPages: totalPages,
-      currentPage: page,
-    };
-  } catch (error) {
-    throw error;
-  }
-};
-
 
 exports.getAllTokhai = async (req, res) => {
   try {
-    const tokhaithue = await paginate(Tokhaithue, {}, req.query.page || 1, 10);
+    const tokhaithue = await paginate(Tokhaithue, {}, req.query.page || 1, 5, [
+      { model: Loaitokhai, as: 'loai_to_khai' },
+      { model: Canhan, as: 'ca_nhan' },
+      { model: Trangthaixuly, as: 'trang_thai_xu_li' },
+    ]);
+    
     res.render("admin/duyettokhai", { tokhaithue });
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal Server Error');
   }
 };
+
 
 exports.getListRegisterMST = async (req, res) => {
   try {

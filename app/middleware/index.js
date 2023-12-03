@@ -3,6 +3,12 @@ const authJwt = require("./authJwt");
 const verifySignUp = require("./verifySignUp");
 const Kyquyettoan = db.kyquyettoan;
 const Op = db.Sequelize.Op;
+const Loaitokhai = db.loaitokhai;
+const Canhan = db.canhan;
+const Diachi = db.diachi;
+const Tochuc = db.tochuc;
+const Trangthaixuly = db.trangthaixuly;
+const User = db.user;
 
 const validateInput = (req, res, next) => {
   const { tokhai, trangthaixuly, startDate, endDate } = req.body;
@@ -211,6 +217,60 @@ const validatePhone = (phone) => {
   return phoneRegex.test(phone);
 };
 
+
+// Trong hàm paginate
+/*
+const paginate = async (model, condition, page = 1, perPage = 5) => {
+  try {
+    const result = await model.findAndCountAll({
+      where: condition,
+      limit: perPage,
+      offset: (page - 1) * perPage,
+      include: [
+        { model: Loaitokhai, as: 'loai_to_khai' },
+        { model: Canhan, as: 'ca_nhan' },
+        { model: Trangthaixuly, as: 'trang_thai_xu_li' },
+      ],
+    });
+
+    const totalPages = Math.ceil(result.count / perPage);
+
+    return {
+      items: result.rows,
+      totalItems: result.count,
+      totalPages: totalPages,
+      currentPage: page,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+*/
+const paginate = async (model, condition, page = 1, perPage = 5, includes = []) => {
+  try {
+    const includeOptions = includes.map(inc => ({ model: inc.model, as: inc.as }));
+
+    const result = await model.findAndCountAll({
+      where: condition,
+      limit: perPage,
+      offset: (page - 1) * perPage,
+      include: includeOptions,
+    });
+
+    const totalPages = Math.ceil(result.count / perPage);
+
+    return {
+      items: result.rows,
+      totalItems: result.count,
+      totalPages: totalPages,
+      currentPage: page,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 module.exports = {
   authJwt,
   verifySignUp,
@@ -219,5 +279,6 @@ module.exports = {
   isStrongPassword,
   isOpen, isOpenTochuc,
   validateCCCD, validatePhone,
-  isOpenCaNhan
+  isOpenCaNhan,
+  paginate,  
 };

@@ -2,6 +2,7 @@ const { query } = require("express");
 const db = require("../models");
 const Excelupload = db.tochuckekhaithue;
 const readXlsxFile = require("read-excel-file/node");
+const { paginate } = require("../middleware");
 const Tochuc = db.tochuc;
 const Op = db.Sequelize.Op;
 
@@ -96,21 +97,18 @@ const upload = async (req, res) => {
   }
 };
 
-const getAllExcelFile = (req, res) => {
-  Excelupload.findAll({
-    include: [{
+const getAllExcelFile = async (req, res) => {
+try {
+  const data = await paginate(Excelupload, {}, req.query.page || 1, 5, [
+    {
       model: Tochuc, as: 'to_chuc'
-    }]
-  })
-    .then((data) => {
-      res.render('admin/listdata.ejs', {data})
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Error",
-      });
-    });
+    }
+  ]);
+  res.render('admin/listdata.ejs', {data})
+} catch (error) {
+  console.error(err);
+    res.status(500).send('Internal Server Error');
+}
 };
 
 const getTochucUser = async (req, res) => {
@@ -137,8 +135,6 @@ const getToChucUploadFile = async (req, res) => {
       });
     });
 };
-
-
 
 module.exports = {
   upload,

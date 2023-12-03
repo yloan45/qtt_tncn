@@ -60,8 +60,8 @@
             <th style="font-weight: bolder;">Hành động</th>
           </tr>
           <% let totalIndex = 0; %>
-          <% if (user.length > 0) { %>
-          <% user.forEach((user, index)=> { %>
+          <% if (canhan.items.length > 0) { %>
+          <% canhan.items.forEach((user, index)=> { %>
           <tr>
             <td><%= index+1 %> </td>
             <td><%= user.masothue %></td>
@@ -105,7 +105,15 @@
           </div>
         </div>
 
-
+        <div class="pagination">
+          <ul class="pagination">
+            <% for(let i = 1; i <= canhan.totalPages; i++) { %>
+            <li class="page-item <% if (i === canhan.currentPage) { %> active <% } %>">
+              <a class="page-link " href="/list-user?page=<%= i %>"><%= i %></a>
+            </li>
+            <% } %>
+          </ul>
+        </div>
       </div>
 
 </body>

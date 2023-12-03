@@ -1,11 +1,11 @@
 const { authJwt, validateInput, checkDateValidity, isOpen, isOpenTochuc, isOpenCaNhan } = require("../middleware");
-const { deleteUser, getAllUser, update, findOne, getUser, updateCanhan, changePassword, forgotPassword } = require("../controllers/canhan.controller");
+const { deleteUser, getAllUser, update, findOne, getUser, updateCanhan, changePassword, forgotPassword, forgotPasswordStep2 } = require("../controllers/canhan.controller");
 const upload = require("../middleware/excelUpload");
 const excelController = require("../controllers/excel.controller");
 const tokhaithue = require("../controllers/tokhai.controller");
 const db = require("../models");
 const { getAllToChuc, deleteToChuc, deleteNhanVien, updateNhanvien, getTochuc, deleteMultiple, updateToChuc } = require("../controllers/tochuc.controller");
-const { getAllTokhai, register, getListRegisterMST, deleteRegisterMST, capMST, createAccount } = require("../controllers/auth.controller");
+const { getAllTokhai, register, getListRegisterMST, deleteRegisterMST, capMST, createAccount, registerPage } = require("../controllers/auth.controller");
 const TochucUpload = db.tochuckekhaithue;
 const { getTokhaithue, duyettokhai, tokhaikhongduocduyet, checkTokhai, getListThuNhap, getPhuluc, downloadPhuluc, moKyQuyetToan, moKyQuyetToanTochuc, listOpenKyQuyetToan, deleteQTT, findOneQTT, updateQTT } = require("../controllers/admin.controller");
 const Tokhai = db.tokhaithue;
@@ -32,6 +32,9 @@ module.exports = function (app) {
     res.render("nguoidung/otp");
   })
 
+  app.get("/forgot-password", (req, res) => {
+    res.render("nguoidung/forgot_password_step2");
+  });
   app.post("/otp", forgotPassword);
 
 
@@ -45,6 +48,7 @@ module.exports = function (app) {
       return res.redirect("/");
     }
   });
+  app.post('/xac-nhan', forgotPasswordStep2);
 
   app.post('/reset-password', (req, res) => {
     const email = req.body.email;
@@ -184,9 +188,7 @@ module.exports = function (app) {
 
 
   // TRUY CẬP QUYỀN CÁ NHÂN
-  app.get('/dang-ky', (req, res) => {
-    res.render('nguoidung/register');
-  });
+  app.get('/dang-ky', registerPage);
 
   app.post('/dang-ky-mst', register);
 

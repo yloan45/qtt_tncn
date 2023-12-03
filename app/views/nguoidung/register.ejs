@@ -3,7 +3,11 @@
 <head>
   <%- include('../partials/head') %>
 </head>
-
+<style>
+  ::placeholder {
+    font-style: italic;
+  }
+</style>
 <body>
   <div class="container">
     <div class="khungtong">
@@ -15,7 +19,10 @@
         <div class="card">
           <h5 class="card-header" style="text-align: center;  background-color: #2886d3; color: white; font-size: 16px;">Đăng ký tài khoản lần đầu</h5>
           <div class="card-body">
-            <form action="/dang-ky-mst" method="post">
+            <% if (messages.error) { %>
+              <span style=" color: red; font-size: 18px; text-align: center;" class="error-message"><%= messages.error[0] %></span>
+            <% } %>
+            <form action="/dang-ky-mst" method="post" onsubmit="return validateForm()">
               <div class="row mt-3">
                 <div class="col"></div>
                 <div class="col-3">
@@ -33,7 +40,8 @@
                   <label for="" style="font-size: 16px; ">Căn cước công dân<font style="color: red;">(*)</font></label>
                 </div>
                 <div class="col-7">
-                  <input type="text" class="form-control" name="cccd" required>
+                  <input type="text" name="cccd" class="form-control" pattern="\d+" title="Căn cước công dân không thể là chữ." required>
+
                 </div>
                 <div class="col"></div>
               </div>
@@ -43,7 +51,7 @@
                   <label for="" style="font-size: 16px; ">Tỉnh/TP<font style="color: red;">(*)</font></label>
                 </div>
                 <div class="col-7">
-                  <select name="tinh_tp" id="city" style="height: 95%;" class="form-select">
+                  <select name="tinh_tp" id="city" style="height: 95%;" class="form-select" required>
                     <option value="">Tỉnh/TP</option>
                   </select>
                 </div>
@@ -56,7 +64,7 @@
                   <label for="" style="font-size: 16px; ">Quận/Huyện<font style="color: red;">(*)</font></label>
                 </div>
                 <div class="col-7">
-                  <select name="quan_huyen" id="district" style="height: 95%;" class="form-select">
+                  <select name="quan_huyen" id="district" style="height: 95%;" class="form-select" required>
                     <option value="">Quận/Huyện</option>
                   </select>
                 </div>
@@ -70,7 +78,7 @@
                   <label for="" style="font-size: 16px; ">Xã/Thị trấn<font style="color: red;">(*)</font></label>
                 </div>
                 <div class="col-7">
-                  <select name="xa_phuong" id="ward" style="height: 95%;" class="form-select">
+                  <select name="xa_phuong" id="ward" style="height: 95%;" class="form-select" required>
                     <option value="">Xã/Thị trấn</option>
                   </select>
                 </div>
@@ -83,7 +91,7 @@
                   <label for="" style="font-size: 16px; ">Số điện thoại<font style="color: red;">(*)</font></label>
                 </div>
                 <div class="col-7">
-                  <input type="text" name="phone" class="form-control" required>
+                  <input type="text" name="phone" class="form-control" pattern="\d+" title="Vui lòng nhập đúng định dạng số điện thoại." required>
                 </div>
                 <div class="col"></div>
               </div>
@@ -94,7 +102,8 @@
                   <label for="" style="font-size: 16px; ">Email<font style="color: red;">(*)</font></label>
                 </div>
                 <div class="col-7">
-                  <input type="email" name="email" class="form-control" required>
+                  <input type="email" name="email" class="form-control"  pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required title="Vui lòng nhập đúng định dạng email">
+
                 </div>
                 <div class="col"></div>
               </div>
@@ -120,10 +129,6 @@
                 <div class="col"></div>
               </div><br>
             <!-- THÔNG BÁO LỖI -->
-            <div style="text-align: center;">
-
-
-
               <div class="container text-center mt-5">
                 <button class="btn btn-primary mx-auto" type="submit" style="width: 150px;">Đăng ký</button>
               </div>
@@ -156,6 +161,30 @@
         }
       }
     </script>
+
+<script>
+  function validateForm() {
+    var phoneField = document.getElementsByName("phone")[0].value;
+    var cccdField = document.getElementsByName("cccd")[0].value;
+
+    // check số điện thoại là 10 số hoặc 11 số
+    if (!((phoneField.length === 10 && !isNaN(phoneField)) || (phoneField.length === 11 && !isNaN(phoneField)))) {
+      alert("Vui lòng nhập đúng định dạng số điện thoại.");
+      return false;
+    }
+    
+    // check căn cước công dân 12 số
+    if (!(cccdField.length === 12) && !isNaN(cccdField)) {
+      alert("Căn cước công dân không hợp lệ. CCCD là một dãy 12 chữ số.");
+      return false;
+    }
+
+    return true;
+  }
+</script>
+
+
+
 </body>
 
 </html>

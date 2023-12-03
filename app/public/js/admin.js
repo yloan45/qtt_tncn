@@ -1,5 +1,4 @@
 // delete user cá nhân
-
 document.addEventListener('DOMContentLoaded', function() {
     var deleteLinks = document.querySelectorAll('.delete-link');
     deleteLinks.forEach(function(link) {
@@ -24,9 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-
   // import cá nhân
-
   document.getElementById('importBtn').addEventListener('click', function() {
     document.getElementById('fileInput').click();
   });
@@ -75,7 +72,49 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
+  // duyệt tài khoản đăng ký thuế lần đầu
+  document.addEventListener('DOMContentLoaded', function () {
+    var create = document.querySelectorAll('.edit-link'); 
+    create.forEach(function (link) {
+      link.addEventListener('click', async function (event) {
+        event.preventDefault();
+        try {
+          var userId = link.getAttribute('data-id');
+          const response = await fetch('/create-user/' + userId, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({}),
+            });
 
+            const result = await response.json();
+
+            if (result.success == true) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Duyệt thành công!',
+                text: 'Tài khoản đã được tạo thành công.',
+              });
+            } else if(result.success == false){
+              Swal.fire({
+                icon: 'error',
+                title: 'Duyệt không thành công.',
+                text: 'Người dùng đã tồn tại!',
+              });
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Duyệt thất bại!',
+                text: 'Đã xảy ra lỗi trong quá trình tạo tài khoản.',
+              });
+            }
+        } catch (error) {
+          throw error;
+        }
+      });
+    });
+  });
 
   // update
   document.addEventListener('DOMContentLoaded', function () {
@@ -84,9 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
     editLinks.forEach(function (link) {
       link.addEventListener('click', function (event) {
         event.preventDefault();
-  
         var userId = link.getAttribute('data-id');
-  
         // Thực hiện chuyển hướng đến trang chỉnh sửa
         window.location.href = '/update/' + userId;
       });

@@ -42,7 +42,8 @@
             <th style="text-align: center; font-weight: bolder; " >Lương</th>
           </tr>
           <% let totalIndex=0; %>
-            <% data.forEach((user, index)=> { %>
+          <% if (data.items.length > 0) { %>
+            <% data.items.forEach((user, index)=> { %>
               <tr style="text-align: center;">
                 <td>
                   <%= index+1 %>
@@ -71,13 +72,26 @@
                 </td>
               </tr>
               <% totalIndex++; %>
-                <% }) %>
+              <% }) %>
+          
+              <% } else {  %> 
+                <td colspan="10" style="text-align: center; background-color: rgb(220, 229, 229); font-size: 16px;">Không có dữ liệu hiển thị</td>
+                <% } %>
+               
                   <h5>Tổng cộng: <%= totalIndex %>
                   </h5>
                   <!-- Nút phân trang -->
 
         </table>
-
+        <div class="pagination">
+          <ul class="pagination">
+            <% for(let i = 1; i <= data.totalPages; i++) { %>
+            <li  class="page-item <% if (i === data.currentPage) { %> active <% } %>">
+              <a class="page-link " href="/getAll?page=<%= i %>"><%= i %></a>
+            </li>
+            <% } %>
+          </ul>
+        </div>
       </div>
 </body>
 <script>

@@ -9,7 +9,7 @@
     <div class="khungtong">
       <!--phan header-->
       <header>
-        <%- include('../partials/header') -%>
+        <%- include('../partials/header_tc') -%>
       </header>
       <!--phan header-->
 
@@ -17,7 +17,7 @@
       <div class="container-fluid" style="width: 550px; margin-top: 1pc; margin-bottom: 1pc;">
         <div class="card bg-glass" style="border-radius: 5px;">
           <nav style="color: #b9deff; background-color: #2886d3; height: 30px; border-radius: 5px; text-align: center;">
-            <p style="margin-top: 3px;">Đăng nhập hệ thống</p>
+            <p style="margin-top: 3px; color: white; font-weight: 600;">Tổ chức đăng nhập</p>
           </nav>
           <div class="card-body px-4 py-5 px-md-5">
             <form action="/tochuc/login" method="post">
@@ -26,10 +26,10 @@
               </div>
               <div class="form-outline">
                 <div class="form-outline mb-4">
-                  <label style="margin-bottom: 5px;">Mã số thuế:</label>
+                  <label style="margin-bottom: 5px; font-weight: 600;">Mã số thuế:</label>
                   <input type="text" id="" class="form-control" name="username" required  placeholder="Username"/>
                 </div>
-              <p style="margin-bottom: 5px;">Mật khẩu</p>
+              <p style="margin-bottom: 5px; font-weight: 600;">Mật khẩu:</p>
                 <div class="input-group">
                   
                   <input type="password" id="password" name="password" class="form-control" placeholder="Password">

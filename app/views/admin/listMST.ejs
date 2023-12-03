@@ -6,22 +6,22 @@
 </head>
 <style>
   table {
-      border-collapse: collapse;
-      width: 300px;
+    border-collapse: collapse;
+    width: 300px;
   }
 
   th,
   td {
-      border: 1px solid rgb(214, 209, 209);
-      text-align: center;
-      padding: 8px;
+    border: 1px solid rgb(214, 209, 209);
+    text-align: center;
+    padding: 8px;
   }
 
   th {
-      font-weight: bold;
+    font-weight: bold;
   }
-
 </style>
+
 <body>
   <div class="preloader">
     <div class="lds-ripple">
@@ -61,7 +61,7 @@
           <% let totalIndex = 0; %>
           <% if (canhan.length > 0) { %>
           <% canhan.forEach((mst, index)=> { %>
-          <tr >
+          <tr>
             <td><%= index+1 %></td>
             <td><%= mst.fullname %></td>
             <td><%= mst.cccd %></td>
@@ -69,21 +69,62 @@
             <td style="width: 15%;"><%= mst.email %></td>
             <td><%= mst.phone %></td>
             <td style="width: 15%;"><%= mst.dia_chi.xa_phuong %>, <%= mst.dia_chi.quan_huyen %>, <%= mst.dia_chi.tinh_tp %></td>
+
             <td>
-              <form action="/create-user/<%= mst.id %>" method="post"><button type="submit" class="btn btn-warning">Xét Duyệt</button></form>
+              <a href="#" class="edit-link" data-id="<%= mst.id %>"><button class="btn btn-warning">Xét Duyệt</button></a>
             </td>
           </tr>
           <% }) %>
           <% } else {  %>
-            <td colspan="10" style="text-align: center; background-color: rgb(220, 229, 229); font-size: 16px;">Không có dữ liệu hiển thị</td>
-            <% } %>
-            
-            <h5>Tổng cộng: <%= totalIndex %></h5>
+          <td colspan="10" style="text-align: center; background-color: rgb(220, 229, 229); font-size: 16px;">Không có dữ liệu hiển thị</td>
+          <% } %>
+
+          <h5>Tổng cộng: <%= totalIndex %></h5>
         </table>
-
-
       </div>
-
 </body>
+<script >
+   document.addEventListener('DOMContentLoaded', function () {
+    var create = document.querySelectorAll('.edit-link'); 
+    create.forEach(function (link) {
+      link.addEventListener('click', async function (event) {
+        event.preventDefault();
+        try {
+          var userId = link.getAttribute('data-id');
+          const response = await fetch('/create-user/' + userId, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({}),
+            });
 
+            const result = await response.json();
+
+            if (result.success == true) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Duyệt thành công!',
+                text: 'Tài khoản đã được tạo thành công.',
+              });
+            } else if(result.success == false){
+              Swal.fire({
+                icon: 'error',
+                title: 'Duyệt không thành công.',
+                text: 'Người dùng đã tồn tại!',
+              });
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Duyệt thất bại!',
+                text: 'Đã xảy ra lỗi trong quá trình tạo tài khoản.',
+              });
+            }
+        } catch (error) {
+          throw error;
+        }
+      });
+    });
+  });
+</script>
 </html>
