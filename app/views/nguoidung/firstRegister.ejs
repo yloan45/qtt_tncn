@@ -167,13 +167,11 @@
     var phoneField = document.getElementsByName("phone")[0].value;
     var cccdField = document.getElementsByName("cccd")[0].value;
 
-    // check số điện thoại là 10 số hoặc 11 số
     if (!((phoneField.length === 10 && !isNaN(phoneField)) || (phoneField.length === 11 && !isNaN(phoneField)))) {
       alert("Vui lòng nhập đúng định dạng số điện thoại.");
       return false;
     }
     
-    // check căn cước công dân 12 số
     if (!(cccdField.length === 12) && !isNaN(cccdField)) {
       alert("Căn cước công dân không hợp lệ. CCCD là một dãy 12 chữ số.");
       return false;

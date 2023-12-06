@@ -142,7 +142,7 @@ const moKyQuyetToanTochuc = async (req, res) => {
       return res.redirect('/admin');
     }
 
-    if ((new Date(ngaymo) <= new Date(closeTochuc)) || (new Date(ngaydong) < new Date(ngaymo)) || (new Date(closeTochuc) < new Date(openTochuc)) ){
+    if ((new Date(ngaymo) <= new Date(closeTochuc)) || (new Date(ngaydong) < new Date(ngaymo)) || (new Date(closeTochuc) < new Date(openTochuc))) {
       return res.redirect('/ky-quyet-toan?=failed');
     }
 
@@ -169,12 +169,12 @@ const findOneQTT = async (req, res) => {
   const admin = req.session.user;
   console.log("id là: ", admin);
   const kyquyettoan = await Kyquyettoan.findByPk(id);
-  if(!kyquyettoan){
-    req.flash('error',"Không tìm thấy dữ liệu.");
+  if (!kyquyettoan) {
+    req.flash('error', "Không tìm thấy dữ liệu.");
     return res.redirect('/admin');
   }
   console.log("thông tin kỳ quyết toán là:" + kyquyettoan);
-  return res.render('admin/edit_QTT', {kyquyettoan, admin});
+  return res.render('admin/edit_QTT', { kyquyettoan, admin });
 };
 
 const updateQTT = async (req, res) => {
@@ -495,11 +495,12 @@ const duyettokhai = async (req, res) => {
 }
 
 let checkTokhaiResult = {};
+
 const tokhaikhongduocduyet = async (req, res) => {
   try {
     const tokhaiId = req.params.id;
     const { username, adminId } = req.session.user;
-    if (checkTokhaiResult.isSuccess == false) {
+    if (checkTokhaiResult.isSuccess  === false) {
       const tokhai = await Tokhaithue.findOne({
         where: {
           id: tokhaiId,
@@ -539,6 +540,69 @@ const tokhaikhongduocduyet = async (req, res) => {
   }
 }
 
+/*
+const tokhaikhongduocduyet = async (req, res) => {
+  try {
+    const tokhaiId = req.params.id;
+    const { username, adminId } = req.session.user;
+    const tokhai = await Tokhaithue.findOne({
+      where: {
+        id: tokhaiId,
+        trangThaiXuLiId: 1,                                           // trạng thái "đang chờ duyệt"
+      },
+      include: [{
+        model: Canhan, as: 'ca_nhan'
+      }]
+    });
+
+    if (!tokhai) {
+      return res.status(404).json({ message: 'Tờ khai đã duyệt!' });
+    }
+
+    const email = tokhai.ca_nhan.email;
+
+    if (checkTokhaiResult.isSuccess) {
+      if (checkTokhaiResult.isSuccess === true) {
+        await tokhai.update({ trangThaiXuLiId: 3 });
+        if (checkTokhaiResult.message) {
+          mailer.sendMail(email, `Tờ khai QTT-TNCN năm ${tokhai.namkekhai} không được duyệt`,
+            `Xin chào ${tokhai.fullname}, <br>
+          Thông tin kê khai tờ khai QTT-TNCN của bạn là hợp lệ, nhưng thông tin phụ lục kèm theo là không đúng.
+          <br>Vui lòng kiểm tra lại thông tin và cập nhật chính xác.
+          `);
+        }
+        await Duyettokhai.create({
+          username: username,
+          adminId: adminId,
+          toKhaiThueId: tokhaiId
+        });
+        return res.status(200).json({ message: 'Duyệt tờ khai thành công!' });
+      }
+      else {
+        await tokhai.update({ trangThaiXuLiId: 3 });                        // trạng thái "không được duyệt
+        if (checkTokhaiResult.message) {
+          mailer.sendMail(email, `Tờ khai QTT-TNCN năm ${tokhai.namkekhai} không được duyệt`,
+            `Xin chào ${tokhai.fullname}, <br>
+        Tờ khai quyết toán thuế của bạn không được duyệt, lý do:
+        <br>${checkTokhaiResult.message}
+        <br>Vui lòng kiểm tra lại thông tin và cập nhật chính xác.
+        `);
+        }
+        await Duyettokhai.create({
+          username: username,
+          adminId: adminId,
+          toKhaiThueId: tokhaiId
+        });
+        return res.status(200).json({ message: 'Duyệt tờ khai thành công!' });
+      }
+    } else {
+      return res.status(400).json({ message: `Tờ khai chưa được kiểm tra hoặc thông tin tờ khai là hợp lệ!` });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: 'Error' });
+  }
+}
+*/
 const getPhuluc = async (req, res) => {
   const id = req.params.id;
   const tokhai = await Tokhaithue.findOne({

@@ -8,6 +8,9 @@ const Tokhaithue = db.tokhaithue;
 const Loaitokhai = db.loaitokhai;
 const bcrypt = require('bcrypt');
 const mailer = require('../utils/mailer');
+const Role = db.role;
+const Op = db.Sequelize.Op;
+
 const crypto = require('crypto');
 const { paginate, paginateCanhan } = require("../middleware");
 
@@ -51,13 +54,19 @@ exports.getAllUser = async (req, res) => {
     .catch((err) => console.log(err));
 }
 */
+
 exports.getAllUser = async (req, res) => {
   try {
-    const canhan = await paginate(Canhan, {}, req.query.page || 1, 5, [
-      { model: Diachi, as: 'dia_chi' },
-      { model: User, as: 'user' },
-    ]);
-    res.render("admin/listUser", {canhan});
+    const canhan = await paginate(
+      Canhan,
+      { status: null },                         // status = null => người dùng đã được xác nhận
+      req.query.page || 1,
+      5,
+      [
+        { model: Diachi, as: 'dia_chi' },
+        { model: User, as: 'user' },
+      ]);
+    res.render("admin/listUser", { canhan });
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal Server Error');
@@ -201,13 +210,13 @@ exports.changePassword = async (req, res) => {
 
   req.session.token = null;
   req.session.user = null;
-  return res.redirect("/")
+  return res.redirect("/canhan/login")
 };
 
 const otpDatabase = new Map();
 
 exports.forgotPassword = async (req, res) => {
-  
+
   const { masothue } = req.body;
   const userCaptcha = req.body.captcha;
   req.session.user = null;
@@ -228,7 +237,7 @@ exports.forgotPassword = async (req, res) => {
     req.flash('error', 'Không tìm thấy mã số thuế.');
     return res.render('nguoidung/otp');
   }
-  console.log(`thông tin user có mst: ${masothue} là:`, user )
+  console.log(`thông tin user có mst: ${masothue} là:`, user)
 
   if (userCaptcha !== req.session.captcha) {
     console.log("mã captcha không đúng");
@@ -237,16 +246,16 @@ exports.forgotPassword = async (req, res) => {
   }
 
 
-  res.render('nguoidung/forgot_password_step2', {user});
+  res.render('nguoidung/forgot_password_step2', { user });
   const email = user.email;
-  console.log(`email user có mst: ${masothue} là:`, email )
+  console.log(`email user có mst: ${masothue} là:`, email)
   const otp = crypto.randomBytes(3).toString('hex').toUpperCase();
   const expirationTime = Date.now() + 15 * 60 * 1000; // 15 minutes
 
   otpDatabase.set(email, { otp, expirationTime });
   try {
-    
-    await  mailer.sendMail(user.email, "Xác nhận đổi mật khẩu", `
+
+    await mailer.sendMail(user.email, "Xác nhận đổi mật khẩu", `
       Xin chào người dùng ${user.fullname},<br>
       Bạn vừa yêu cầu đổi mật khẩu, <br>
       Mã OTP của bạn là: ${otp}, <br>
@@ -260,6 +269,108 @@ exports.forgotPassword = async (req, res) => {
     return res.redirect("/");
   }
 };
+
+exports.registerStep1 = async (req, res) => {
+  try {
+    const { masothue } = req.body;
+    const userCaptcha = req.body.captcha;
+    req.session.user = null;
+    const user = await Canhan.findOne({
+      where: {
+        masothue: masothue,
+        status: "đã xác nhận"
+      },
+      include: [{
+        model: Diachi,
+        as: 'dia_chi'
+      }]
+    });
+
+    req.session.user = user;
+    
+    if (!user) {
+      console.log("không tìm thấy mst")
+      req.flash('error', 'Không tìm thấy mã số thuế.');
+      return res.render('nguoidung/registerStep1');
+    }
+    console.log(`thông tin user có mst: ${masothue} là:`, user)
+
+    if (userCaptcha !== req.session.captcha) {
+      console.log("mã captcha không đúng");
+      req.flash('error', 'Mã kiểm tra không đúng');
+      return res.render('nguoidung/registerStep1');
+    }
+    res.render('nguoidung/registerStep2', { user });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+
+};
+
+
+exports.registerStep2 = async (req, res) => {
+  try {
+    const { fullname, masothue, email, phone, tinh_tp, cccd, cqqtthue } = req.body;
+    req.session.user = null;
+    const user = {
+      fullname: fullname,
+      masothue: masothue,
+      email: email,
+      phone: phone,
+      cccd: cccd,
+      cqqtthue: cqqtthue,
+      status: null
+    };
+    req.session.user = user;
+    req.session.tinh_tp = { tinh_tp };
+    console.log(user);
+    res.render('nguoidung/registerStep3', { tinh_tp, user });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+
+exports.registerStep3 = async (req, res) => {
+  try {
+    const user = req.session.user;
+    const id = req.session.id;
+    const randomPassword = generateRandomPassword();
+    const hashedPassword = await bcrypt.hash(randomPassword, 6);
+
+    const canhan = await Canhan.findOne({ where: { masothue: user.masothue } });
+
+    await Canhan.update(user, {
+      where: {
+        masothue: user.masothue,
+      },
+    });
+
+    const createdUser = await User.create({
+      username: user.masothue,
+      password: hashedPassword,
+      caNhanId: canhan.id,
+    });
+
+    const result = createdUser.setRoles([1]);
+    if (result) {
+      mailer.sendMail(canhan.email, "Tạo tài khoản thành công",
+        `Xin chào ${canhan.fullname} <br>
+     Bạn đã đăng ký thành công tài khoản. Tài khoản:  <br>
+      Tài khoản đăng nhập hệ thống của bạn:<br>
+      - MST NTT: ${canhan.masothue} <br>
+      - Mật khẩu: ${randomPassword}`);
+      return res.redirect('/canhan/login');
+    }
+
+
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
 
 function generateRandomPassword() {
   return crypto.randomBytes(4).toString('hex');
@@ -278,7 +389,7 @@ exports.forgotPasswordStep2 = async (req, res) => {
 
       if (!canhan) {
         req.flash('error', 'Người dùng không tồn tại.');
-        return res.redirect("/");
+        return res.redirect("/otp");
       }
       await User.update({ password: hashedPassword }, {
         where: { caNhanId: canhan.id }
@@ -292,11 +403,11 @@ exports.forgotPasswordStep2 = async (req, res) => {
     } catch (error) {
       console.error('Error resetting password:', error);
       req.flash('error', 'Đã xảy ra lỗi khi đặt lại mật khẩu.');
-      return res.redirect("/");
+      return res.redirect("/otp");
     }
   } else {
     req.flash('error', 'Mã OTP không đúng hoặc đã hết hạn.');
-    return res.redirect("/");
+    return res.redirect("/otp");
   }
 };
 

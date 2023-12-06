@@ -15,12 +15,9 @@ const Diachi = db.diachi;
 const Tokhaithue = db.tokhaithue;
 const Loaitokhai = db.loaitokhai;
 const Trangthaixuly = db.trangthaixuly;
-const express = require('express');
-
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { validateCCCD, validatePhone, paginate } = require("../middleware");
-const { findOne } = require("./canhan.controller");
 
 function generateRandomPassword() {
   return crypto.randomBytes(4).toString('hex');
@@ -239,7 +236,6 @@ exports.TochucSignin = async (req, res) => {
   }
 };
 
-
 exports.CanhanSignin = async (req, res) => {
   try {
     const user = await User.findOne({
@@ -253,7 +249,7 @@ exports.CanhanSignin = async (req, res) => {
     });
 
     if (!user) {
-      req.flash('error', 'Mã số thuế không đúng!');
+      req.flash('error', 'Người dùng không tồn tại!');
       return res.redirect('/canhan/login');
     }
 
@@ -350,7 +346,7 @@ exports.register = async (req, res) => {
 
     if (existingCanhan) {
       req.flash('error','Thông tin người dùng đã được đăng ký!');
-      return res.render('nguoidung/register');
+      return res.render('nguoidung/firstRegister');
     }
 
     const canhan = await Canhan.create({
@@ -466,7 +462,7 @@ exports.createAccount = async (req, res) => {
 
 exports.registerPage = (req, res) => {
   req.flash('error', '');
-  res.render('nguoidung/register');
+  res.render('nguoidung/firstRegister');
 };
 
 exports.randomMasothue = async (req, res) => {

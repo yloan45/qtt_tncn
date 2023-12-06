@@ -109,7 +109,7 @@
                       <p>Số người phụ thuộc: </p>
                     </div>
                     <div class="col-9">
-                        <input type="text" name="phuthuoc"  class="form-control" value="<%= user.ca_nhan.phuthuoc %>">
+                        <input type="number" name="phuthuoc" min="0" class="form-control" value="<%= user.ca_nhan.phuthuoc %>">
                     </div>
                   </div>
     
@@ -160,7 +160,16 @@
     <%- include('../partials/footer') %>
   </footer>
   <script src="js/address.js"></script>
+<script>
+  function validateInput(input) {
+  let value = input.value;
+  if (/^-?\d*\.?\d+$/.test(value)) {
+  } else {
+    alert("Không được nhập số âm.")
+  }
+}
 
+</script>
 </body>
 
 </html>

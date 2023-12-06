@@ -99,7 +99,7 @@ const upload = async (req, res) => {
 
 const getAllExcelFile = async (req, res) => {
 try {
-  const data = await paginate(Excelupload, {}, req.query.page || 1, 5, [
+  const data = await paginate(Excelupload, {}, req.query.page || 1, 10, [
     {
       model: Tochuc, as: 'to_chuc'
     }

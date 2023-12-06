@@ -31,8 +31,8 @@
             <th>Địa chỉ</th>
             <th>Email</th>
             <th>Điện thoại</th>
-            <th>Thu nhập tính thuế</th>
-            <th>Năm kê khai</th>
+            <th>Thu nhập tính thuế <br> (VNĐ)</th>
+            <th>Cập nhật lần cuối</th>
             <th>Hành động</th>
           </thead>
           <tbody><br>
@@ -68,10 +68,9 @@
               <td>
                 <%= data.dienthoai %>
               </td>
-              <td>
-                <%= data.thunhaptinhthue %>
-              </td>
-              <td></td>
+              <td><%= parseFloat(data.thunhaptinhthue).toLocaleString() %></td>
+
+              <td><%= data.updatedAt.toLocaleString() %></td>
               <td>
                 <a href="#" class="edit-user" data-toggle="modal" data-target="#editModal" data-id="<%= data.id %>">
                   <i class="fas fa-edit"></i>

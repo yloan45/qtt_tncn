@@ -1,5 +1,5 @@
 const { authJwt, validateInput, checkDateValidity, isOpen, isOpenTochuc, isOpenCaNhan } = require("../middleware");
-const { deleteUser, getAllUser, update, findOne, getUser, updateCanhan, changePassword, forgotPassword, forgotPasswordStep2 } = require("../controllers/canhan.controller");
+const { deleteUser, getAllUser, update, findOne, getUser, updateCanhan, changePassword, forgotPassword, forgotPasswordStep2, registerStep1, registerStep2, registerStep3 } = require("../controllers/canhan.controller");
 const upload = require("../middleware/excelUpload");
 const excelController = require("../controllers/excel.controller");
 const tokhaithue = require("../controllers/tokhai.controller");
@@ -189,7 +189,12 @@ module.exports = function (app) {
 
   // TRUY CẬP QUYỀN CÁ NHÂN
   app.get('/dang-ky', registerPage);
-
+  app.get('/canhan/dang-ky', (req, res) => {
+    res.render('nguoidung/registerStep1');
+  });
+  app.post('/canhan/dang-ky/b1', registerStep1);
+  app.post('/canhan/dang-ky/b2', registerStep2);
+  app.post('/canhan/dang-ky/b3', registerStep3);
   app.post('/dang-ky-mst', register);
 
   app.get('/check-is-open-tochuc', isOpen);
