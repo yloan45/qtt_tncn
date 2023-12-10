@@ -1,9 +1,10 @@
 const { authJwt, validateInput, checkDateValidity, isOpen, isOpenTochuc, isOpenCaNhan } = require("../middleware");
-const { deleteUser, getAllUser, update, findOne, getUser, updateCanhan, changePassword, forgotPassword, forgotPasswordStep2, registerStep1, registerStep2, registerStep3 } = require("../controllers/canhan.controller");
+const { deleteUser, getAllUser, update, findOne, getUser, updateCanhan, changePassword, forgotPassword, forgotPasswordStep2, registerStep1, registerStep2, registerStep3, findPhuluc, deleteFile, renderCanhanWithoutTokhaiInRange, treHanQTT } = require("../controllers/canhan.controller");
 const upload = require("../middleware/excelUpload");
 const excelController = require("../controllers/excel.controller");
 const tokhaithue = require("../controllers/tokhai.controller");
 const db = require("../models");
+const multer = require('multer');
 const { getAllToChuc, deleteToChuc, deleteNhanVien, updateNhanvien, getTochuc, deleteMultiple, updateToChuc } = require("../controllers/tochuc.controller");
 const { getAllTokhai, register, getListRegisterMST, deleteRegisterMST, capMST, createAccount, registerPage } = require("../controllers/auth.controller");
 const TochucUpload = db.tochuckekhaithue;
@@ -17,7 +18,7 @@ const otpDatabase = new Map();
 const { Sequelize } = require('sequelize');
 const importController = require("../controllers/import.controller");
 const { isAdmin } = require("../middleware/authJwt");
-
+const Canhan = db.canhan;
 module.exports = function (app) {
   app.use(function (req, res, next) {
     res.header(
@@ -145,6 +146,35 @@ module.exports = function (app) {
   app.post('/mo-ky-quyet-toan-to-chuc', [authJwt.verifyToken, authJwt.isAdmin], moKyQuyetToanTochuc);
 
 
+  app.post('/export-user', [authJwt.verifyToken, authJwt.isAdmin], tokhaithue.exportUser);
+  app.post('/export-tochuc', [authJwt.verifyToken, authJwt.isAdmin], tokhaithue.exportTochuc);
+  app.post('/export-tn', [authJwt.verifyToken, authJwt.isAdmin], tokhaithue.exportThunhap);
+
+
+  app.get('/chart', async (req, res) => {
+    try {
+      const statusCounts = await Canhan.findAll({
+        attributes: [
+          [db.sequelize.literal('COALESCE(status, \'null\')'), 'status'],
+          [db.sequelize.fn('COUNT', 'id'), 'count']
+        ],
+        group: [db.sequelize.literal('COALESCE(status, \'null\')')],
+        raw: true,
+      });
+
+      console.log("thống kê số liệu: ", statusCounts)
+      res.render('admin/chart', { statusCounts: statusCounts });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
+
+  app.get('/admin/danh-sach-ca-nhan-tre-han-qtt',[authJwt.verifyToken, authJwt.isAdmin], (req, res) => {
+    treHanQTT(res);
+  });
+
 
   // TRUY CẬP QUYỀN TỔ CHỨC
   app.get('/delete-nv/:id', [authJwt.verifyTokenTochuc, authJwt.isTochuc], deleteNhanVien);
@@ -253,7 +283,7 @@ module.exports = function (app) {
   app.get('/add-phu-luc/:id', [authJwt.verifyTokenCanhan], async (req, res) => {          // form thêm phụ lục tờ khai ở phần tra cứu tờ khai
     const id = req.params.id;
     console.log("id là: ", id);
-    res.render('nguoidung/addPhuluc', { id });
+    res.render('nguoidung/addPhuluc', { id, error: req.flash('error') });
   });
 
   app.post('/add-phu-luc/:id', [authJwt.verifyTokenCanhan], tokhaithue.createPhuluc);     // tạo phụ lục tờ khai
@@ -295,10 +325,10 @@ module.exports = function (app) {
 
   app.post('/update-bank/:id', tokhaithue.updateBank);                                    // thêm thông tin tài khoản ngân hàng
 
+  app.get('/delete-to-khai/:id', tokhaithue.deleteTokhai);
 
-
-
-
+  app.get('/phu-luc/:id', [authJwt.verifyTokenCanhan], findPhuluc);
+  app.get('/delete-phu-luc/:id', [authJwt.verifyTokenCanhan], deleteFile);
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

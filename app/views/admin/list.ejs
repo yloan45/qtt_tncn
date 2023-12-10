@@ -31,9 +31,9 @@
       </div>
       <div class="container-fluid">
         <div style="text-align: right;">
-          <a href="#" class="btn btn-info" style="color: white; font-weight: bold; margin-top: 3px;" id="importBtn">Thêm</a>
-          <input type="file" id="fileInput" style="display:none;" name="file">
-          <button type="submit"  id="downloadLink" class="btn btn-danger" style="color: white; font-weight: bold; margin-top: 3px;">Xuất</button>
+            <div style="display: none;">
+                
+          <a href="#" class="btn btn-danger" style="color: white; font-weight: bold; margin-top: 3px;" >Thông báo</a>
         </div>
         <table class="table table-bordered mt-3">
           <tr style="text-align: center;font-weight: bold;  background-color: #2886d3; color: white;"  >
@@ -46,12 +46,10 @@
             <th style="font-weight: bolder;">Địa chỉ</th>
             <th style="font-weight: bolder;">Cơ quan quản lý thuế</th>
             <th style="font-weight: bolder;">Điện thoại</th>
-            <th style="font-weight: bolder;">Số người phụ thuộc</th>
-            <th style="font-weight: bolder;">Hành động</th>
           </tr>
           <% let totalIndex = 0; %>
-          <% if (canhan.items.length > 0) { %>
-          <% canhan.items.forEach((user, index)=> { %>
+          <% if (result.length > 0) { %>
+          <% result.forEach((user, index)=> { %>
           <tr>
             <td><%= index+1 %> </td>
             <td><%= user.masothue %></td>
@@ -61,11 +59,7 @@
             <td><%= user.dia_chi.xa_phuong %> - <%= user.dia_chi.quan_huyen %> - <%= user.dia_chi.tinh_tp %></td>
             <td><%= user.cqqtthue%></td>
             <td><%= user.phone %></td>
-            <td><%= user.phuthuoc %></td>
-            <td>
-              <a href="#" class="edit-link" data-id="<%= user.id %>"><i class="fas fa-edit"></i></a>
-              <a href="/deletecn/<%= user.id %>" class="delete-link" data-id="<%= user.id %>"><i class="fas fa-trash"></i></a>
-            </td>
+         
             <% totalIndex++; %>
           </tr>
           <% }) %>
@@ -95,15 +89,6 @@
           </div>
         </div>
 
-        <div class="pagination">
-          <ul class="pagination">
-            <% for(let i = 1; i <= canhan.totalPages; i++) { %>
-            <li class="page-item <% if (i === canhan.currentPage) { %> active <% } %>">
-              <a class="page-link " href="/list-user?page=<%= i %>"><%= i %></a>
-            </li>
-            <% } %>
-          </ul>
-        </div>
       </div>
 
 </body>

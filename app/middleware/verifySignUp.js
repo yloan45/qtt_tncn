@@ -6,20 +6,6 @@ const Tochuc = db.tochuc;
 
 checkCaNhan = async (req, res, next) => {
   try {
-
-    // Username
-    let user = await User.findOne({
-      where: {
-        username: req.body.username
-      }
-    });
-
-    if (user) {
-      return res.status(400).send({
-        message: "Failed! Username is already in use!"
-      });
-    }
-
     // Email
     let canhan = await Canhan.findOne({
       where: {
@@ -44,17 +30,7 @@ checkCaNhan = async (req, res, next) => {
 
 checkToChuc = async (req, res, next) => {
   try {
-    // Username
-    let user = await User.findOne({
-      where: {
-        username: req.body.username
-      }
-    });
-    if (user) {
-      return res.status(400).send({
-        message: "Failed! Username is already in use!"
-      });
-    }
+
     // Email
     let tochuc = await Tochuc.findOne({
       where: {

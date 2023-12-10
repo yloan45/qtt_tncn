@@ -23,16 +23,28 @@ function generateRandomPassword() {
   return crypto.randomBytes(4).toString('hex');
 }
 
+const generateRandomMasothue = async () => {
+  while (true) {
+    const masothue = Math.floor(1000000000 + Math.random() * 9000000000);
+    const existingCanhan = await Canhan.findOne({ where: { masothue: masothue } });
+    const existingTochuc = await Tochuc.findOne({ where: { masothue: masothue } });
+    if (!existingCanhan && !existingTochuc) {
+      return masothue;
+    }
+  }
+};
+
 exports.CaNhanSignup = async (req, res) => {
   try {
-    const masothue = await this.randomMasothue();
+    const masothue = await generateRandomMasothue();
+    console.log("mã số thuế cá nhân là: " + masothue)
     const randomPassword = generateRandomPassword();
     const canhan = await Canhan.create({
       email: req.body.email,
       masothue: masothue,
       cccd: req.body.cccd,
       phone: req.body.phone,
-      cqqtthue: 'Cục thuế' + req.body.tinh_tp,
+      cqqtthue: 'Cục thuế ' + req.body.tinh_tp,
       phuthuoc: req.body.phuthuoc,
       fullname: req.body.fullname,
     });
@@ -50,80 +62,58 @@ exports.CaNhanSignup = async (req, res) => {
       caNhanId: canhan.id
     });
 
-    if (req.body.roles) {
-      const roles = await Role.findAll({
-        where: {
-          name: {
-            [Op.or]: req.body.roles,
-          },
-        },
-      });
-
-      const result = user.setRoles(roles);
-      if (result) {
-        mailer.sendMail(canhan.email, "Tạo tài khoản thành công",
-          `Xin chào ${canhan.fullname} <br>
-      Bạn vừa được tạo tài khoản admin trên hệ thống thành công! <br>
+    const result = user.setRoles([1]);
+    if (result) {
+      mailer.sendMail(canhan.email, "Tạo tài khoản thành công",
+        `Xin chào ${canhan.hoten} <br>
+      Bạn vừa được tạo tài khoản Quyết toán thuế TNCN thành công! <br>
       Tài khoản đăng nhập hệ thống của bạn:<br>
-      - username: ${user.username} <br>
+      - username: ${canhan.masothue} <br>
       - password: ${randomPassword}`);
-        return res.redirect('/');
-      }
+      return res.redirect('/list-user');
     }
 
-    else {
-      // user has role = 3
-      const result = user.setRoles([1]);
-      if (result) {
-        mailer.sendMail(canhan.email, "Tạo tài khoản thành công",
-          `Xin chào ${canhan.hoten} <br>
-        Bạn vừa được tạo tài khoản Quyết toán thuế TNCN thành công! <br>
-        Tài khoản đăng nhập hệ thống của bạn:<br>
-        - username: ${user.username} <br>
-        - password: ${randomPassword}`);
-        return res.redirect('/list-user');
-      }
-    }
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
 };
 
 exports.ToChucSignup = async (req, res) => {
-  // Save User to Database: 7 - not null
   try {
+    const masothue = await generateRandomMasothue();
+    const randomPassword = generateRandomPassword();
     const tochuc = await Tochuc.create({
-      masothue: req.body.masothue,
+      masothue: masothue,
       email: req.body.email,
       tentochuc: req.body.tentochuc,
-      address: req.body.address,
       phone: req.body.phone,
-      cqqtthue: req.body.cqqtthue,
+      cqqtthue: 'Cục thuế ' + req.body.tinh_tp,
       nhanvien: req.body.nhanvien,
       daidien: req.body.daidien,
     });
 
-    const user = await User.create({
-      username: req.body.username,
-      password: bcrypt.hashSync(req.body.password, 8),
-      toChucId: tochuc.id,
+    const diachi = await Diachi.create({
+      tinh_tp: req.body.tinh_tp,
+      quan_huyen: req.body.quan_huyen,
+      xa_phuong: req.body.xa_phuong,
+      toChucId: tochuc.id
     });
 
-    if (req.body.roles) {
-      const roles = await Role.findAll({
-        where: {
-          name: {
-            [Op.or]: req.body.roles,
-          },
-        },
-      });
+    const user = await User.create({
+      username: tochuc.masothue,
+      password: bcrypt.hashSync(randomPassword, 8),
+      toChucId: tochuc.id
+    });
 
-      const result = user.setRoles(roles);
-      if (result) res.send({ message: "User registered successfully!" });
-    } else {
-      // user has role = 1
-      const result = user.setRoles([2]);
-      if (result) res.send({ message: "User registered successfully!" });
+    const result = user.setRoles([2]);
+    if (result) {
+      mailer.sendMail(tochuc.email, "Tạo tài khoản thành công",
+        `Xin chào ${tochuc.hoten} <br>
+      Bạn vừa được tạo tài khoản Quyết toán thuế TNCN thành công! <br>
+      Tài khoản đăng nhập hệ thống của bạn:<br>
+      - username: ${tochuc.masothue} <br>
+      - password: ${randomPassword}`);
+      return res.redirect('/list-dn');
     }
 
   } catch (error) {
@@ -482,7 +472,7 @@ exports.randomMasothue = async (req, res) => {
 
 exports.getAllTokhai = async (req, res) => {
   try {
-    const tokhaithue = await paginate(Tokhaithue, {}, req.query.page || 1, 5, [
+    const tokhaithue = await paginate(Tokhaithue, {}, req.query.page || 1, 25, [
       { model: Loaitokhai, as: 'loai_to_khai' },
       { model: Canhan, as: 'ca_nhan' },
       { model: Trangthaixuly, as: 'trang_thai_xu_li' },

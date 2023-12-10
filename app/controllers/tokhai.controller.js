@@ -12,7 +12,10 @@ const { Op } = require('sequelize')
 const flash = require('express-flash');
 const ExcelJS = require('exceljs');
 const mailer = require('../utils/mailer');
-
+const Diachi = db.diachi;
+const Tochuc = db.tochuc;
+const ExcelUpload = db.tochuckekhaithue;
+const Bank = db.bank;
 
 const createTokhai = async (req, res) => {
   const loaitokhai = await Loaitokhai.findOne({
@@ -218,6 +221,15 @@ async function createPhuluc(req, res) {
         }
         return res.status(500).send(err.message);
       }
+      const isImageOrPDF = req.files.every(file =>
+        file.mimetype.startsWith('image/') || file.mimetype === 'application/pdf'
+      );
+
+      if (!isImageOrPDF) {
+        const errorMessage = 'Loại file không hợp lệ. Vui lòng chọn file ảnh hoặc PDF.';
+        return res.send(`<script>alert('${errorMessage}'); window.location.href = window.location.href;</script>`);
+      }
+
       const phulucData = {
         tenphuluc: req.body.fieldName[0],
         files: req.files.map((file, index) => ({
@@ -230,6 +242,7 @@ async function createPhuluc(req, res) {
       const id = req.params.id;
       console.log("id của tờ khai là: ", id);
       const tokhai = await Tokhai.findByPk(id);
+
 
       if (!tokhai) {
         return res.status(404).send('Tờ khai không tồn tại');
@@ -250,7 +263,8 @@ async function createPhuluc(req, res) {
         phuLucId: existingPhuluc.id,
       }));
       await File.bulkCreate(newFilesData);
-      res.redirect('/tra-cuu-to-khai');
+      res.send(`<script>alert('Thêm phụ lục thành công! Tờ khai đã được cập nhật'); window.location.href = window.location.href;</script>`);
+    //  res.redirect('/tra-cuu-to-khai');
 
     });
   } catch (error) {
@@ -261,12 +275,15 @@ async function createPhuluc(req, res) {
 
 const tracuuTokhai = async (req, res, next) => {
   try {
+    const user = req.session.user;
+
     const { trangthaixuly, startDate, endDate } = req.body;
     const startDatetime = new Date(startDate + 'T00:00:00Z');
     const endDatetime = new Date(endDate + 'T23:59:59Z');
 
     const searchResult = await Tokhai.findAll({
       where: {
+        caNhanId: user.caNhanId,
         createdAt: {
           [Op.between]: [startDatetime, endDatetime],
         },
@@ -334,6 +351,7 @@ const hoanthueResult = async (req, res) => {
   try {
     const id = req.params.id;
     const result = await hoanTraThue(id);
+    
     if (result) {
       const { thongTinHoanTraThue, tokhai, id } = result;
       res.render('nguoidung/hoanTraThue', { thongTinHoanTraThue, tokhai, id });
@@ -486,6 +504,168 @@ const exportDanhSachHoanThue = async (req, res) => {
   }
 };
 
+const exportUser = async (req, res) => {
+  try {
+    const canhanData = await Canhan.findAll({
+      where: {
+        status: null
+      }, 
+      include: [
+        {
+          model: Diachi, as: 'dia_chi',
+          attributes: ['tinh_tp', 'quan_huyen', 'xa_phuong']
+        }
+      ]
+    });
+
+    const plainData = canhanData.map((instance) => instance.get({ plain: true }));
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('CaNhanData');
+
+    worksheet.columns = [
+      { header: 'Mã số thuế', key: 'masothue', width: 15 },
+      { header: 'Họ và tên', key: 'fullname', width: 20 },
+      { header: 'CCCD', key: 'cccd', width: 15 },
+      { header: 'Điện thoại', key: 'phone', width: 15 },
+      { header: 'Phụ thuộc', key: 'phuthuoc', width: 10 },
+      { header: 'Email', key: 'email', width: 20 },
+      { header: 'Cơ quan quyết toán thuế', key: 'cqqtthue', width: 25 },
+      { header: 'Địa chỉ', key: 'dia_chi', width: 25 },
+    ];
+
+    plainData.forEach((row) => {
+      worksheet.addRow(row);
+    });
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename=ca_nhan_data.xlsx');
+
+    await workbook.xlsx.write(res);
+
+    res.end();
+  } catch (error) {
+    console.error('Error exporting data to Excel:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const exportTochuc = async (req, res) => {
+  try {
+    const tochuc = await Tochuc.findAll();
+
+    const plainData = tochuc.map((instance) => instance.get({ plain: true }));
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('tochuc');
+
+    worksheet.columns = [
+      { header: 'Mã số thuế', key: 'masothue', width: 15 },
+      { header: 'Tên đơn vị', key: 'tentochuc', width: 25 },
+      { header: 'Đại diện', key: 'daidien', width: 20 },
+      { header: 'Điện thoại', key: 'phone', width: 15 },
+      { header: 'Email', key: 'email', width: 25 },
+      { header: 'Cơ quan quyết toán thuế', key: 'cqqtthue', width: 30 },
+      { header: 'Số lượng nhân viên', key: 'nhanvien', width: 15 },
+      { header: 'Địa chỉ', key: 'dia_chi', width: 35 },
+    ];
+
+    plainData.forEach((row) => {
+      worksheet.addRow(row);
+    });
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename=list-to-chuc.xlsx');
+
+    await workbook.xlsx.write(res);
+
+    res.end();
+  } catch (error) {
+    console.error('Error exporting data to Excel:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const exportThunhap = async (req, res) => {
+  try {
+    const excelData = await ExcelUpload.findAll({
+      include: [{ model: Tochuc, as: "to_chuc",attributes: ['tentochuc'] }],
+    });
+
+    const plainData = excelData.map((instance) => {
+      const plainInstance = instance.get({ plain: true });
+      const tentochuc = plainInstance.to_chuc ? plainInstance.to_chuc.tentochuc : '';
+      return {
+        masothue: plainInstance.masothue,
+        tentochuc: tentochuc,
+        hoten: plainInstance.hoten,
+        dienthoai: plainInstance.dienthoai,
+        email: plainInstance.email,
+        diachi: plainInstance.diachi,
+        thunhaptinhthue: plainInstance.thunhaptinhthue,
+        ghichu: plainInstance.ghichu,
+      };
+    });
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('tochuc');
+
+    worksheet.columns = [
+      { header: 'Mã số thuế', key: 'masothue', width: 15 },
+      { header: 'Tên đơn vị', key: 'tentochuc', width: 25 },
+      { header: 'Tên NLĐ', key: 'hoten', width: 20 },
+      { header: 'Điện thoại', key: 'dienthoai', width: 15 },
+      { header: 'Email', key: 'email', width: 25 },
+      { header: 'Địa chỉ', key: 'diachi', width: 30 },
+      { header: 'Tổng thu nhập', key: 'thunhaptinhthue', width: 35 },
+      { header: 'Ghi chú', key: 'ghichu', width: 15 },
+    ];
+
+    plainData.forEach((row) => {
+      worksheet.addRow(row);
+    });
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename=list-to-chuc.xlsx');
+
+    await workbook.xlsx.write(res);
+
+    res.end();
+  } catch (error) {
+    console.error('Error exporting data to Excel:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+
+const deleteTokhai = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const tokhai = await Tokhai.findOne({
+      where: {
+        id: id,
+      },
+      include: [{
+        model: Trangthai, 
+        as: 'trang_thai_xu_li',
+      }]
+    })
+
+    if(tokhai.trangThaiXuLiId === 1){
+      Tokhai.destroy({
+        where: {
+          id: id,
+        }
+      });
+    } else {
+      res.send("xóa không thành công!");
+    }
+    
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   create: createTokhai,
   createTokhaiStep2,
@@ -494,5 +674,6 @@ module.exports = {
   createPhuluc,
   hoanTraThue, updateBank, hoanthueResult,
   hoanthueResultAdmin, listHoanThue,
-  exportDanhSachHoanThue
+  exportDanhSachHoanThue, exportUser, exportTochuc, exportThunhap,
+  deleteTokhai
 };

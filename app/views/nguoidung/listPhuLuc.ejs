@@ -1,0 +1,108 @@
+      <!DOCTYPE html>
+ <html lang="en">
+ <head>
+   <%- include('./partials/head') %>
+   <style scoped>
+    /* Đặt lớp CSS hidden */
+    .step.hidden {
+      display: none;
+    }
+
+    .step {
+      background-color: white;
+    }
+
+    .khungtong {
+      box-shadow: 0px 0px 15px #ccc;
+      margin: auto;
+      font-size: 13px;
+    }
+   
+  </style>
+ </head>
+ <body>
+   <div class="container">
+     <div class="khungtong">
+       <header>
+         <%- include('./partials/header') -%>
+       </header>
+       <!--phan header-->
+       <div class="container-fluid" style="margin-top: 1pc; margin-bottom: 1pc;">
+         <h3>Danh sách phụ lục</h3>
+         <table class="table table-bordered  table-striped "   id="data-table">
+            <tr style="text-align: center; background-color: #2886d3; color: white;"  >
+              <th style="text-align: center; font-weight: bolder; font-size: 15px;"> STT </th>
+              <th style="text-align: center; font-weight: bolder; font-size: 15px;">Tên tờ khai</th>
+              <th style="text-align: center; font-weight: bolder; font-size: 15px;">Tên phụ lục</th>
+              <th style="text-align: center; font-weight: bolder; font-size: 15px;">Ngày gửi file</th>
+              <th style="text-align: center; font-weight: bolder; font-size: 15px;">Hành động</th>
+            </tr>
+            <input type="text" name="phulucId" style="display: none;" value="<%= tokhai.id %>">
+            <% let totalIndex=0; %>
+            <% if (phuluc.length > 0) { %>
+              <% phuluc.forEach((files, index)=> { %>
+                 
+                <tr style="font-size: 14px;">
+                  <td>
+                    <%= index+1 %>
+                  </td>
+                  <td>
+                    <%= tokhai.tokhai %>
+                  </td>
+                  <td>
+                    <%= files.fieldName %>
+                  </td>
+                  <td>
+                    <%= files.createdAt.toLocaleString() %>
+                  </td>
+                  <td style="text-align: center;">
+                      <a class="btn btn-warning" style="text-align: center;" href="/uploads/<%= files.filename %>">Xem</i></a> 
+                      <a href="/delete-phu-luc/<%= files.id %>" class="delete-link btn btn-danger" data-id="<%= files.id %>">Xóa</a></td>
+                    </tr>
+                    </td>
+                </tr>
+                <% totalIndex++; %>
+                  <% }) %>
+                  <% } else { %>
+                      <td style="text-align: center; font-size: 15px;" colspan="10" >Tờ khai không có phụ lục</td>
+                      <% } %>
+                 
+              </table>
+        
+         <h5 style="font-size: 16px; text-align: right; margin-right: 15px;">Tổng cộng: <%= totalIndex %></h5>
+         <br><br><br>
+       </div>
+     </div>
+   </div>
+   <footer>
+     <%- include('../partials/footer') %>
+   </footer>
+ </body>
+
+ <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var deleteLinks = document.querySelectorAll('.delete-link');
+    deleteLinks.forEach(function(link) {
+      link.addEventListener('click', function(event) {
+        event.preventDefault();
+        var userId = link.getAttribute('data-id');
+        Swal.fire({
+          title: 'Xác nhận xóa',
+          text: 'Bạn có chắc chắn muốn xóa?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'Đồng ý',
+          cancelButtonText: 'Hủy bỏ'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/delete-phu-luc/' + userId;
+          }
+        });
+      });
+    });
+  });
+
+ </script>
+ </html>

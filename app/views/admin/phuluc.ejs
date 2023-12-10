@@ -67,7 +67,8 @@
                   <%= files.createdAt.toLocaleString() %>
                 </td>
                 <td style="text-align: center;">
-                    <a style="text-align: center;" href="/uploads/<%= files.filename %>">Xem chi tiết</i></a> 
+                    <a class="btn btn-info" style="text-align: center;" href="/uploads/<%= files.filename %>">Xem</i></a> 
+                    <button class="btn btn-danger" style="text-align: center;" href="/uploads/<%= files.filename %>">Mail</i></button> 
                 </td>
               </tr>
               <% totalIndex++; %>

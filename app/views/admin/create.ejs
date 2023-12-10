@@ -25,16 +25,6 @@
           <div class="row">
             <div class="col-12 d-flex no-block align-items-center">
               <h4 class="page-title">Tạo tài khoản Tổ chức/Doanh nghiệp</h4>
-              <div class="ms-auto text-end">
-                <nav aria-label="breadcrumb">
-                  <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">
-                      Library
-                    </li>
-                  </ol>
-                </nav>
-              </div>
             </div>
           </div>
         </div>
@@ -42,14 +32,7 @@
         <div class="container-fluid">
             <form action="/api/auth/signup" method="post" class="row g-3 needs-validation" novalidate>
                 <div class="container-fluid" style="width: 650px;" >
-                    <div class="mb-3">
-                        <label for="validationCustom01" class="form-label">Mã số thuế</label>
-                        <input type="text" class="form-control" id="validationCustom01" name="masothue" value="" required>
-                        <div class="invalid-feedback">
-                          Mã số thuế không được để trống
-                        </div>
-                    </div>
-
+       
                     <div class="mb-3">
                         <label for="validationCustom02" class="form-label">Họ tên NNT</label>
                         <input type="text" class="form-control" name="fullname" value="" required>
@@ -59,7 +42,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="validationCustom02" class="form-label">Tỉnh/Thàn phố</label>
+                        <label for="validationCustom02" class="form-label">Tỉnh/Thành phố</label>
                         <select name="tinh_tp" id="city" class="form-control" required>
                             <option value=""></option>
                           </select>
@@ -80,7 +63,9 @@
                       
                       <div class="mb-3">
                         <label class="form-label">Xã/Phường/Thị trấn</label>
-                        <input name="xa_phuong" id="" class="form-control">
+                        <select for="validationCustom02" name="xa_phuong" id="ward" class="form-control">
+                          <option value=""></option>
+                        </select>
                         <div class="invalid-feedback">
                           Xã phường không được để trống
                       </div>
@@ -126,16 +111,9 @@
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                      <label for="validationCustom02" class="form-label">Username</label>
-                      <input type="text" class="form-control" id="validationCustom02" value="" name="username" required>
-                      <div class="invalid-feedback">
-                        Số điện thoại không được để trống
-                      </div>
-                  </div>
                 <%# submit %>       
                 <div class="mb-3">
-                    <button class="btn btn-primary" type="submit" data-toggle="modal" data-target="#myModal">Create Account</button>
+                    <button class="btn btn-primary" type="submit">Tạo tài khoản</button>
                   </div>
                 </div>
                 </div>
@@ -148,7 +126,6 @@
         </div>
 
   </body>
-<script src="js/province.js"></script>
 <script src="js/address.js"></script>
   <script>
 (function () {

@@ -10,9 +10,6 @@ module.exports = (sequelize, Sequelize) => {
         ngaydong: {
             type: Sequelize.STRING
         },
-        kymo: {
-            type: Sequelize.STRING
-        },
         ngaymotochuc: {
             type: Sequelize.STRING,
         },

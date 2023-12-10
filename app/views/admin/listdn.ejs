@@ -30,10 +30,10 @@
         </div>
         <div class="container-fluid">
 
-<div style="text-align: right;">
-  
-  <a href="#" class="btn btn-info" style="color: white; font-weight: bold; margin-top: 3px;" name="file">Thêm</a>
-  <a href="#" class="btn btn-danger" style="color: white; font-weight: bold;margin-top: 3px;">Xuất</a>
+<div style="text-align: right;">  
+  <form action="/export-tochuc" method="post">
+  <button type="submit"  id="tochucDownload" class="btn btn-danger" style="color: white; font-weight: bold; margin-top: 3px;">Xuất DS</button>
+</form>
 </div>
        <table class="table table-bordered mt-3">
         <tr style="text-align: center;font-weight: bold; background-color: #2886d3; color: white;"  >
@@ -43,8 +43,8 @@
                 <th>Mã số thuế</th>
                 <th>Tên Doanh nghiệp/Tổ chức</th>
                 <th>Đại diện</th>
-                <th>Địa chỉ</th>
                 <th>Email liên hệ</th>
+                <th>Địa chỉ</th>
                 <th>Cơ quan quản lý thuế</th>
                 <th>Điện thoại</th>
                 <th>Nhân viên<br>(Người)</th>
@@ -69,7 +69,7 @@
                     <%= user.email %>
                   </td>
                  <td>
-                    <%= user.address %>
+                    <%= user.dia_chis.tinh_tp %>
                  </td>
                  <td>
                 <%= user.cqqtthue%>

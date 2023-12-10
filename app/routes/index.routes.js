@@ -1,6 +1,7 @@
 const express = require('express');
 const { getAllToChuc, deleteToChuc } = require('../controllers/tochuc.controller');
 const { authJwt } = require('../middleware');
+
 const router = express.Router();
 
 // public content
@@ -13,8 +14,6 @@ router.get('/', (req, res) => {
 router.get('/admin-login', (req, res) => {
   res.render('admin/auth/login.ejs')
 });
-
-
 
 // CÁ NHÂN 
 

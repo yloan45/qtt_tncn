@@ -6,11 +6,12 @@ const Canhan = db.canhan;
 const Diachi = db.diachi;
 const Tokhaithue = db.tokhaithue;
 const Loaitokhai = db.loaitokhai;
+const Kyquyettoan = db.kyquyettoan;
 const bcrypt = require('bcrypt');
 const mailer = require('../utils/mailer');
 const Role = db.role;
 const Op = db.Sequelize.Op;
-
+const Bank = db.bank;
 const crypto = require('crypto');
 const { paginate, paginateCanhan } = require("../middleware");
 
@@ -72,8 +73,6 @@ exports.getAllUser = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
-
-
 
 exports.getAllTokhaithue = (req, res) => {
   Tokhaithue.findAll({
@@ -287,7 +286,7 @@ exports.registerStep1 = async (req, res) => {
     });
 
     req.session.user = user;
-    
+
     if (!user) {
       console.log("không tìm thấy mst")
       req.flash('error', 'Không tìm thấy mã số thuế.');
@@ -342,7 +341,7 @@ exports.registerStep3 = async (req, res) => {
 
     const canhan = await Canhan.findOne({ where: { masothue: user.masothue } });
 
-    await Canhan.update(user, {
+    await Canhan.update({ status: null }, {
       where: {
         masothue: user.masothue,
       },
@@ -362,7 +361,7 @@ exports.registerStep3 = async (req, res) => {
       Tài khoản đăng nhập hệ thống của bạn:<br>
       - MST NTT: ${canhan.masothue} <br>
       - Mật khẩu: ${randomPassword}`);
-      return res.redirect('/canhan/login');
+      //return res.redirect('/canhan/login');
     }
 
 
@@ -411,7 +410,6 @@ exports.forgotPasswordStep2 = async (req, res) => {
   }
 };
 
-
 exports.getUser = async (req, res) => {
   const userId = req.session.user.id;
   const user = await User.findByPk(userId, {
@@ -424,11 +422,224 @@ exports.getUser = async (req, res) => {
       }
     }
   });
+
+  const bank = await Bank.findAll();
   if (user) {
     res.render('nguoidung/tokhaithue', {
-      user: user
+      user: user,
+      bank
     });
   } else {
     res.status(404).json({ message: 'Người dùng không tồn tại' });
   }
 }
+
+exports.findPhuluc = async (req, res) => {
+  const id = req.params.id;
+  const tokhai = await Tokhaithue.findOne({
+    where: {
+      id: id,
+    },
+    include: [
+      {
+        model: Canhan,
+        as: 'ca_nhan'
+      },
+      {
+        model: db.phuluc,
+        as: 'phu_lucs',
+        include: [
+          {
+            model: db.file,
+            as: 'files',
+          }
+        ]
+      }
+    ]
+  });
+  if (!tokhai) {
+    res.json({ message: 'Không tìm thấy tờ khai!' });
+    return;
+  }
+
+  const phuluc = tokhai.phu_lucs.reduce((acc, phuluc) => {
+    acc.push(...phuluc.files);
+    return acc;
+  }, []);
+
+
+  return res.render("nguoidung/listPhuLuc", {
+    phuluc,
+    tokhai
+  });
+
+
+};
+
+exports.deleteFile = async (req, res) => {
+  try {
+    const phulucId = req.params.phulucId;
+    const fileId = req.params.id;
+    await db.file.destroy({ where: { id: fileId } });
+    return res.redirect('back');
+  } catch (error) {
+    console.error('Error deleting file:', error);
+    return res.status(500).json({ message: 'Đã có lỗi xảy ra khi xóa file!' });
+  }
+};
+
+
+/*
+exports.renderCanhanWithoutTokhaiInRange = async (res) => {
+  try {
+    const currentYear = new Date().getFullYear();
+
+    const kyquyettoanForCurrentYear = await Kyquyettoan.findOne({
+      where: {
+        trangthai: true,
+        ngaymo: { [Op.gte]: `${currentYear}-01-01` },
+        ngaydong: { [Op.lte]: `${currentYear}-12-31` },
+      },
+    });
+
+
+    if (!kyquyettoanForCurrentYear) {
+      console.error('Kyquyettoan record not found or trangthai !== true for the current year');
+      return;
+    }
+
+    const ngaymo = kyquyettoanForCurrentYear.ngaymo;
+    const ngaydong = kyquyettoanForCurrentYear.ngaydong;
+
+    const result = await Canhan.findAll({
+      include: [
+        {
+          model: Tokhaithue,
+          where: { caNhanId: null },
+          required: false,
+        },
+      ],
+    });
+
+
+    const currentDate = new Date();
+    const overdueCanhan = result.filter((item) => {
+      const ngaydongDate = new Date(item.Kyquyettoan.ngaydong);
+      return currentDate > ngaydongDate;
+    });
+
+
+
+    console.log("danh sách người dùng trễ hạn quyết toán thuế: ", result);
+    res.render('admin/list', { result });
+
+  } catch (error) {
+    console.error('Error:', error);
+    throw error; // You might want to throw the error to handle it outside of this function
+  }
+};
+*/
+/*
+exports.treHanQTT = async (res) => {
+  try {
+    const currentYear = new Date().getFullYear();
+    const kyquyettoanForCurrentYear = await Kyquyettoan.findOne({
+      where: {
+        trangthai: true,
+        ngaymo: { [Op.gte]: `${currentYear}-01-01` },
+        ngaydong: { [Op.lte]: `${currentYear}-12-31` },
+      },
+    });
+
+    if (!kyquyettoanForCurrentYear) {
+      console.error('Kyquyettoan record not found or trangthai !== true for the current year');
+      return;
+    }
+
+    const ngaydong = kyquyettoanForCurrentYear.ngaydong;
+
+    const overdueCanhan = await Canhan.findAll({
+      include: [
+        {
+          model: Tokhaithue, as: 'to_khai_thues',
+          required: false,
+        },
+        {
+          model: Diachi, as: 'dia_chi'
+        }
+      ],
+      where: {
+        status: null,
+        '$to_khai_thues.createdAt$': null,
+      },
+    });
+
+    const filterCaNhanTreHan = overdueCanhan.filter((item) => {
+      const ngaydongDate = new Date(ngaydong);
+      return new Date() > ngaydongDate;
+    });
+
+    res.render('admin/list', { result: filterCaNhanTreHan, num: filterCaNhanTreHan.length, });
+
+  } catch (error) {
+    console.error('Error:', error);
+    throw error; 
+  }
+};*/
+
+exports.treHanQTT = async (res) => {
+  try {
+    const currentYear = new Date().getFullYear();
+    const kyquyettoanForCurrentYear = await Kyquyettoan.findOne({
+      where: {
+        trangthai: true,
+        ngaymo: { [Op.gte]: `${currentYear}-01-01` },
+        ngaydong: { [Op.lte]: `${currentYear}-12-31` },
+      },
+    });
+
+    if (!kyquyettoanForCurrentYear) {
+      console.error('Kyquyettoan record not found or trangthai !== true for the current year');
+      return;
+    }
+
+    const ngaydong = kyquyettoanForCurrentYear.ngaydong;
+
+    const overdueCanhan = await Canhan.findAll({
+      include: [
+        {
+          model: Tokhaithue,
+          as: 'to_khai_thues',
+          required: false,
+          where: {
+            createdAt: {
+              [Op.or]: [
+                { [Op.lt]: ngaydong },
+                { [Op.gt]: `${currentYear}-12-31` },
+              ],
+            },
+          },
+        },
+        {
+          model: Diachi,
+          as: 'dia_chi'
+        }
+      ],
+      where: {
+        status: null,
+        '$to_khai_thues.id$': null,
+      },
+    });
+
+    const filterCaNhanTreHan = overdueCanhan.filter((item) => {
+      const ngaydongDate = new Date(ngaydong);
+      return new Date() > ngaydongDate;
+    });
+
+    res.render('admin/list', { result: filterCaNhanTreHan, num: filterCaNhanTreHan.length });
+
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};

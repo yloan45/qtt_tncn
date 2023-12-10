@@ -52,79 +52,112 @@
         </div>
       </div>
       <div class="container-fluid">
+
+        <div style="text-align: right; margin-left: -2pc; display: none;">
+          <div class="form-check form-switch">
+            <div class="input-group">
+              <label for="">Trạng thái: </label>
+              <input class="form-check-input" type="checkbox" style="margin-left: 15px; width: 40px;border-radius: 15px;" id="toggleTaxPeriod" checked onchange="toggleTaxPeriod()">
+            </div>
+          </div>
+        </div>
+
         <div style="text-align: right;">
           <!-- Default switch -->
           <div class="custom-control custom-switch">
 
-          <form action="/update-qtt/<%= kyquyettoan.id %>" method="post" onsubmit="return validateDates()">
-            <input type="text" value="<%= admin.id %>" name="adminId" style="display: none;">
-            <table class="table">
-              <tr>
-              <tr style="background-color: #2886d3;">
-                <td colspan="2" style="font-size: 18px; font-weight: 900;">Cá nhân</td>
-                <td colspan="2" style="font-size: 18px; font-weight: 900;">Doanh nghiệp/Tổ chức</td>
-              </tr>
+            <form action="/update-qtt/<%= kyquyettoan.id %>" method="post" onsubmit="return validateDates()">
+              <input type="text" value="<%= admin.id %>" name="adminId" style="display: none;">
+              <table class="table">
+                <tr>
+                <tr style="background-color: #2886d3;">
+                  <td colspan="2" style="font-size: 18px; font-weight: 900;">Cá nhân</td>
+                  <td colspan="2" style="font-size: 18px; font-weight: 900;">Doanh nghiệp/Tổ chức</td>
+                </tr>
 
-              <th class="combined-header">
-                <span style="font-weight: 900;">Bắt đầu</span>
-              </th>
+                <th class="combined-header">
+                  <span style="font-weight: 900;">Bắt đầu</span>
+                </th>
 
-              <th class="combined-header">
-                <span style="font-weight: 900;">Kết thúc</span>
-              </th>
+                <th class="combined-header">
+                  <span style="font-weight: 900;">Kết thúc</span>
+                </th>
 
-              <th class="combined-header">
-                <span style="font-weight: 900;">Bắt đầu</span>
-              </th>
+                <th class="combined-header">
+                  <span style="font-weight: 900;">Bắt đầu</span>
+                </th>
 
-              <th class="combined-header">
-                <span style="font-weight: 900;">Kết thúc</span>
-              </th>
-              </tr>
-              <tr>
-                <th><input name="openCN" class="form-control" type="date" value="<%= kyquyettoan.ngaymo%>"></th>
-                <th><input name="closeCN" class="form-control" type="date" value="<%= kyquyettoan.ngaydong%>"></th>
-                <th><input name="openTC" class="form-control" type="date" value="<%= kyquyettoan.ngaymotochuc%>"></th>
-                <th><input name="closeTC" class="form-control" type="date" value="<%= kyquyettoan.ngaydongtochuc%>"></th>
-              </tr>
-              <tr>
-                <th colspan="4"><button class="btn btn-warning" style="width: 250px; font-weight: bolder;">Cập nhật</button></th>
-              </tr>
-            </table>
-          </form>
+                <th class="combined-header">
+                  <span style="font-weight: 900;">Kết thúc</span>
+                </th>
+                </tr>
+                <tr>
+                  <th><input name="openCN" class="form-control" type="date" value="<%= kyquyettoan.ngaymo%>"></th>
+                  <th><input name="closeCN" class="form-control" type="date" value="<%= kyquyettoan.ngaydong%>"></th>
+                  <th><input name="openTC" class="form-control" type="date" value="<%= kyquyettoan.ngaymotochuc%>"></th>
+                  <th><input name="closeTC" class="form-control" type="date" value="<%= kyquyettoan.ngaydongtochuc%>"></th>
+                </tr>
+                <tr>
+                  <th colspan="4"><button class="btn btn-warning" style="width: 250px; font-weight: bolder;">Cập nhật</button></th>
+                </tr>
+              </table>
+            </form>
 
+          </div>
         </div>
       </div>
     </div>
-  </div>
+
+
+    <script>
+      function toggleTaxPeriod() {
+        var toggleBtn = document.getElementById('toggleTaxPeriod');
+
+        if (toggleBtn.checked) {
+          Swal.fire({
+            title: 'Bật thời gian quyết toán',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
+        } else {
+          Swal.fire({
+            title: 'Tắt thời gian quyết toán',
+            icon: 'info',
+            confirmButtonText: 'OK'
+          });
+        }
+      }
+    </script>
+
+
 </body>
 <script>
   document.getElementById('#currentYear').innerHTML += new Date().getFullYear();
 </script>
 <script>
-    function validateDates() {
-      var openCN = new Date(document.getElementsByName("openCN")[0].value);
-      var closeCN = new Date(document.getElementsByName("closeCN")[0].value);
-      var openTC = new Date(document.getElementsByName("openTC")[0].value);
-      var closeTC = new Date(document.getElementsByName("closeTC")[0].value);
-  
-      if (openCN <= closeTC) {
-        alert("Cá nhân bắt đầu quyết toán thuế chỉ khi thời gian quyết toán của Doanh nghiệp/Tổ chức kết thúc");
-        return false;
-      }
+  function validateDates() {
+    var openCN = new Date(document.getElementsByName("openCN")[0].value);
+    var closeCN = new Date(document.getElementsByName("closeCN")[0].value);
+    var openTC = new Date(document.getElementsByName("openTC")[0].value);
+    var closeTC = new Date(document.getElementsByName("closeTC")[0].value);
 
-      if (openCN > closeCN) {
-        alert("Ngày kết thúc không thể nhỏ hơn ngày bặt đẩu");
-        return false;
-      }
-
-      if (openTC > closeTC) {
-        alert("Ngày kết thúc không thể nhỏ hơn ngày bặt đẩu");
-        return false;
-      }
-  
-      return true;
+    if (openCN <= closeTC) {
+      alert("Cá nhân bắt đầu quyết toán thuế chỉ khi thời gian quyết toán của Doanh nghiệp/Tổ chức kết thúc");
+      return false;
     }
-  </script>
-  
+
+    if (openCN > closeCN) {
+      alert("Ngày kết thúc không thể nhỏ hơn ngày bặt đẩu");
+      return false;
+    }
+
+    if (openTC > closeTC) {
+      alert("Ngày kết thúc không thể nhỏ hơn ngày bặt đẩu");
+      return false;
+    }
+
+    return true;
+  }
+</script>
+
 </html>

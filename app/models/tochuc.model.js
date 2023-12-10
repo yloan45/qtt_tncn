@@ -27,12 +27,7 @@ module.exports = (sequelize, Sequelize) => {
 
       address: {
         type: Sequelize.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            msg: "Dia chi khong duoc de trong!"
-          }
-        }
+         
       },
 
       phone: {

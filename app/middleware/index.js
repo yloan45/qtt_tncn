@@ -153,7 +153,7 @@ const isOpenCaNhan = async (req, res, next) => {
     return res.redirect('/canhan');
   }
 };
-
+/*
 const isOpenTochuc = async (req, res, next) => {
   try {
     const currentYear = new Date().getFullYear();
@@ -206,7 +206,7 @@ const isOpenTochuc = async (req, res, next) => {
     return res.redirect('/canhan');
   }
 };
-
+*/
 const validateCCCD = (cccd) => {
   const cccdRegex = /^[0-9]{12}$/;
   return cccdRegex.test(cccd);
@@ -217,35 +217,6 @@ const validatePhone = (phone) => {
   return phoneRegex.test(phone);
 };
 
-
-// Trong hàm paginate
-/*
-const paginate = async (model, condition, page = 1, perPage = 5) => {
-  try {
-    const result = await model.findAndCountAll({
-      where: condition,
-      limit: perPage,
-      offset: (page - 1) * perPage,
-      include: [
-        { model: Loaitokhai, as: 'loai_to_khai' },
-        { model: Canhan, as: 'ca_nhan' },
-        { model: Trangthaixuly, as: 'trang_thai_xu_li' },
-      ],
-    });
-
-    const totalPages = Math.ceil(result.count / perPage);
-
-    return {
-      items: result.rows,
-      totalItems: result.count,
-      totalPages: totalPages,
-      currentPage: page,
-    };
-  } catch (error) {
-    throw error;
-  }
-};
-*/
 const paginate = async (model, condition, page = 1, perPage = 5, includes = []) => {
   try {
     const includeOptions = includes.map(inc => ({ model: inc.model, as: inc.as }));
@@ -270,6 +241,49 @@ const paginate = async (model, condition, page = 1, perPage = 5, includes = []) 
   }
 };
 
+const isOpenTochuc = async (req, res, next) => {
+  try {
+    const currentYear = new Date().getFullYear();
+    const kyQuyetToan = await Kyquyettoan.findOne({
+      where: {
+        ngaymotochuc: {
+          [Op.between]: [new Date(`${currentYear}-01-01`), new Date(`${currentYear}-12-31`)],
+        },
+      },
+    });
+
+    if (!kyQuyetToan || kyQuyetToan.trangthai === false) {
+      return res.status(403).json({
+        error: kyQuyetToan && kyQuyetToan.trangthai === false
+          ? `Đang tạm đóng.`
+          : `Chưa đến thời gian quyết toán thuế!`,
+      });
+    }
+
+    const startDate = new Date(kyQuyetToan.ngaymotochuc);
+    const endDate = new Date(kyQuyetToan.ngaydongtochuc); //
+
+    const currentDate = new Date();
+    const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
+
+    if (currentDate < startDate) {
+      return res.status(403).json({
+        error: `Chưa đến thời gian quyết toán thuế. Ngày bắt đầu từ ${formattedDate} đến ${formattedDate1}`,
+      });
+    } else if (currentDate > endDate) {
+      return res.status(403).json({
+        error: `Bạn đã quá hạn kê khai quyết toán thuế.`,
+      });
+    }
+
+    req.kyQuyetToan = kyQuyetToan;
+    next();
+  } catch (error) {
+    console.error(error);
+    req.flash('error', 'Lỗi khi kiểm tra thời gian quyết toán');
+    return res.redirect('/canhan');
+  }
+};
 
 module.exports = {
   authJwt,

@@ -41,7 +41,7 @@
 
               <!--CỤC THUẾ - CHI CỤC THUẾ-->
               <div class="input-group" style="margin-top: 15px">
-                <span class="thongtintokhai">Cơ quan quản lý thuế</span>
+                <span class="thongtintokhai">Cơ quan thuế Tỉnh/TP:</span>
                 <select class="" style="margin-right: 240px; width: 600px;" name="cucthue" id="">
                   <option value="<%= user.ca_nhan.cqqtthue %>"><%= user.ca_nhan.cqqtthue %></option>
                 </select>
@@ -73,10 +73,10 @@
               <%# NAME KÊ KHAI - NAME="year" %>
               <div class="input-group" style="margin-top: 15px;">
                 <span class="thongtintokhai">Từ tháng</span>
-                <input style="width: 150px;"  name="tungay" type="text" id="fromMonth">
+                <input style="width: 150px;"  name="tungay" type="text" id="fromMonth" required>
 
                 <span class="thongtintokhai">Đến tháng</span>
-                <input style="width: 150px;" name="denngay" type="text" id="toMonth">
+                <input style="width: 150px;" name="denngay" type="text" id="toMonth" required>
                 <input style="width: 150px; display: none;" name="numMonths" type="text" id="numMonths">
               </div>
               <br>
@@ -86,7 +86,7 @@
             <script>
               const currentYear = new Date().getFullYear();
               const yearSelect = document.getElementById("yearInput");
-              for (let year = currentYear - 1; year <= currentYear; year++) {
+              for (let year = currentYear-1; year <= currentYear; year++) {
                 const option = document.createElement("option");
                 option.value = year;
                 option.text = year;

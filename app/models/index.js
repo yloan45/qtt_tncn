@@ -44,7 +44,7 @@ db.chitietphanhoi = require("../models/chitietphanhoi.model.js")(sequelize, Sequ
 db.kyquyettoan = require("../models/kyquyettoan.js")(sequelize, Sequelize);
 
 db.file = require("../models/file.model.js")(sequelize,Sequelize);
-
+db.bank = require("../models/bank.js")(sequelize,Sequelize);
 
 db.phuluc.hasMany(db.file, {
   onDelete: "CASCADE",

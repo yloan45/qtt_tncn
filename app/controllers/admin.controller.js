@@ -130,10 +130,27 @@ const moKyQuyetToan = async (req, res) => {
   }
 };
 
+
 const moKyQuyetToanTochuc = async (req, res) => {
   try {
     const adminId = req.body.adminId;
     const { ngaymo, ngaydong, openTochuc, closeTochuc } = req.body;
+
+    const currentYear = new Date().getFullYear();
+    const kyQuyetToanCount = await Kyquyettoan.count({
+      where: {
+        trangthai: true,
+        adminId: adminId,
+        ngaymo: {
+          [Op.between]: [new Date(`${currentYear}-01-01`), new Date(`${currentYear}-12-31`)],
+        },
+      },
+    });
+
+    if (kyQuyetToanCount >= 1) {
+      req.flash('error', 'Chỉ được mở QTT-TCCN 1 lần trong năm');
+      return res.redirect('/admin');
+    }
 
     console.log(req.body);
     if (!adminId) {
@@ -348,7 +365,7 @@ const checkTokhai = async (req, res) => {
   let hasAttachment = tokhai.phu_lucs && tokhai.phu_lucs.length > 0;
 
   if (ct27 > 0 || ct36 > 0) {
-    if (tokhai.phu_lucs && tokhai.phu_lucs.length > 0) {
+    if (tokhai.phu_lucs && tokhai.phu_lucs.length > 0) {                        // check phụ lục
       hasAttachment = true;
     }
   }
@@ -357,12 +374,13 @@ const checkTokhai = async (req, res) => {
   console.log('Has Attachment:', hasAttachment);
 
   const { masothue } = tokhai.ca_nhan;
-  const ct22_temp = ct22; // Lấy ct22 từ đối tượng tokhai
+  const ct22_temp = ct22;                                                                     // Lấy ct22 từ đối tượng tokhai
   const ct22WithoutCommas = ct22_temp.replace(/,/g, '');
 
   const ct22_number = parseFloat(ct22WithoutCommas);
   console.log("Mã số thuế là", masothue);
   console.log("Số thuế đã được khấu trừ là", ct22_number);
+
 
   const tochuckekhaithue = await Tochuckekhaithue.findAll({
     where: {
@@ -374,8 +392,8 @@ const checkTokhai = async (req, res) => {
   console.log("Danh sách các tổ chức: ", tochuckekhaithue);
 
 
-  let validationResult;
-  if (tokhai.ct46 <= tokhai.ct44 && tokhai.hoan_tra_thue.tonghoantra === tokhai.ct46) {
+  let validationResult;                                                                      // thông tin hoàn trả thuế
+  if (tokhai.ct46 <= tokhai.ct45 && tokhai.hoan_tra_thue.tonghoantra === tokhai.ct46) {
     validationResult = {
       isValid: true,
       message: '',
@@ -387,9 +405,10 @@ const checkTokhai = async (req, res) => {
     }
   }
 
+
   let result = { message: '', isSuccess: false, hasAttachment: hasAttachment, validationResult };
 
-
+  console.log("thông tin kiểm tra  hoàn trả thuế: ", validationResult)
 
 
   if (tochuckekhaithue.length > 0) {
@@ -406,36 +425,61 @@ const checkTokhai = async (req, res) => {
         };
         console.log('Organization Name:', organizationInfo.organizationName);
 
-        // Push organizationInfo to the array
+        // Push array
         organizationsInfo.push(organizationInfo);
         result.organizationsInfo = organizationsInfo;
       }
     });
 
     console.log('Tổng khẩu trừ thuế:', tongthu);
-    /*
-        if(tokhai.stk && tokhai.nganhang && tokhai.hoan_tra_thue.tonghoantra == 0){
-          console.log('ct22 === tongthu:', ct22_number === tongthu);
-          result = { message: 'Tờ khai hợp lệ.', isSuccess: true, ct22: ct22_number, hasAttachment: hasAttachment, validationResult };
-        } else {
-          console.log('ct22 === tongthu:', ct22_number === tongthu);
-          result = { message: 'Tờ khai còn thiếu thông tin tài khoản ngân hàng.<br>', isSuccess: true, ct22: ct22_number, hasAttachment: hasAttachment, validationResult };
-        }
-    */
 
-    if (ct22_number === tongthu && hasAttachment === true) {
+    // trường hợp tất cả thông tin kiểm tra đều hợp lệ
+    if (ct22_number === tongthu &&
+      hasAttachment === true &&
+      validationResult.isValid === true) {
       console.log('ct22 === tongthu:', ct22_number === tongthu);
-      result = { message: 'Tờ khai hợp lệ.', isSuccess: true, ct22: ct22_number, hasAttachment: hasAttachment };
+      result = {
+        message: 'Tờ khai hợp lệ.',
+        isSuccess: true, ct22: ct22_number,
+        hasAttachment: hasAttachment,
+        validationResult
+      };
+    }
 
-    } else if (ct22_number === tongthu && hasAttachment === false) {
+    // trường hợp sai phụ lục
+    else if (ct22_number === tongthu &&
+      validationResult.isValid === true &&
+      hasAttachment === false) {
       console.log('ct22 === tongthu:', ct22_number === tongthu);
-      result = { message: 'Tờ khai thiếu phụ lục kèm theo', isSuccess: false };
-    } else {
+      result = {
+        message: 'Tờ khai thiếu phụ lục kèm theo',
+        isSuccess: false
+      };
+    }
+
+    // trường hợp sai thông tin đề nghị hoàn trả thuế: yêu cầu hoàn trả > số thuế nộp thừa
+    else if (ct22_number === tongthu &&
+      hasAttachment === true &&
+      validationResult.isValid === false) {
+      console.log('ct22 === tongthu:', ct22_number === tongthu);
+      result = {
+        message: `Thông tin đề nghị hoàn trả thuế không chính xác.<br>
+                  Số thuế đề nghị hoàn trả không được lớn hơn số thuế nộp thừa trong kỳ.
+        `,
+        isSuccess: false, ct22: ct22_number,
+        hasAttachment: hasAttachment,
+        validationResult
+      };
+    }
+
+    else {
       console.log('ct22 !== tongthu:', ct22_number === tongthu);
       result = {
         message: `Tổng thu nhập chịu thuế không đúng.
-      <br>Tổng thu nhập chịu thuế là: ${tongthu} vnđ
-      <br>Thu nhập từ các tổ chức: ${result.organizationsInfo.map(org => org.organizationName).join(', ')}</li>`, isSuccess: false
+                <br>Tổng thu nhập chịu thuế là: ${tongthu} vnđ
+                <br>Thu nhập từ các tổ chức: 
+                ${result.organizationsInfo.map(org => org.organizationName).join(', ')}</li>`,
+        isSuccess: false
       };
     }
   } else {
@@ -500,7 +544,7 @@ const tokhaikhongduocduyet = async (req, res) => {
   try {
     const tokhaiId = req.params.id;
     const { username, adminId } = req.session.user;
-    if (checkTokhaiResult.isSuccess  === false) {
+    if (checkTokhaiResult.isSuccess === false) {
       const tokhai = await Tokhaithue.findOne({
         where: {
           id: tokhaiId,

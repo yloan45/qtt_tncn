@@ -131,5 +131,55 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
 
+  document.getElementById('downloadLink').addEventListener('click', async () => {
+    try {
+      const response = await fetch('/export-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-  
+      if (response.ok) {
+        const blob = await response.blob();
+
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'ca_nhan_data.xlsx';
+
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        console.error('Error downloading Excel file:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error downloading Excel file:', error);
+    }
+  });
+
+
+  document.getElementById('tochucDownload').addEventListener('click', async () => {
+    try {
+      const response = await fetch('/export-tochuc', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'ca_nhan_data.xlsx';
+
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        console.error('Error downloading Excel file:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error downloading Excel file:', error);
+    }
+  });

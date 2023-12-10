@@ -42,14 +42,6 @@
             <form action="/api/auth/signup" method="post" class="row g-3 needs-validation" novalidate>
                 <div class="container-fluid" style="width: 650px;" >
                     <div class="mb-3">
-                        <label for="validationCustom01" class="form-label">Mã số thuế</label>
-                        <input type="text" class="form-control" id="validationCustom01" name="masothue" value="" required>
-                        <div class="invalid-feedback">
-                          Mã số thuế không được để trống
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
                         <label for="validationCustom02" class="form-label">Họ tên NNT</label>
                         <input type="text" class="form-control" name="tentochuc" value="" required>
                         <div class="invalid-feedback">
@@ -76,7 +68,8 @@
                       
                       <div class="mb-3">
                         <label class="form-label">Xã/Phường/Thị trấn</label>
-                        <input type="text" class="form-control" name="xa_phuong">
+                        <select  name="xa_phuong" id="ward" class="form-control">
+                          <option value=""></option>
                       </div>
 
                     <div class="mb-3">

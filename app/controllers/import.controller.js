@@ -24,12 +24,7 @@ function removeAccents(str) {
 
 let counter = 1;
 
-function generateUsername(fullname) {
-    const usernameWithoutAccents = removeAccents(fullname);
-    const usernameWithoutSpaces = usernameWithoutAccents.replace(/\s/g, ""); // Remove spaces
-    const uniqueSuffix = counter++;
-    return `${usernameWithoutSpaces}-${uniqueSuffix}`;
-}
+
 
 const upload = async (req, res) => {
     try {
@@ -64,7 +59,7 @@ const upload = async (req, res) => {
                         const unhashedPassword = generateRandomPassword();                  // random password
                         const hashedPassword = bcrypt.hashSync(unhashedPassword, 8);        // mã hóa password
                         const user = await User.create({
-                            username: generateUsername(c.fullname),
+                            username: c.masothue,
                             password: hashedPassword,
                             caNhanId: c.id,
                         }, { transaction: t });

@@ -36,7 +36,11 @@ exports.deleteToChuc = (req, res) => {
 }
 
 exports.getAllToChuc = (req, res) => {
-  Tochuc.findAll().then((users) => {
+  Tochuc.findAll({
+    include: [{
+      model: Diachi, as: 'dia_chis'
+    }]
+  }).then((users) => {
     res.render("admin/listdn",
       { user: users });
   })
@@ -124,7 +128,6 @@ exports.getTochuc = async (req, res) => {
     res.status(404).json({ message: 'Người dùng không tồn tại' });
   }
 }
-
 
 exports.updateToChuc = async (req, res) => {
   const id = req.body.id;

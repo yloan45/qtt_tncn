@@ -30,9 +30,8 @@
         <form action="/update-bank/<%= tokhai.id %>" method="post">
           <table class="table table-striped table-bordered mt-3 " id="data-table" style="text-align: center;">
             <thead>
-              <th>Tờ khai</th>
-              <th>Số thuế nộp thừa trong kỳ</th>
               <th>Trạng thái đề nghị hoàn</th>
+              <th>Số thuế nộp thừa trong kỳ</th>
               <th>Số thuế đề nghị hoàn trả</th>
               <th>Hoàn trả vào tài khoản</th>
               <th>Ngân hàng</th>
@@ -40,9 +39,8 @@
             </thead>
             <tbody>
               <tr>
-                <td><%= tokhai.tokhai %></td>
+                <td style="text-transform: capitalize;"><%= thongTinHoanTraThue.trangthai %> </td>
                 <td><%= tokhai.ct44 %> VNĐ</td>
-                <td><%= thongTinHoanTraThue.trangthai %> </td>
                 <td><%= thongTinHoanTraThue.tonghoantra %> VNĐ</td>
                 <td><input type="text" name="stk" value="<%= tokhai.stk %>" class="form-control"></td>
                 
@@ -50,9 +48,11 @@
                   <select name="nganhang" class="form-select">
                     <option value="<%= tokhai.nganhang %>" selected><%= tokhai.nganhang %></option>
                     <option value="Sacombank">Sacombank</option>
-                    <option value="Agribank">Agribank</option>
+                    <option value="HDBank">HDBank</option>
                     <option value="Vietcombank">Vietcombank</option>
-                    <option value="MB Bank">MB Bank</option>
+                    <option value="MBBank">MBBank</option>
+                    <option value="Vietinbank">Vietinbank</option>
+                    <option value="Agribank">Agribank</option>
                   </select>
                 </td>
                 <td>
