@@ -657,8 +657,9 @@ const deleteTokhai = async (req, res) => {
           id: id,
         }
       });
+      return res.send(`<script>alert('Xóa thành công!'); window.history.back();</script>`);
     } else {
-      res.send("xóa không thành công!");
+      return res.send(`<script>alert('Xóa không thành công!');  window.history.back();</script>`);
     }
     
   } catch (error) {

@@ -49,4 +49,17 @@ app.get("/change-password", (req, res) => {
 app.post("/change-password/:id", changePassword);
 
 
+app.get("/to-chuc-change-password", (req, res) => {
+  res.render('tochuc/changePassword');
+});
+
+app.get("/quen-mat-khau", (req, res) => {
+  res.render("tochuc/otp");
+});
+
+app.get("/lay-lai-mat-khau", (req, res) => {
+  res.render("tochuc/forgotPassword");
+});
+
+
 };

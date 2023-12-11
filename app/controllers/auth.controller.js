@@ -185,8 +185,12 @@ exports.TochucSignin = async (req, res) => {
         username: req.body.username,
       },
       include: [{
-        model: Tochuc, as: 'to_chuc'
-      },]
+        model: Tochuc, as: 'to_chuc',
+        include: [{
+          model: Diachi, as: 'dia_chis'
+        }]
+      },
+    ]
     });
 
     if (!user) {

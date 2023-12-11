@@ -74,18 +74,20 @@
           <div class="d-flex justify-content-between align-items-center">
             <h5 style="text-align: right;">Tổng cộng: <%= totalIndex %></h5>
           </div>
-
           <br><br><br>
-
-          
-        
-        
         </div>
       </div>
     </div>
     <input name="adminId" style="display: none;" value="<%= admin.adminId %>">
     <%- include('kyquyettoan.tochuc.ejs') %>
   </div>
+
+  <hr>
+      <footer>
+        <p style="text-align: center;">Trang admin</p>
+      </footer>
+
+
 </body>
 <script>
   document.getElementsByClassName('.currentYear').innerHTML += new Date().getFullYear();

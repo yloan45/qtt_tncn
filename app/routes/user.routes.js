@@ -1,11 +1,11 @@
 const { authJwt, validateInput, checkDateValidity, isOpen, isOpenTochuc, isOpenCaNhan } = require("../middleware");
-const { deleteUser, getAllUser, update, findOne, getUser, updateCanhan, changePassword, forgotPassword, forgotPasswordStep2, registerStep1, registerStep2, registerStep3, findPhuluc, deleteFile, renderCanhanWithoutTokhaiInRange, treHanQTT } = require("../controllers/canhan.controller");
+const { deleteUser, getAllUser, update, findOne, getUser, updateCanhan, changePassword, forgotPassword, forgotPasswordStep2, registerStep1, registerStep2, registerStep3, findPhuluc, deleteFile, renderCanhanWithoutTokhaiInRange, treHanQTT, sendBatchEmails, renderTreHanQTT, getTreHanData } = require("../controllers/canhan.controller");
 const upload = require("../middleware/excelUpload");
 const excelController = require("../controllers/excel.controller");
 const tokhaithue = require("../controllers/tokhai.controller");
 const db = require("../models");
 const multer = require('multer');
-const { getAllToChuc, deleteToChuc, deleteNhanVien, updateNhanvien, getTochuc, deleteMultiple, updateToChuc } = require("../controllers/tochuc.controller");
+const { getAllToChuc, deleteToChuc, deleteNhanVien, updateNhanvien, getTochuc, deleteMultiple, updateToChuc, getToChucTreHanData, renderToChucTreHanQTT, sendEmailTochuc, sendEmailsToChuc, forgotPasswordToChuc, forgotPasswordToChucStep2, registerTochucStep1, registerTochucStep2, registerTochucStep3, updateProfileToChuc } = require("../controllers/tochuc.controller");
 const { getAllTokhai, register, getListRegisterMST, deleteRegisterMST, capMST, createAccount, registerPage } = require("../controllers/auth.controller");
 const TochucUpload = db.tochuckekhaithue;
 const { getTokhaithue, duyettokhai, tokhaikhongduocduyet, checkTokhai, getListThuNhap, getPhuluc, downloadPhuluc, moKyQuyetToan, moKyQuyetToanTochuc, listOpenKyQuyetToan, deleteQTT, findOneQTT, updateQTT } = require("../controllers/admin.controller");
@@ -31,13 +31,14 @@ module.exports = function (app) {
 
   app.get("/otp", (req, res) => {
     res.render("nguoidung/otp");
-  })
+  });
 
   app.get("/forgot-password", (req, res) => {
     res.render("nguoidung/forgot_password_step2");
   });
-  app.post("/otp", forgotPassword);
 
+  app.post("/otp", forgotPassword);
+  app.post("/quen-mat-khau", forgotPasswordToChuc);
 
   app.post('/validate-otp', (req, res) => {
     const { email, otp } = req.body;
@@ -49,7 +50,10 @@ module.exports = function (app) {
       return res.redirect("/");
     }
   });
+
   app.post('/xac-nhan', forgotPasswordStep2);
+  app.post('/to-chuc-xac-nhan', forgotPasswordToChucStep2);
+
 
   app.post('/reset-password', (req, res) => {
     const email = req.body.email;
@@ -68,7 +72,7 @@ module.exports = function (app) {
   });
 
 
-  app.get('/tochuc/', [authJwt.verifyTokenTochuc, authJwt.isTochuc], getTochuc);
+  app.get('/tochuc', [authJwt.verifyTokenTochuc, authJwt.isTochuc], getTochuc)
 
   app.get('/canhan', [authJwt.verifyTokenCanhan], (req, res) => {                       // homepage cá nhân
     res.render("nguoidung/index.ejs");
@@ -171,17 +175,67 @@ module.exports = function (app) {
   });
 
 
-  app.get('/admin/danh-sach-ca-nhan-tre-han-qtt',[authJwt.verifyToken, authJwt.isAdmin], (req, res) => {
-    treHanQTT(res);
+  //app.get('/admin/danh-sach-ca-nhan-tre-han-qtt',[authJwt.verifyToken, authJwt.isAdmin], renderTreHanQTT);
+
+  app.get('/admin/danh-sach-ca-nhan-tre-han-qtt', [authJwt.verifyToken, authJwt.isAdmin], async (req, res) => {
+    try {
+      const treHanData = await getTreHanData();
+      if (treHanData !== null) {
+        await renderTreHanQTT(res, treHanData);
+      } else {
+        res.status(404).send('Data not found');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
+  app.post('/admin/send-emails', async (req, res) => {
+    try {
+     const filterCaNhanTreHan = await getTreHanData();
+      await sendBatchEmails(filterCaNhanTreHan);
+      res.status(200).json({ success: true, message: 'Gửi thông báo đến email người dùng thành công.' });
+      console.log("Gửi thông báo thành công");
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Internal Server Error');
+    }
   });
 
 
+  app.get('/admin/danh-sach-to-chuc-tre-han-qtt', [authJwt.verifyToken, authJwt.isAdmin], async (req, res) => {
+    try {
+      const treHanData = await getToChucTreHanData();
+      if (treHanData !== null) {
+        await renderToChucTreHanQTT(res, treHanData);
+      } else {
+        res.status(404).send('Data not found');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
+  app.post('/admin/send-email-to-chuc', async (req, res) => {
+    try {
+     const filterCaNhanTreHan = await getToChucTreHanData();
+      await sendEmailsToChuc(filterCaNhanTreHan);
+      res.status(200).json({ success: true, message: 'Gửi thông báo đến email người dùng thành công.' });
+      console.log("Gửi thông báo thành công");
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
   // TRUY CẬP QUYỀN TỔ CHỨC
-  app.get('/delete-nv/:id', [authJwt.verifyTokenTochuc, authJwt.isTochuc], deleteNhanVien);
+  app.get('/delete-nv/:id', [authJwt.verifyTokenTochuc, authJwt.isTochuc, isOpenTochuc], deleteNhanVien);
   app.get('/tochuc/update/:id', [authJwt.verifyToken, authJwt.isTochuc], excelController.getTochucUser);              // get one
   app.get('/tochuc/upload', [authJwt.verifyTokenTochuc, authJwt.isTochuc], excelController.getToChucUploadFile);      // get all
 
-  app.post('/update/nv/:id', [authJwt.verifyTokenTochuc, authJwt.isTochuc], updateNhanvien);                                    // select -  xóa nhiều 
+  app.post('/update/nv/:id', [authJwt.verifyTokenTochuc, authJwt.isTochuc, isOpenTochuc], updateNhanvien);                                    // select -  xóa nhiều 
   app.post("/upload", [authJwt.verifyTokenTochuc, authJwt.isTochuc, isOpenTochuc], upload.single("file"), excelController.upload); // upload file excel 
 
   app.get("/tochuc/upload-file", [authJwt.verifyTokenTochuc, authJwt.isTochuc, isOpenTochuc], (req, res) => {               // form upload file excel
@@ -190,12 +244,14 @@ module.exports = function (app) {
     res.render('tochuc/upload', { user: user });
   });
 
-  app.get('/tochuc/cap-nhat-thong-tin', (req, res) => {
-    res.render('tochuc/update');
+  app.get('/tochuc/cap-nhat-thong-tin',[authJwt.verifyTokenTochuc, authJwt.isTochuc], (req, res) => {
+    const user = req.session.user;
+    res.render('tochuc/update', {user});
+    
   });
 
   app.post('/cap-nhat-thong-tin', [authJwt.verifyTokenTochuc, authJwt.isTochuc], updateToChuc);
-  app.post('/delete-multiple', async (req, res) => {
+  app.post('/delete-multiple', [authJwt.verifyTokenTochuc, authJwt.isTochuc, isOpenTochuc], async (req, res) => {
     const idsToDelete = req.body.ids;
 
     try {
@@ -216,6 +272,12 @@ module.exports = function (app) {
     }
   });
 
+  app.get('/tochuc/dang-ky', (req, res) => {
+    res.render('tochuc/registerStep1');
+  });
+  app.post('/tochuc/dang-ky/b1', registerTochucStep1);
+  app.post('/tochuc/dang-ky/b2', registerTochucStep2);
+  app.post('/tochuc/dang-ky/b3', registerTochucStep3);
 
   // TRUY CẬP QUYỀN CÁ NHÂN
   app.get('/dang-ky', registerPage);
@@ -275,7 +337,7 @@ module.exports = function (app) {
     res.render('/nguoidung/resultsSearch');
   });
 
-  app.post('/tra-cuu-to-khai-qtt', validateInput, checkDateValidity, tokhaithue.tracuuTokhai, (req, res) => {
+  app.post('/tra-cuu-to-khai-qtt',[authJwt.verifyTokenCanhan], validateInput, checkDateValidity, tokhaithue.tracuuTokhai, (req, res) => {
     const { searchResult } = res.locals;
     res.render('nguoidung/resultsSearch', { searchResult });
   });
@@ -323,9 +385,9 @@ module.exports = function (app) {
     }
   });
 
-  app.post('/update-bank/:id', tokhaithue.updateBank);                                    // thêm thông tin tài khoản ngân hàng
+  app.post('/update-bank/:id', [authJwt.verifyTokenCanhan],tokhaithue.updateBank);                                    // thêm thông tin tài khoản ngân hàng
 
-  app.get('/delete-to-khai/:id', tokhaithue.deleteTokhai);
+  app.get('/delete-to-khai/:id',[authJwt.verifyTokenCanhan], tokhaithue.deleteTokhai);
 
   app.get('/phu-luc/:id', [authJwt.verifyTokenCanhan], findPhuluc);
   app.get('/delete-phu-luc/:id', [authJwt.verifyTokenCanhan], deleteFile);

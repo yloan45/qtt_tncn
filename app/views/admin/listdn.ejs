@@ -32,23 +32,21 @@
 
 <div style="text-align: right;">  
   <form action="/export-tochuc" method="post">
-  <button type="submit"  id="tochucDownload" class="btn btn-danger" style="color: white; font-weight: bold; margin-top: 3px;">Xuất DS</button>
+  <button type="submit"  id="tochucDownload" class="btn btn-warning" style="color: white; font-weight: bold; margin-top: 3px;">Xuất DS</button>
 </form>
 </div>
        <table class="table table-bordered mt-3">
-        <tr style="text-align: center;font-weight: bold; background-color: #2886d3; color: white;"  >
-                <th>
-                    STT
-                </th>
-                <th>Mã số thuế</th>
-                <th>Tên Doanh nghiệp/Tổ chức</th>
-                <th>Đại diện</th>
-                <th>Email liên hệ</th>
-                <th>Địa chỉ</th>
-                <th>Cơ quan quản lý thuế</th>
-                <th>Điện thoại</th>
-                <th>Nhân viên<br>(Người)</th>
-                <th>Action</th>
+        <tr style="text-align: center;font-weight: bolder; background-color: #2886d3; color: white;"  >
+                <th style="font-weight: bolder;">STT</th>
+                <th style="font-weight: bolder;">Mã số thuế</th>
+                <th style="font-weight: bolder;">Tên Doanh nghiệp/Tổ chức</th>
+                <th style="font-weight: bolder;">Đại diện</th>
+                <th style="font-weight: bolder;">Email liên hệ</th>
+                <th style="font-weight: bolder;">Địa chỉ</th>
+                <th style="font-weight: bolder;">Cơ quan quản lý thuế</th>
+                <th style="font-weight: bolder;">Điện thoại</th>
+                <th style="font-weight: bolder;">Nhân viên<br>(Người)</th>
+                <th style="font-weight: bolder;">Hành dộng</th>
             </tr>
             <% let totalIndex = 0; %>
             <% user.forEach((user, index)=> { %>
@@ -92,6 +90,9 @@
             <h5>Tổng cộng: <%= totalIndex %></h5>
           </table>
         </div>
-
+        <hr>
+        <footer>
+          <p style="text-align: center;">Trang admin</p>
+        </footer>
   </body>
 </html>

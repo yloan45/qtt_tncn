@@ -27,23 +27,26 @@
               <div class="form-outline">
                 <div class="form-outline mb-4">
                   <label style="margin-bottom: 5px; font-weight: 600;">Mã số thuế:</label>
-                  <input type="text" id="" class="form-control" name="username" required  placeholder="Username"/>
+                  <input type="text" id="" class="form-control" name="username" required placeholder="Username" />
                 </div>
-              <p style="margin-bottom: 5px; font-weight: 600;">Mật khẩu:</p>
+                <p style="margin-bottom: 5px; font-weight: 600;">Mật khẩu:</p>
                 <div class="input-group">
-                  
+
                   <input type="password" id="password" name="password" class="form-control" placeholder="Password">
-                    <span style="background-color: white;" class="input-group-text" id="password-toggle" onclick="togglePasswordVisibility()">
-                      <i class="fa fa-eye" id="password-icon"></i>
-                    </span>
-                 
+                  <span style="background-color: white;" class="input-group-text" id="password-toggle" onclick="togglePasswordVisibility()">
+                    <i class="fa fa-eye" id="password-icon"></i>
+                  </span>
+
                 </div>
               </div>
               <br>
+
               <button type="submit" class="btn btn-primary">
                 Đăng nhập
               </button>
-
+              <div style="text-align: right;">
+                <a href="/quen-mat-khau">Lấy lại mật khẩu?</a>
+              </div>
             </form>
           </div>
         </div>
@@ -59,7 +62,7 @@
       function togglePasswordVisibility() {
         var passwordField = document.getElementById("password");
         var passwordIcon = document.getElementById("password-icon");
-  
+
         if (passwordField.type === "password") {
           passwordField.type = "text";
           passwordIcon.className = "fa fa-eye-slash";

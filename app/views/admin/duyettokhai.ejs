@@ -37,7 +37,6 @@
       /* Màu nền của dòng "Không có dữ liệu hiển thị" */
     }
   </style>
-
 </head>
 
 <body>
@@ -64,22 +63,21 @@
           </div>
         </div>
       </div>
-
+      <a href="/admin/danh-sach-ca-nhan-tre-han-qtt" style="margin-left: 20px; margin-top: 10px; font-weight: bold;" class="btn btn-danger">DS Quá Hạn</a>
       <div class="container-fluid">
-        <table class="table table-bordered ">
+        <table class="table table-bordered " id="data-table">
           <thead class="sticky-header " style="text-align: center; background-color: #2886d3">
             <th style="font-weight: bolder; color: white;"> STT </th>
             <th style="font-weight: bolder; color: white;"> Họ và tên NNT </th>
             <th style="font-weight: bolder; color: white;"> Mã số thuế </th>
             <th style="font-weight: bolder; color: white;"> Địa chỉ </th>
-            <th style="font-weight: bolder; color: white;"> Email </th>
             <th style="font-weight: bolder; color: white;"> Điện thoại </th>
             <th style="font-weight: bolder; color: white;"> Năm kê khai </th>
             <th style="font-weight: bolder; color: white;"> Loại tờ khai </th>
             <th style="font-weight: bolder; color: white;"> Phụ lục </th>
             <th style="font-weight: bolder; color: white;"> Hoàn trả thuế </th>
             <th style="font-weight: bolder; color: white;" class="status-cell"> Trạng thái tờ khai </th>
-            <th>Ngày tạo</th>
+            <th style="font-weight: bolder; color: white;">Ngày tạo</th>
             <th style="font-weight: bolder; color: white;"> Hành động </th>
           </thead>
           <tbody>
@@ -92,9 +90,8 @@
               <td><%= tokhaithue.fullname %></td>
               <td><%= tokhaithue.ca_nhan.masothue %></td>
               <td><%= tokhaithue.address %></td>
-              <td><%= tokhaithue.ca_nhan.email %></td>
               <td><%= tokhaithue.ca_nhan.phone %></td>
-              <td ><%= tokhaithue.namkekhai %></td>
+              <td><%= tokhaithue.namkekhai %></td>
               <td><%= tokhaithue.loai_to_khai.tenloai %></td>
               <td><a href="/phu-luc-to-khai/<%= tokhaithue.id %>">Xem</a></td>
               <td><a href="/hoan-tra-thue/<%= tokhaithue.id %>">Xem</a></td>
@@ -107,7 +104,7 @@
                 <%= tokhaithue.trang_thai_xu_li.tentrangthai%>
                 <% } %>
               </td>
-<td><%= tokhaithue.createdAt.toLocaleString() %></td>
+              <td><%= tokhaithue.createdAt.toLocaleString() %></td>
               <td>
                 <a href="#" class="edit-user" data-toggle="modal" data-target="#editModal" data-id="<%= tokhaithue.id %>">
                   <i class="fa fa-pencil"></i>
@@ -149,6 +146,11 @@
       <%- include('check_tokhai') %>
     </div>
   </div>
+
+  <hr>
+      <footer>
+        <p style="text-align: center;">Trang admin</p>
+      </footer>
 </body>
 
 <script src="js/check_tokhai.js"></script>

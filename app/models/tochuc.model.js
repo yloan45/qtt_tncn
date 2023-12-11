@@ -17,12 +17,12 @@ module.exports = (sequelize, Sequelize) => {
   
       daidien: {
         type: Sequelize.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            msg: "Ten dai dien khong duoc de trong!"
-          }
-        }
+       // allowNull: false,
+      //  validate: {
+       //   notEmpty: {
+        //    msg: "Ten dai dien khong duoc de trong!"
+       //   }
+       // }
       },
 
       address: {
@@ -31,7 +31,7 @@ module.exports = (sequelize, Sequelize) => {
       },
 
       phone: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
         validate: {
           notEmpty: {
@@ -60,13 +60,21 @@ module.exports = (sequelize, Sequelize) => {
       
       nhanvien: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+       /* allowNull: false,
         validate: {
           notEmpty: {
             msg: "So luong nhan vien khong duoc de trong!"
            }
-        }
-      }
+        }*/
+      },
+      status: {
+        type: Sequelize.STRING,
+      },
+
+      linhvuc: {
+        type: Sequelize.STRING,
+      },
+
     });
     return Tochuc;
   };

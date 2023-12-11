@@ -1,112 +1,199 @@
 <html lang="en">
 
 <head>
-    <%- include('head') %>
+  <%- include('head') %>
 </head>
 <style scoped>
-    .home {
-      font-size: 14px;
-      text-align: justify;
-      margin-left: 25px;
-      
-    }
-    .home p {
-      font-weight: bold;
-    }
-  </style>
+  .home {
+    font-size: 14px;
+    text-align: justify;
+    margin-left: 25px;
+
+  }
+
+  .home p {
+    font-weight: bold;
+  }
+</style>
+
 <body>
-    <div class="container">
-        <div class="khungtong">
-            <!--phan header-->
-            <header>
-                <%- include('./partials/header') -%>
-            </header>
-            <div class="container-fluid" style="width: 900px; margin-top: 1pc; margin-bottom: 1pc;">
-                <div class="card">
-                    <div class="card-header">
-                      <h5> Cập nhật thông tin tổ chức/doanh nghiệp</h5>
-                    </div>
-                    <form action="/cap-nhat-thong-tin" method="post">
-                        <input type="text" name="id" value="<%= user.to_chuc.id%>" style="display: none;">
-                    <div class="card-body">
-                      <div class="home">
-                        <div class="row">
-                          <div class="col mt-3">
-                            <p>Họ và tên: </p>
-                          </div>
-                          <div class="col-9 ">
-                            <input type="text" name="tentochuc" class="form-control mt-3" value=" <%= user.to_chuc.tentochuc %>">
-                          </div>
-                        </div>
-          
-                        <div class="row">
-                          <div class="col mt-3">
-                            <p>Mã số thuế </p>
-                          </div>
-                          <div class="col-9 ">
-                            <input type="text" name="masothue" class="form-control mt-3" value="  <%= user.to_chuc.masothue %>" readonly>
-                           
-                          </div>
-                        </div>
-          
-                        <div class="row">
-                          <div class="col mt-3">
-                            <p>Email: </p>
-                          </div>
-                          <div class="col-9 ">
-                            <input type="text" name="email" class="form-control mt-3" value="  <%= user.to_chuc.email %>" readonly>
-                          </div>
-                        </div>
-          
-                        <div class="row">
-                          <div class="col  mt-3">
-                            <p>Điện thoại: </p>
-                          </div>
-                          <div class="col-9">
-                            <input type="text" name="phone" class="form-control mt-3" value="  <%= user.to_chuc.phone %>">
-                          </div>
-                        </div>
-                        
-                        <div class="row">
-                          <div class="col  mt-3">
-                            <p>Địa chỉ: </p>
-                          </div>
-                          <div class="col-9">
-                            <input type="text" name="address" class="form-control mt-3" value="  <%= user.to_chuc.address %>">
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col  mt-3">
-                            <p>Cơ quan quản lý thuế </p>
-                          </div>
-                          <div class="col-9">
-                            <input type="text" name="cqqtthue" class="form-control mt-3" value="  <%= user.to_chuc.cqqtthue %>">
-                          </div>
-                        </div>
-          
-                        <div class="row">
-                          <div class="col  mt-3">
-                            <p>Số lượng nhân viên</p>
-                          </div>
-                          <div class="col-9">
-                            <input type="text" name="nhanvien" class="form-control mt-3" value="  <%= user.to_chuc.nhanvien %>">
-                          </div>
-                        </div>
-
-
-                      </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 175px; margin-left: 25pc;">Cập nhật</button>
-                    </form>
+  <div class="container">
+    <div class="khungtong">
+      <!--phan header-->
+      <header>
+        <%- include('./partials/header') -%>
+      </header>
+      <div class="container-fluid" style="width: 900px; margin-top: 1pc; margin-bottom: 1pc;">
+        <div class="card">
+          <div class="card-header">
+            <h5> Cập nhật thông tin tổ chức/doanh nghiệp</h5>
+          </div>
+          <form action="/cap-nhat-thong-tin" method="post">
+            <input type="text" name="id" value="<%= user.to_chuc.id%>" style="display: none;">
+            <div class="card-body">
+              <div class="home">
+                <div class="row">
+                  <div class="col mt-3">
+                    <p>Họ và tên: </p>
                   </div>
-                <br><br><br>
-                <!--PHẦN NỘI DUNG-->
+                  <div class="col-9 ">
+                    <input type="text" name="tentochuc" class="form-control mt-3" value=" <%= user.to_chuc.tentochuc %>">
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col mt-3">
+                    <p>Mã số thuế </p>
+                  </div>
+                  <div class="col-9 ">
+                    <input type="text" name="masothue" class="form-control mt-3" value="  <%= user.to_chuc.masothue %>" readonly>
+
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col mt-3">
+                    <p>Email: </p>
+                  </div>
+                  <div class="col-9 ">
+                    <input type="text" name="email" class="form-control mt-3" value="  <%= user.to_chuc.email %>" readonly>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col  mt-3">
+                    <p>Điện thoại: </p>
+                  </div>
+                  <div class="col-9">
+                    <input type="text" name="phone" class="form-control mt-3" value="  <%= user.to_chuc.phone %>">
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col  mt-3">
+                    <p>Địa chỉ: </p>
+                  </div>
+                  <div class="col-9">
+                    <input type="text" name="address" class="form-control mt-3" value="  <%= user.to_chuc.address %>">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col  mt-3">
+                    <p>Cơ quan quản lý thuế </p>
+                  </div>
+                  <div class="col-9">
+                    <input type="text" name="cqqtthue" class="form-control mt-3" value="  <%= user.to_chuc.cqqtthue %>">
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col  mt-3">
+                    <p>Số lượng nhân viên</p>
+                  </div>
+                  <div class="col-9">
+                    <input type="text" name="nhanvien" class="form-control mt-3" value="  <%= user.to_chuc.nhanvien %>">
+                  </div>
+                </div>
+
+                <div class="row mt-3
+                ">
+                  <div class="col">
+                    <p>Địa chỉ: </p>
+                  </div>
+                  <div class="col-9">
+                      <input type="text" required name="xa_phuong" class="form-control">
+                  </div> 
+                </div>
+  
+                <div class="row mt-3">
+                  <div class="col">
+                    <p>Quận/Huyện: </p>
+                  </div>
+                  <div class="col-9">
+                      <select name="quan_huyen" class="form-select" required id="district">
+                          <option value="">Chọn</option>
+                      </select>
+                  </div>
+                </div>
+
+                <div class="row mt-3"  >
+                  <div class="col">
+                    <p>Tỉnh/TP: </p>
+                  </div>
+                  <div class="col-9">
+                      <select name="tinh_tp" class="form-select" required id="tp">
+                          <option value=""><%= user.to_chuc.dia_chis.tinh_tp %></option>
+                      </select>
+                  </div>
+                </div>
+              </div>
             </div>
+            <button type="submit" class="btn btn-primary" style="width: 175px; margin-left: 25pc;">Cập nhật</button>
+          </form>
         </div>
-        <footer>
-            <%- include('../partials/footer') %>
-        </footer>
-        <script src="js/formwizard.js"></script>
+        <br><br><br>
+        <!--PHẦN NỘI DUNG-->
+      </div>
+    </div>
+    <script src="js/address.js"></script>
+    <footer>
+      <%- include('../partials/footer') %>
+    </footer>
+    <script src="js/formwizard.js"></script>
+
+    <script>
+      const host = "https://provinces.open-api.vn/api/";
+      var callAPI = (api) => {
+        return axios.get(api)
+          .then((response) => {
+            renderData(response.data, "tp");
+          });
+      }
+      callAPI('https://provinces.open-api.vn/api/?depth=1');
+      var callApiDistrict = (api) => {
+        return axios.get(api)
+          .then((response) => {
+            renderData(response.data.districts, "district");
+          });
+      }
+      var callApiWard = (api) => {
+        return axios.get(api)
+          .then((response) => {
+            renderData(response.data.wards, "ward");
+          });
+      }
+
+      var renderData = (array, select) => {
+        let row = ' <option disable value="">Chọn</option>';
+        array.forEach(element => {
+          row += `<option data-id="${element.code}" value="${element.name}">${element.name}</option>`
+        });
+        document.querySelector("#" + select).innerHTML = row
+      }
+
+      $("#tp").change(() => {
+        callApiDistrict(host + "p/" + $("#tp").find(':selected').data('id') + "?depth=2");
+        printResult();
+      });
+      $("#quan_huyen").change(() => {
+        callApiWard(host + "d/" + $("#quan_huyen").find(':selected').data('id') + "?depth=2");
+        printResult();
+      });
+      $("#ward").change(() => {
+        printResult();
+      })
+
+      var printResult = () => {
+        if ($("#quan_huyen").find(':selected').data('id') != "" && $("#tp").find(':selected').data('id') != "" &&
+          $("#ward").find(':selected').data('id') != "") {
+          let result = $("#tp option:selected").text() +
+            " | " + $("#quan_huyen option:selected").text() + " | " +
+            $("#ward option:selected").text();
+          $("#result").text(result)
+        }
+
+      }
+    </script>
 
 </body>
 

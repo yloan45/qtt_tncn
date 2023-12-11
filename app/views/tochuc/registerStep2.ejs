@@ -1,0 +1,161 @@
+<html lang="en">
+
+<head>
+  <%- include('head') %>
+</head>
+
+<body>
+  <div class="container">
+    <div class="khungtong">
+      <header>
+        <%- include('../partials/header') -%>
+      </header>
+      <div class="container-fluid" style=" width: 900px;margin-top: 1pc; margin-bottom: 1pc;">
+        <div class="card">
+          <h5 class="card-header" style="text-align: center;  background-color: #2886d3; color: white; font-size: 16px;">Đăng ký tài khoản cá nhân</h5>
+          <div class="card-body">
+            <% if (messages.error) { %>
+            <span style=" color: red;" class="error-message"><%= messages.error[0] %></span>
+            <% } %>
+            <form action="/tochuc/dang-ky/b2" method="post">
+
+              <div class="row mt-3">
+                <div class="col"></div>
+                <div class="col-3" style="text-align: right;">
+                  <label for="" style="font-size: 16px; text-align: right;">Mã số thuế <font style="color: red;">(*)
+                    </font></label>
+                </div>
+                <div class="col-7">
+                  <input type="text" name="masothue" class="form-control" value="<%= user.masothue %>" style="background-color: white;" readonly>
+                </div>
+                <div class="col"></div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col"></div>
+                <div class="col-3" style="text-align: right;">
+                  <label for="" style="font-size: 16px;">Tên doanh nghiệp/tổ chức: <font style="color: red;">(*)
+                    </font></label>
+                </div>
+                <div class="col-7">
+                  <input type="text" name="tentochuc" class="form-control" value="<%= user.tentochuc %>" style="background-color: white;" readonly >
+                </div>
+                <div class="col"></div>
+              </div>
+
+
+
+              <div class="row mt-3">
+                <div class="col"></div>
+                <div class="col-3" style="text-align: right;">
+                  <label for="" style="font-size: 16px;">Đại diện doanh nghiệp/tổ chức: <font style="color: red;">(*)
+                    </font></label>
+                </div>
+                <div class="col-7">
+                  <input type="text" name="daidien" class="form-control" value="<%= user.daidien %>" style="background-color: white;" readonly >
+                </div>
+                <div class="col"></div>
+              </div>
+
+
+              <div class="row">
+                <div class="col">
+                  <p>Địa chỉ: </p>
+                </div>
+                <div class="col-9">
+                    <input type="text" name="xa_phuong" required class="form-control">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  <p>Quận/Huyện: </p>
+                </div>
+                <div class="col-9">
+                    <select name="quan_huyen" class="form-select" required id="district">
+                        <option value=""></option>
+                    </select>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="col">
+                  <p>Tỉnh/TP: </p>
+                </div>
+                <div class="col-9">
+                    <select name="quan_huyen" class="form-select" required id="city">
+                        <option value=""></option>
+                    </select>
+                </div>
+              </div>
+
+
+
+              <div class="row mt-3">
+                <div class="col"></div>
+                <div class="col-3" style="text-align: right;">
+                  <label for="" style="font-size: 16px;">Cơ quan quản lý: <font style="color: red;">(*)
+                    </font></label>
+                </div>
+                <div class="col-7">
+                  <input type="text" name="cqqtthue" class="form-control" style="background-color: white;" readonly  value="<%= user.cqqtthue %>">
+                </div>
+                <div class="col"></div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col"></div>
+                <div class="col-3" style="text-align: right;">
+                  <label for="" style="font-size: 16px;">Lĩnh vực kinh doanh: <font style="color: red;">(*)</font>
+                  </label>
+                </div>
+                <div class="col-7">
+                  <input type="text" name="linhvuc" class="form-control" style="background-color: white;" readonly value="<%= user.linhvuc %>">
+                </div>
+                <div class="col"></div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col"></div>
+                <div class="col-3" style="text-align: right;">
+                  <label for="" style="font-size: 16px;">Số điện thoại: <font style="color: red;">(*)
+                    </font></label>
+                </div>
+                <div class="col-7">
+                  <input type="text" name="phone" class="form-control" style="background-color: white;" readonly value="<%= user.phone %>">
+                </div>
+                <div class="col"></div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col"></div>
+                <div class="col-3" style="text-align: right;">
+                  <label for="" style="font-size: 16px;">Email: <font style="color: red;">(*)</font>
+                  </label>
+                </div>
+                <div class="col-7">
+                  <input type="text" name="email" class="form-control" value="<%= user.email %>" required>
+                </div>
+                <div class="col"></div>
+              </div>
+          </div>
+
+          <div class="container text-center mt-5">
+            <a href="/otp" class="btn mx-auto" style="width: 150px; background-color: #2886d3; color: white;">Quay lại</a>
+            <button class="btn mx-auto" style="width: 150px; background-color: #2886d3; color: white;">Tiếp tục</button>
+          </div>
+          <br><br><br>
+          </form>
+        </div>
+      </div>
+      <br><br><br>
+    </div>
+  </div>
+  <footer>
+    <%- include('../partials/footer') %>
+  </footer>
+  <script src="js/index.js"></script>
+</body>
+
+</html>

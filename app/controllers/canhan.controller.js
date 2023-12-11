@@ -206,10 +206,9 @@ exports.changePassword = async (req, res) => {
   const hashedPassword = bcrypt.hashSync(newPassword, 8);
   await User.update({ password: hashedPassword }, { where: { id: id } });
 
-
   req.session.token = null;
   req.session.user = null;
-  return res.redirect("/canhan/login")
+  return res.redirect("/")
 };
 
 const otpDatabase = new Map();
@@ -307,7 +306,6 @@ exports.registerStep1 = async (req, res) => {
 
 };
 
-
 exports.registerStep2 = async (req, res) => {
   try {
     const { fullname, masothue, email, phone, tinh_tp, cccd, cqqtthue } = req.body;
@@ -330,7 +328,6 @@ exports.registerStep2 = async (req, res) => {
     throw error;
   }
 };
-
 
 exports.registerStep3 = async (req, res) => {
   try {
@@ -585,7 +582,7 @@ exports.treHanQTT = async (res) => {
     console.error('Error:', error);
     throw error; 
   }
-};*/
+};
 
 exports.treHanQTT = async (res) => {
   try {
@@ -636,10 +633,97 @@ exports.treHanQTT = async (res) => {
       return new Date() > ngaydongDate;
     });
 
-    res.render('admin/list', { result: filterCaNhanTreHan, num: filterCaNhanTreHan.length });
+   //await sendBatchEmails(filterCaNhanTreHan);
+   // res.render('admin/list', { result: filterCaNhanTreHan, num: filterCaNhanTreHan.length });
+   return filterCaNhanTreHan;
 
   } catch (error) {
     console.error('Error:', error);
     throw error;
   }
 };
+*/
+
+// danh sách cá nhân trễ hạn quyết toán thuế
+exports.getTreHanData = async () => {
+  try {
+    const currentYear = new Date().getFullYear();
+    const kyquyettoanForCurrentYear = await Kyquyettoan.findOne({
+      where: {
+        trangthai: true,
+        ngaymo: { [Op.gte]: `${currentYear}-01-01` },
+        ngaydong: { [Op.lte]: `${currentYear}-12-31` },
+      },
+    });
+
+    if (!kyquyettoanForCurrentYear) {
+      console.error('Kỳ quyết toán không tồn tại.');
+      return null;  
+    }
+
+    const ngaydong = kyquyettoanForCurrentYear.ngaydong;
+
+    const overdueCanhan = await Canhan.findAll({
+      include: [
+        {
+          model: Tokhaithue,
+          as: 'to_khai_thues',
+          required: false,
+          where: {
+            createdAt: {
+              [Op.or]: [
+                { [Op.lt]: ngaydong },
+                { [Op.gt]: `${currentYear}-12-31` },
+              ],
+            },
+          },
+        },
+        {
+          model: Diachi,
+          as: 'dia_chi'
+        }
+      ],
+      where: {
+        status: null,
+        '$to_khai_thues.id$': null,
+      },
+    });
+
+    const filterCaNhanTreHan = overdueCanhan.filter((item) => {
+      const ngaydongDate = new Date(ngaydong);
+      return new Date() > ngaydongDate;
+    });
+
+    return filterCaNhanTreHan;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+};
+
+// render để trang danh sách trễ hạn
+exports.renderTreHanQTT = async (res, data) => {
+  try {
+    res.render('admin/list', { result: data, num: data.length });
+  } catch (error) {
+    console.error('Error rendering view:', error);
+    throw error;
+  }
+};
+
+
+// gửi mail thông báo 
+exports.sendBatchEmails =  async (users) => {
+  try {
+    for (const user of users) {
+      const emailSubject = 'Thông báo trễ hạn quyết toán thuế';
+      const emailText = `Dear ${user.fullname},\n\nBạn đã quá hạn quyết toán.`;
+      await mailer.sendMail(user.email, emailSubject, emailText);
+    }
+  } catch (error) {
+    console.error('Lỗi khi gửi mail: ', error);
+    throw error;
+  }
+}
+
+

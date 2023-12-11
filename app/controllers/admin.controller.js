@@ -148,8 +148,7 @@ const moKyQuyetToanTochuc = async (req, res) => {
     });
 
     if (kyQuyetToanCount >= 1) {
-      req.flash('error', 'Chỉ được mở QTT-TCCN 1 lần trong năm');
-      return res.redirect('/admin');
+      return res.send(`<script>alert('Chỉ được mở QTT-TCCN 1 lần trong năm'); window.location.href = '/ky-quyet-toan';</script>`);
     }
 
     console.log(req.body);
@@ -472,12 +471,28 @@ const checkTokhai = async (req, res) => {
       };
     }
 
+    else if (ct22_number !== tongthu &&
+      hasAttachment === true &&
+      validationResult.isValid === false) {
+      console.log('ct22 === tongthu:', ct22_number === tongthu);
+      result = {
+        message: `Thông tin đề nghị hoàn trả thuế không chính xác.<br>
+                  Số thuế đề nghị hoàn trả không được lớn hơn số thuế nộp thừa trong kỳ.<br>
+                  Thu nhập chịu thuế không chính xác. <br>
+                  NNT có thu nhập từ các đơn vị: ${result.organizationsInfo.map(org => org.organizationName).join(', ')}</li>`,
+
+        isSuccess: false, ct22: ct22_number,
+        hasAttachment: hasAttachment,
+        validationResult
+      };
+    }
+
     else {
       console.log('ct22 !== tongthu:', ct22_number === tongthu);
       result = {
         message: `Tổng thu nhập chịu thuế không đúng.
-                <br>Tổng thu nhập chịu thuế là: ${tongthu} vnđ
-                <br>Thu nhập từ các tổ chức: 
+                <br>Tổng thu nhập chịu thuế được ghi nhận là: ${tongthu} vnđ
+                <br>NNT có thu nhập từ các tổ chức: 
                 ${result.organizationsInfo.map(org => org.organizationName).join(', ')}</li>`,
         isSuccess: false
       };
