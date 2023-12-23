@@ -141,7 +141,7 @@ const isOpenCaNhan = async (req, res, next) => {
       });
     } else if (new Date() > endDate){
       return res.status(403).json({
-        error: `Đã kết thúc thời gian quyết toán thuế năm ${year}`,
+        error: `Đã kết thúc thời gian quyết toán thuế!`,
       });
     }
 
@@ -263,16 +263,30 @@ const isOpenTochuc = async (req, res, next) => {
     const startDate = new Date(kyQuyetToan.ngaymotochuc);
     const endDate = new Date(kyQuyetToan.ngaydongtochuc); //
 
-    const currentDate = new Date();
-    const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
+   // const currentDate = new Date();
+   // const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
 
-    if (currentDate < startDate) {
+
+    const currentDate = new Date(kyQuyetToan.ngaymotochuc);
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1; 
+    const year = currentDate.getFullYear();
+    const formattedDate = `${day}-${month}-${year}`;
+
+
+    const currentDate1 = new Date(kyQuyetToan.ngaydongtochuc);
+    const day1 = currentDate1.getDate();
+    const month1 = currentDate1.getMonth() + 1; 
+    const year1 = currentDate1.getFullYear();
+    const formattedDate1 = `${day1}-${month1}-${year1}`;
+
+    if (new Date() < startDate) {
       return res.status(403).json({
         error: `Chưa đến thời gian quyết toán thuế. Ngày bắt đầu từ ${formattedDate} đến ${formattedDate1}`,
       });
-    } else if (currentDate > endDate) {
+    } else if (new Date() > endDate) {
       return res.status(403).json({
-        error: `Bạn đã quá hạn kê khai quyết toán thuế.`,
+        error: `Thời gian quyết toán thuế đã kết thúc`,
       });
     }
 

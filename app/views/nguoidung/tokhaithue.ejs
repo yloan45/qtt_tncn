@@ -92,8 +92,9 @@
 </script>
 
 <%# định dạng dấu , cho input : 2,000,000  %>
-<script>
-  const numberInputs = document.querySelectorAll(".number-input");
+
+<script>/*
+const numberInputs = document.querySelectorAll(".number-input");
   numberInputs.forEach(input => {
     input.addEventListener("input", function() {
       let value = input.value.replace(/[^0-9]/g, '');
@@ -102,9 +103,21 @@
       const numberValue = parseInt(value);
       createTokhai(req, res, numberValue);
     });
-  });
+  });*/
 </script>
 
+<script>
+  const numberInputs = document.querySelectorAll(".number-input");
+  numberInputs.forEach(input => {
+    input.addEventListener("input", function() {
+      let value = input.value.replace(/-/g, ''); // Remove dashes
+      const formattedValue = parseInt(value).toLocaleString("en-US");
+      input.value = formattedValue;
+      const numberValue = parseInt(value);
+      createTokhai(req, res, numberValue);
+    });
+  });
+</script>
 
 <script>
   const yearInput = document.getElementById("yearInput");

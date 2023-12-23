@@ -27,7 +27,15 @@ module.exports = (sequelize, Sequelize) => {
     diachi: {
       type: Sequelize.STRING
     },
+    tongthunhap: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
     thunhaptinhthue: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    namkekhai: {
       type: Sequelize.STRING,
       allowNull: false
     },

@@ -63,6 +63,27 @@ const moKyQuyetToan = async (req, res, ngaymo, ngaydong) => {
 };
 */
 
+const statusQTT = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const kyquyettoan = await Kyquyettoan.findByPk(id);
+    if (!kyquyettoan) {
+      return res.status(404).json({ error: 'Không tìm thấy kỳ quyết toán.' });
+    }
+    await Kyquyettoan.update({
+      trangthai: !kyquyettoan.trangthai,
+    }, {
+      where: {
+        id: kyquyettoan.id,
+      },
+    });
+    res.status(200).json({ message: 'Cập nhật trạng thái thành công.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Lỗi khi cập nhật trạng thái.' });
+  }
+};
+
 const listOpenKyQuyetToan = async (req, res) => {
   try {
     const adminId = req.session.user;
@@ -315,6 +336,8 @@ const getListThuNhap = async (req, res) => {
   const canhan = await Canhan.findByPk(id);
   const masothue = req.body.masothue;
 
+
+
   if (canhan && canhan.masothue === masothue) {
     const tochuckekhaithue = await Tochuckekhaithue.findAll({
       where: {
@@ -334,7 +357,7 @@ const getListThuNhap = async (req, res) => {
     return tochuckekhaithue;
   }
 };
-
+/*
 const checkTokhai = async (req, res) => {
   const id = req.params.id;
   const tokhai = await Tokhaithue.findOne({
@@ -506,6 +529,185 @@ const checkTokhai = async (req, res) => {
   res.json(result);
 
 }
+*/
+
+
+const checkTokhai = async (req, res) => {
+  const id = req.params.id;
+  const tokhai = await Tokhaithue.findOne({
+    where: {
+      id: id,
+    },
+    include: [
+      {
+        model: Canhan,
+        as: 'ca_nhan'
+      },
+      {
+        model: Phuluc, as: 'phu_lucs'
+      },
+      {
+        model: Hoanthue, as: 'hoan_tra_thue'
+      }
+    ]
+  });
+
+  if (!tokhai) {
+    res.json({ message: 'Không tìm thấy thông tin tờ khai phù hợp', isSuccess: false });
+    return;
+  }
+
+  const { ct22, ct27, ct36, stk, nganhang, namkekhai } = tokhai;
+  let hasAttachment = tokhai.phu_lucs && tokhai.phu_lucs.length > 0;
+
+  if (ct27 > 0 || ct36 > 0) {
+    if (tokhai.phu_lucs && tokhai.phu_lucs.length > 0) {                        // check phụ lục
+      hasAttachment = true;
+    }
+  }
+
+
+  console.log('Has Attachment:', hasAttachment);
+  const { masothue } = tokhai.ca_nhan;
+  const ct22_temp = ct22;                                                                     // Lấy ct22 từ đối tượng tokhai
+  const ct22WithoutCommas = ct22_temp.replace(/,/g, '');
+
+  const ct22_number = parseFloat(ct22WithoutCommas);
+  console.log("Mã số thuế là", masothue);
+  console.log("Số thuế đã được khấu trừ là", ct22_number);
+
+
+  const tochuckekhaithue = await Tochuckekhaithue.findAll({
+    where: {
+      masothue: masothue
+    },
+    include: [{ model: Tochuc, as: 'to_chuc' }]
+  });
+
+  console.log("Danh sách các tổ chức: ", tochuckekhaithue);
+
+
+  let validationResult;                                                                      // thông tin hoàn trả thuế
+  if (tokhai.ct46 <= tokhai.ct45 && tokhai.hoan_tra_thue.tonghoantra === tokhai.ct46) {
+    validationResult = {
+      isValid: true,
+      message: '',
+    }
+  } else {
+    validationResult = {
+      isValid: false,
+      message: 'Đề nghị hoàn trả thuế không chính xác!',
+    }
+  }
+
+
+  let result = { message: '', isSuccess: false, hasAttachment: hasAttachment, validationResult };
+
+  console.log("thông tin kiểm tra  hoàn trả thuế: ", validationResult)
+
+  const filteredTochuckekhaithue = tochuckekhaithue.filter(
+    (record) => record.namkekhai === namkekhai,
+  );
+  
+  console.log("Danh sách các tổ chức: ", filteredTochuckekhaithue);
+  if (filteredTochuckekhaithue.length > 0) {
+    let tongthu = 0;
+    const organizationsInfo = [];
+  
+    filteredTochuckekhaithue.forEach((banGhi) => {  // <-- Use filteredTochuckekhaithue here
+      const khautruthue = parseFloat(banGhi.thunhaptinhthue);
+      
+    console.log("namkekhai:", namkekhai),
+    console.log("record.namkekhai:", banGhi.to_chuc.namkekhai)
+      if (!isNaN(khautruthue)) {
+        tongthu += khautruthue;
+        const organizationInfo = {
+          organizationName: banGhi.to_chuc.tentochuc,
+        };
+        console.log('Organization Name:', organizationInfo.organizationName);
+  
+        organizationsInfo.push(organizationInfo);
+        result.organizationsInfo = organizationsInfo;
+      }
+    });
+
+    console.log('Tổng khẩu trừ thuế:', tongthu);
+
+    // trường hợp tất cả thông tin kiểm tra đều hợp lệ
+    if (ct22_number === tongthu &&
+      hasAttachment === true &&
+      validationResult.isValid === true) {
+      console.log('ct22 === tongthu:', ct22_number === tongthu);
+      result = {
+        message: 'Tờ khai hợp lệ.',
+        isSuccess: true, ct22: ct22_number,
+        hasAttachment: hasAttachment,
+        validationResult
+      };
+    }
+
+    // trường hợp sai phụ lục
+    else if (ct22_number === tongthu &&
+      validationResult.isValid === true &&
+      hasAttachment === false) {
+      console.log('ct22 === tongthu:', ct22_number === tongthu);
+      result = {
+        message: 'Tờ khai thiếu phụ lục kèm theo',
+        isSuccess: false
+      };
+    }
+
+    // trường hợp sai thông tin đề nghị hoàn trả thuế: yêu cầu hoàn trả > số thuế nộp thừa
+    else if (ct22_number === tongthu &&
+      hasAttachment === true &&
+      validationResult.isValid === false) {
+      console.log('ct22 === tongthu:', ct22_number === tongthu);
+      result = {
+        message: `Thông tin đề nghị hoàn trả thuế không chính xác.<br>
+                  Số thuế đề nghị hoàn trả không được lớn hơn số thuế nộp thừa trong kỳ.
+        `,
+        isSuccess: false, ct22: ct22_number,
+        hasAttachment: hasAttachment,
+        validationResult
+      };
+    }
+
+    else if (ct22_number !== tongthu &&
+      hasAttachment === true &&
+      validationResult.isValid === false) {
+      console.log('ct22 === tongthu:', ct22_number === tongthu);
+      result = {
+        message: `Thông tin đề nghị hoàn trả thuế không chính xác.<br>
+                  Số thuế đề nghị hoàn trả không được lớn hơn số thuế nộp thừa trong kỳ.<br>
+                  Thu nhập chịu thuế không chính xác. <br>
+                  NNT có thu nhập từ các đơn vị: ${result.organizationsInfo.map(org => org.organizationName).join(', ')}</li>`,
+
+        isSuccess: false, ct22: ct22_number,
+        hasAttachment: hasAttachment,
+        validationResult
+      };
+    }
+
+    else {
+      console.log('ct22 !== tongthu:', ct22_number === tongthu);
+      result = {
+        message: `Tổng thu nhập chịu thuế không đúng.
+                <br>Tổng thu nhập chịu thuế được ghi nhận là: ${tongthu} vnđ
+                <br>NNT có thu nhập từ các tổ chức: 
+                ${result.organizationsInfo.map(org => org.organizationName).join(', ')}</li>`,
+        isSuccess: false
+      };
+    }
+  } else {
+    result = { message: 'Không tìm thấy mã số thuế phù hợp', isSuccess: false };
+  }
+
+  checkTokhaiResult = result;
+  console.log(result);
+  res.json(result);
+
+}
+
 
 const duyettokhai = async (req, res) => {
   try {
@@ -750,5 +952,5 @@ module.exports = {
   duyettokhai, getTokhaithue, tokhaikhongduocduyet,
   checkTokhai, getListAllTongThuNhap, getListThuNhap, getPhuluc, downloadPhuluc,
   moKyQuyetToan, moKyQuyetToanTochuc, listOpenKyQuyetToan, deleteQTT,
-  findOneQTT, updateQTT
+  findOneQTT, updateQTT, statusQTT
 }

@@ -22,7 +22,7 @@
         <!-- Form for editing user details -->
         <form id="editUserForm">
           <input type="hidden" id="editUserId" name="id">
-          <div class="row">
+          <div class="row mt-3">
             <div class="row">
               <div class="col">
                 <div class="form-group">
@@ -38,7 +38,7 @@
               </div>
             </div>
 
-            <div class="row">
+            <div class="row mt-3">
               <div class="col">
                 <div class="form-group">
                   <label for="fullname">Email</label>
@@ -53,7 +53,7 @@
               </div>
             </div>
 
-            <div class="row">
+            <div class="row mt-3">
               <div class="col">
                 <div class="form-group">
                   <label for="cccd">Căn cước công dân</label>
@@ -69,16 +69,23 @@
               </div>
             </div>
 
-            <div class="row">
+            <div class="row mt-3">
               <div class="col">
                 <div class="form-group">
                   <label for="thunhaptinhthue">Tổng thu nhập</label>
                   <input type="text" class="form-control" id="thunhaptinhthue" name="thunhaptinhthue">
                 </div>
               </div>
-              <div class="col"></div>
+              <div class="col">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="thunhaptinhthue">Năm kê khai</label>
+                    <input type="text" class="form-control" id="namkekhai" name="namkekhai">
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="row">
+            <div class="row mt-3" >
               <div class="col">
                 <div class="input-group">
                   <label for="" style="margin-right: 15px;"> Ghi chú</label>
@@ -89,10 +96,7 @@
           </div>
           <input style="display: none;" id="nldId" name="nldId">
           <!-- Trong phần modal-body -->
-          <div id="updateMessage" style="display: none; margin-right: 25px; margin-top: 25px;" class="alert alert-success" role="alert">
-            Cập nhật thông tin thành công!
-          </div>
-
+  
           <br><br>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">Close</button>

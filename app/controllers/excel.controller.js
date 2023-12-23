@@ -98,7 +98,7 @@ const upload = async (req, res) => {
 };
 */
 
-
+/*
 const upload = async (req, res) => {
   try {
     if (req.file == undefined) {
@@ -120,7 +120,8 @@ const upload = async (req, res) => {
           dienthoai: row[5],
           diachi: row[6],
           thunhaptinhthue: row[8],
-          ghichu: row[9],
+          namkekhai: row[9],
+          ghichu: row[10],
           toChucId: toChucId,
         };
         excelupload.push(excelfile);
@@ -142,10 +143,72 @@ const upload = async (req, res) => {
     });
   }
 };
+*/
+
+const upload = async (req, res) => {
+  try {
+    if (req.file == undefined) {
+      return res.status(400).send("Vui lòng chọn file excel để upload!");
+    }
+    let path = __basedir + "/uploads/excel/" + req.file.filename;
+    readXlsxFile(path).then(async (rows) => {
+      rows.shift();
+      let excelupload = [];
+      const toChucId = req.session.user.toChucId;
+      console.log("Tổ chức có ID là: ", toChucId);
+
+      for (const row of rows) {
+        let excelfile = {
+          hoten: row[1],
+          cccd: row[3],
+          masothue: row[2],
+          email: row[4],
+          dienthoai: row[5],
+          diachi: row[6],
+          tongthunhap: row[8],
+          thunhaptinhthue: row[7],
+          namkekhai: row[9],
+          ghichu: row[10],
+          toChucId: toChucId,
+        };
+
+        const existingRecord = await Excelupload.findOne({
+          where: {
+            masothue: excelfile.masothue,
+            namkekhai: excelfile.namkekhai,
+            toChucId: toChucId,
+          },
+        });
+
+        if (existingRecord) {
+          await Excelupload.update(excelfile, {
+            where: {
+              masothue: excelfile.masothue,
+              namkekhai: excelfile.namkekhai,
+              toChucId: toChucId,
+            },
+          });
+        } else {
+          excelupload.push(excelfile);
+        }
+      }
+
+      await Excelupload.bulkCreate(excelupload);
+
+      res.status(200).send({ message: "Upload file thành công!" });
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: "Không thể upload file: " + req.file.originalname,
+    });
+  }
+};
+
 
 const getAllExcelFile = async (req, res) => {
 try {
-  const data = await paginate(Excelupload, {}, req.query.page || 1, 10, [
+  const data = await paginate(Excelupload, {}, req.query.page || 1, 25, [
     {
       model: Tochuc, as: 'to_chuc'
     }

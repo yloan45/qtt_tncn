@@ -31,7 +31,7 @@
       </div>
       <div class="container-fluid">
         <div style="text-align: right;">
-          <table class="table table-bordered mt-3 table-striped">
+          <table class="table table-bordered mt-3">
             <tr style="text-align: center; background-color: #2886d3; color: white;">
               <th style="font-weight: bold;">
                 STT
@@ -40,6 +40,7 @@
               <th style="font-weight: bold;">Thời gian Cá nhân kết thúc</th>
               <th style="font-weight: bold;">Thời gian Tổ chức bắt đầu</th>
               <th style="font-weight: bold;">Thời gian Tổ chức kết thúc</th>
+              <th style="font-weight: bold;">Trạng thái</th>
               <th style="font-weight: bold;">Người tạo</th>
               <th style="font-weight: bold;">Ngày tạo</th>
               <th style="font-weight: bold;">Cập nhật lần cuối</th>
@@ -53,6 +54,15 @@
               <td><input type="date" name="" value="<%= dateOpen.ngaydong %>" readonly style="text-align: center;border: none;background-color: white; font-size: 14px;"></td>
               <td><input type="date" name="" value="<%= dateOpen.ngaymotochuc %>" readonly style="text-align: center;border: none;background-color: white; font-size: 14px;"></td>
               <td><input type="date" name="" value="<%= dateOpen.ngaydongtochuc %>" readonly style="text-align: center;border: none;background-color: white; font-size: 14px;"></td>
+              
+              <td>
+                <% if (dateOpen.trangthai) { %>
+                  Đang mở
+                <% } else { %>
+                  Đã đóng
+                <% } %>
+              </td>
+              
               <td><input value="<%= admin.username %>" readonly style="text-align: center;border: none;background-color: white; font-size: 14px;"></td>
               <td><%= dateOpen.createdAt.toLocaleString() %></td>
               <td><%= dateOpen.updatedAt.toLocaleString() %></td>

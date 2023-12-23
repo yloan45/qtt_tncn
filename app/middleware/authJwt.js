@@ -70,9 +70,7 @@ isAdmin = async (req, res, next) => {
         return next();
       }
     }
-    return res.status(403).send({
-      message: "Require Admin Role!",
-    });
+    return res.status(403).send(`<script>alert('Yêu cầu quyền truy cập Admin');  window.location.href = '/api/auth/signout';</script>`);
   } catch (error) {
     return res.status(500).send({
       message: "Unable to validate User role!",
@@ -90,10 +88,7 @@ isTochuc = async (req, res, next) => {
         return next();
       }
     }
-
-    return res.status(403).send({
-      message: "Require Admin Tochuc!",
-    });
+    return res.status(403).send(`<script>alert('Yêu cầu quyền tổ chức');  window.location.href = '/api/auth/signout';</script>`);
   } catch (error) {
     return res.status(500).send({
       message: "Unable to validate User role!",
@@ -101,16 +96,34 @@ isTochuc = async (req, res, next) => {
   }
 };
 
+
+isCanhan = async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.userId);
+    const roles = await user.getRoles();
+
+    for (let i = 0; i < roles.length; i++) {
+      if (roles[i].name === "canhan") {
+        return next();
+      }
+    }
+    return res.status(403).send(`<script>alert('Yêu cầu quyền truy cập cá nhân');  window.location.href = '/api/auth/signout';</script>`);
+  } catch (error) {
+    return res.status(500).send({
+      message: "Unable to validate User role!",
+    });
+  }
+};
+
+
+
 function checkUserRole(role) {
   return (req, res, next) => {
     const user = req.session.user;
-    // Kiểm tra quyền của người dùng
     if (user && user.authorities.includes(role)) {
-      // Người dùng có quyền, tiếp tục xử lý
       next();
     } else {
-      // Người dùng không có quyền, đưa họ đến trang lỗi hoặc trang yêu cầu quyền
-      res.redirect('/error'); // Hoặc trang lỗi
+      res.redirect('/error');
     }
   };
 }
@@ -120,6 +133,6 @@ const authJwt = {
   verifyTokenCanhan,
   verifyTokenTochuc,
   isAdmin,
-  isTochuc
+  isTochuc, isCanhan
 };
 module.exports = authJwt;

@@ -50,7 +50,7 @@ exports.registerTochucStep1 = async (req, res) => {
 
 exports.registerTochucStep2 = async (req, res) => {
   try {
-    const { tentochuc, masothue, email,linhvuc, phone, tinh_tp, cqqtthue } = req.body;
+    const { tentochuc, masothue, email, linhvuc, phone, tinh_tp, cqqtthue } = req.body;
     req.session.user = null;
     const user = {
       tentochuc: tentochuc,
@@ -131,6 +131,9 @@ exports.getToChucTreHanData = async () => {
     const ngaydong = kyquyettoanForCurrentYear.ngaydongtochuc;
 
     const tochucTreHan = await Tochuc.findAll({
+      where: {
+        status: null
+      },
       include: [
         {
           model: ExcelUpload,
@@ -138,7 +141,7 @@ exports.getToChucTreHanData = async () => {
           required: false,
           where: {
             toChucId: {
-              [Op.eq]: db.sequelize.literal('`to_chuc`.`id`'), 
+              [Op.eq]: db.sequelize.literal('`to_chuc`.`id`'),
             },
             createdAt: {
               [Op.between]: [ngaymo, ngaydong],
@@ -165,7 +168,7 @@ exports.getToChucTreHanData = async () => {
         const uploadDate = new Date(upload.createdAt);
         return uploadDate >= new Date(ngaymo) && uploadDate <= new Date(ngaydong);
       });
-    
+
       if (uploadsInRange) {
         danhSachTreHan.push({
           tochuc,
@@ -178,9 +181,9 @@ exports.getToChucTreHanData = async () => {
         });
       }
     });
-    
+
     console.log('danh sách tổ chức trễ hạn là:', danhSachTreHan);
-    
+
     return danhSachTreHan;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -204,7 +207,7 @@ exports.sendEmailsToChuc = async (data) => {
     const overdueOrganizations = data.filter(item => item.trangthai === 'Trễ hạn');
 
     for (const organization of overdueOrganizations) {
-      const email = organization.tochuc.email; 
+      const email = organization.tochuc.email;
       const subject = 'Thông báo: Qúa hạn quyết toán thuế';
       const text = `Xin chào ${organization.tochuc.tentochuc},\n\n Bạn đã quá hạn quyết toán thuế. Vui lòng đến cơ quan quản lý thuế để giải quyết thủ tục quá hạn quyết toán thuế.`;
 
@@ -248,6 +251,7 @@ exports.deleteToChuc = (req, res) => {
 
 exports.getAllToChuc = (req, res) => {
   Tochuc.findAll({
+    where: { status: null },
     include: [{
       model: Diachi, as: 'dia_chis'
     }]
@@ -329,7 +333,7 @@ exports.getTochuc = async (req, res) => {
     include: {
       model: Tochuc,
       as: 'to_chuc',
-      include: [{model: Diachi, as: 'dia_chis'}]
+      include: [{ model: Diachi, as: 'dia_chis' }]
     }
   });
   if (user) {
@@ -348,14 +352,25 @@ exports.updateToChuc = async (req, res) => {
     include: [{ model: Diachi, as: 'dia_chis' }]
   });
   try {
-    const [num] = await Tochuc.update(req.body, {
-      where: { id: id },
+    const { tinh_tp, quan_huyen, xa_phuong, tentochuc, email, phone, cqqtthue, nhanvien, daidien } = req.body;
+    const diachi = xa_phuong + quan_huyen + tinh_tp;
+    const [num] = await Tochuc.update({
+      tentochuc: tentochuc,
+      daidien: daidien,
+      nhanvien: nhanvien,
+      cqqtthue: cqqtthue,
+      phone: phone,
+      email: email,
+      address: diachi
+    },
+      {
+        where: { id: id },
 
-    });
+      });
 
-    const [address] = await Diachi.update(req.body, {where: {toChucId: user.id}});
+    const [address] = await Diachi.update(req.body, { where: { toChucId: user.id } });
 
-    if (num > 0 ) {
+    if (num > 0) {
       req.flash('success', 'Cập nhật thông tin thành công!');
       return res.send(`<script>alert('Cập nhật thông tin thành công!'); window.location.href = '/tochuc/cap-nhat-thong-tin';</script>`);
     } else {
@@ -463,4 +478,42 @@ exports.forgotPasswordToChucStep2 = async (req, res) => {
     req.flash('error', 'Mã OTP không đúng hoặc đã hết hạn.');
     return res.redirect("/quen-mat-khau");
   }
+};
+
+
+exports.toChucChangePassword = async (req, res) => {
+  const id = req.body.id;
+  const user = await User.findByPk(id);
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+  if (!user || !oldPassword || !bcrypt.compareSync(oldPassword, user.password)) {
+    req.flash('oldPasswordError', 'Mật khẩu không đúng');
+    return res.redirect('/to-chuc-change-password');
+  }
+  console.log('Provided Old Password:', oldPassword);
+  console.log('Stored Hashed Password:', user.password);
+  console.log('Provided new Password:', newPassword);
+  console.log('Provided confirm  Password:', confirmPassword);
+  if (
+    newPassword.length < 6 ||
+    !/[A-Z]/.test(newPassword) ||
+    !/[!@#$%^&*()-=_+]/.test(newPassword)
+  ) {
+    req.flash(
+      'newPasswordError',
+      'Mật khẩu không đúng định dạng. Mật khẩu phải có ít nhất 6 ký tự, 1 ký tự in hoa và 1 ký tự đặt biệt'
+    );
+    return res.redirect('/to-chuc-change-password');
+  }
+
+  if (!(confirmPassword === newPassword)) {
+    req.flash('confirmPasswordError', 'Xác nhận mật khẩu không trùng khớp');
+    return res.redirect('/to-chuc-change-password');
+  }
+
+  const hashedPassword = bcrypt.hashSync(newPassword, 8);
+  await User.update({ password: hashedPassword }, { where: { id: id } });
+
+  req.session.token = null;
+  req.session.user = null;
+  return res.redirect("/")
 };

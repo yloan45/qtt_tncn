@@ -13,6 +13,8 @@ document.querySelectorAll('.edit-user').forEach(function (editLink) {
     const thuenop = modal.querySelector('#thuenop');
     const hoantrathue = modal.querySelector('#hoantrathue');
     const thuethua = modal.querySelector('#thuethua');
+    const ct34 = modal.querySelector('#ct34');
+    const namkekhai = modal.querySelector('#namkekhai');
     const tokhaiIdInput = modal.querySelector('#tokhaiId');
     tokhaiIdInput.value = id; // Đặt giá trị của tokhaiId trong modal
 
@@ -30,6 +32,8 @@ document.querySelectorAll('.edit-user').forEach(function (editLink) {
           thunhapchiuthue.value = data.tokhaithue.ct22;
           khautruthue.value = data.tokhaithue.ct36+ " VNĐ";
           thuenop.value = data.tokhaithue.ct44  + " VNĐ";
+          ct34.value = data.tokhaithue.ct34 + " VN";
+          namkekhai.value = data.tokhaithue.namkekhai;
           hoantrathue.value = data.tokhaithue.ct46 + " VNĐ";
           thuethua.value = data.tokhaithue.ct45+ " VNĐ";
         }

@@ -32,22 +32,23 @@
             <input type="text" name="id" value="<%= user.to_chuc.id%>" style="display: none;">
             <div class="card-body">
               <div class="home">
-                <div class="row">
-                  <div class="col mt-3">
-                    <p>Họ và tên: </p>
-                  </div>
-                  <div class="col-9 ">
-                    <input type="text" name="tentochuc" class="form-control mt-3" value=" <%= user.to_chuc.tentochuc %>">
-                  </div>
-                </div>
 
                 <div class="row">
                   <div class="col mt-3">
                     <p>Mã số thuế </p>
                   </div>
                   <div class="col-9 ">
-                    <input type="text" name="masothue" class="form-control mt-3" value="  <%= user.to_chuc.masothue %>" readonly>
+                    <input type="text" name="masothue" class="form-control mt-3" style="background-color: white;" value="<%= user.to_chuc.masothue %>" readonly>
 
+                  </div>
+                </div> 
+
+                <div class="row">
+                  <div class="col mt-3">
+                    <p>Họ và tên: </p>
+                  </div>
+                  <div class="col-9 ">
+                    <input type="text" name="tentochuc" class="form-control mt-3" value="<%= user.to_chuc.tentochuc %>">
                   </div>
                 </div>
 
@@ -56,7 +57,7 @@
                     <p>Email: </p>
                   </div>
                   <div class="col-9 ">
-                    <input type="text" name="email" class="form-control mt-3" value="  <%= user.to_chuc.email %>" readonly>
+                    <input type="text" name="email" class="form-control mt-3"  value="<%= user.to_chuc.email %>">
                   </div>
                 </div>
 
@@ -65,16 +66,16 @@
                     <p>Điện thoại: </p>
                   </div>
                   <div class="col-9">
-                    <input type="text" name="phone" class="form-control mt-3" value="  <%= user.to_chuc.phone %>">
+                    <input type="text" name="phone" class="form-control mt-3" value="<%= user.to_chuc.phone %>">
                   </div>
                 </div>
 
-                <div class="row">
+                <div class="row" style="display: none;">
                   <div class="col  mt-3">
                     <p>Địa chỉ: </p>
                   </div>
                   <div class="col-9">
-                    <input type="text" name="address" class="form-control mt-3" value="  <%= user.to_chuc.address %>">
+                    <input type="text" name="address" class="form-control mt-3" value="<%= user.to_chuc.address %>">
                   </div>
                 </div>
                 <div class="row">
@@ -82,7 +83,7 @@
                     <p>Cơ quan quản lý thuế </p>
                   </div>
                   <div class="col-9">
-                    <input type="text" name="cqqtthue" class="form-control mt-3" value="  <%= user.to_chuc.cqqtthue %>">
+                    <input type="text" name="cqqtthue" class="form-control mt-3" value="<%= user.to_chuc.cqqtthue %>">
                   </div>
                 </div>
 
@@ -91,7 +92,7 @@
                     <p>Số lượng nhân viên</p>
                   </div>
                   <div class="col-9">
-                    <input type="text" name="nhanvien" class="form-control mt-3" value="  <%= user.to_chuc.nhanvien %>">
+                    <input type="number" name="nhanvien" min="0" class="form-control mt-3" value="<%= user.to_chuc.nhanvien %>">
                   </div>
                 </div>
 

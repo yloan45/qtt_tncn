@@ -44,7 +44,7 @@ exports.CaNhanSignup = async (req, res) => {
       masothue: masothue,
       cccd: req.body.cccd,
       phone: req.body.phone,
-      cqqtthue: 'Cục thuế ' + req.body.tinh_tp,
+      cqqtthue: 'Cục thuế ' + ' ' + req.body.tinh_tp,
       phuthuoc: req.body.phuthuoc,
       fullname: req.body.fullname,
     });
@@ -87,9 +87,11 @@ exports.ToChucSignup = async (req, res) => {
       email: req.body.email,
       tentochuc: req.body.tentochuc,
       phone: req.body.phone,
+      address:  req.body.xa_phuong + ', ' + req.body.quan_huyen + ', ' + req.body.tinh_tp,
       cqqtthue: 'Cục thuế ' + req.body.tinh_tp,
       nhanvien: req.body.nhanvien,
       daidien: req.body.daidien,
+      linhvuc: req.body.linhvuc,
     });
 
     const diachi = await Diachi.create({
@@ -108,7 +110,7 @@ exports.ToChucSignup = async (req, res) => {
     const result = user.setRoles([2]);
     if (result) {
       mailer.sendMail(tochuc.email, "Tạo tài khoản thành công",
-        `Xin chào ${tochuc.hoten} <br>
+        `Xin chào ${tochuc.tentochuc} <br>
       Bạn vừa được tạo tài khoản Quyết toán thuế TNCN thành công! <br>
       Tài khoản đăng nhập hệ thống của bạn:<br>
       - username: ${tochuc.masothue} <br>
@@ -364,8 +366,8 @@ exports.register = async (req, res) => {
     });
 
     req.flash('success', 'Thông tin đăng ký cấp Mã số thuế của bạn đã được ghi nhập. Vui lòng chờ phản hồi từ Cơ Quan Thuế');
-    return res.redirect('/');
-
+   // return res.redirect('/');
+   return res.send(`<script>alert('Thông tin đăng ký đã được ghi nhận! Kết quả xét duyệt sẽ được gửi qua email sau vài ngày làm việc.'); window.location.href = '/';</script>`);
   } catch (error) {
     console.log(error);
     req.flash('error', 'Đã xảy ra lỗi trong quá trình đăng ký.');
@@ -388,6 +390,7 @@ exports.createAccount = async (req, res) => {
           {
             [Op.or]: [
               { masothue: canhan.masothue },
+              { cccd: canhan.cccd },
               { email: canhan.email },
               { phone: canhan.phone }
             ]
@@ -396,13 +399,14 @@ exports.createAccount = async (req, res) => {
         ]
       }
     });
-
+    console.log('Existing Canhan Pending Query:', existingCanhanPending.toString());
     const existingCanhan = await Canhan.findOne({
       where: {
         [Op.and]: [
           {
             [Op.or]: [
               { masothue: canhan.masothue },
+              { cccd: canhan.cccd },
               { email: canhan.email },
               { phone: canhan.phone }
             ]
@@ -522,8 +526,9 @@ exports.deleteRegisterMST = async (req, res) => {
       .then(function (rowDeleted) {
         if (rowDeleted == 1) {
           console.log("deleted!!!");
-
-          res.redirect('/list-dang-ky-cap-mst');
+         // return res.send(`<script>alert('window.location.href = '/';</script>`);
+ 
+            res.redirect('/list-dang-ky-cap-mst');
         }
       })
   } catch (error) {

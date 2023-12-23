@@ -61,8 +61,7 @@ exports.getAllUser = async (req, res) => {
     const canhan = await paginate(
       Canhan,
       { status: null },                         // status = null => người dùng đã được xác nhận
-      req.query.page || 1,
-      5,
+      req.query.page || 1, 25,
       [
         { model: Diachi, as: 'dia_chi' },
         { model: User, as: 'user' },
@@ -162,7 +161,7 @@ exports.updateCanhan = async (req, res) => {
 
     if (num > 0 && address > 0) {
       req.flash('success', 'Cập nhật thông tin thành công!');
-      return res.redirect('/edit-profile?=success');
+      return res.redirect('/canhan');
     } else {
       req.flash('error', 'Không thể cập nhật người dùng');
       return res.redirect('/edit-profile?=false');

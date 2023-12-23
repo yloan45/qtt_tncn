@@ -32,11 +32,16 @@
             <th>Địa chỉ</th>
             <th>Email</th>
             <th>Điện thoại</th>
-            <th>Thu nhập tính thuế <br> (VNĐ)</th>
+            <th>Thu nhập trong năm<br> (VNĐ)</th>
+            <th>Thu nhập thực nhận được<br> (VNĐ)</th>
+            <th>Năm quyết toán</th>
             <th>Cập nhật lần cuối</th>
             <th>Hành động</th>
           </thead>
           <tbody><br>
+            <tr id="no-result-row" style="display: none;">
+              <td colspan="12">Không tìm thấy thông tin</td>
+            </tr>
             <a href="#" class="btn btn-success" style="color: white;" id="importBtn">Nhập</a>
             <input type="file" id="fileInput" style="display:none;" name="file">&nbsp;
             <button id="deleteButton" class="btn btn-danger">Xóa</button>
@@ -70,7 +75,10 @@
                 <%= data.dienthoai %>
               </td>
               <td><%= parseFloat(data.thunhaptinhthue).toLocaleString() %></td>
+              <td><%= parseFloat(data.tongthunhap).toLocaleString() %></td>
 
+
+              <td><%= data.namkekhai %></td>
               <td><%= data.updatedAt.toLocaleString() %></td>
               <td>
                 <a href="#" class="edit-user" data-toggle="modal" data-target="#editModal" data-id="<%= data.id %>">
@@ -83,45 +91,95 @@
             </tr>
 
             <% }) %>
+
+            <div class="form-group" style="margin-top: 1pc;">
+
+              <label for="yearFilter">Lọc theo năm:</label>
+              <select class="form-select" style="width: 250px;" id="yearFilter" onchange="filterByYear()">
+                <option value="">Tất cả</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+                <option value="2020">2020</option>
+              </select>
+            </div>
             <h5 style="font-size: 16px; text-align: right; margin-right: 15px;">Tổng cộng: <%= totalIndex %> </h5>
             <% } else { %>
-            <td colspan="10">Không có dữ liệu hiển thị.</td>
+            <td colspan="12" style="text-align: center;">Không có dữ liệu hiển thị.</td>
             <% } %>
           </tbody>
         </table>
-
         <%- include('update_modal.ejs') %>
 
         <br><br><br>
         <!--PHẦN NỘI DUNG-->
       </div>
     </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const dataYears = Array.from(new Set(data.map(item => item.namkekhai)));
+        const yearFilter = document.getElementById('yearFilter');
+        for (let i = 0; i < Math.min(5, dataYears.length); i++) {
+          const option = document.createElement('option');
+          option.value = dataYears[i];
+          option.textContent = dataYears[i];
+          yearFilter.appendChild(option);
+        }
+        filterByYear();
+      });
+
+      function filterByYear() {
+        const selectedYear = document.getElementById('yearFilter').value;
+        const rows = document.querySelectorAll('#data-table tbody tr');
+
+        rows.forEach(row => {
+          const yearColumn = row.querySelector('td:nth-child(11)');
+          const yearValue = yearColumn ? yearColumn.textContent.trim() : '';
+          console.log(`Row Year: ${yearValue}, Selected Year: ${selectedYear}`);
+
+          if (!selectedYear || yearValue === selectedYear) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      }
+    </script>
+
+
     <footer>
       <%- include('../partials/footer') %>
     </footer>
     <script>
       const searchInput = document.getElementById('search-input');
       const dataTable = document.getElementById('data-table');
+      const noResultRow = document.getElementById('no-result-row');
+
       searchInput.addEventListener('input', function() {
         const searchTerm = searchInput.value.toLowerCase();
         const rows = dataTable.querySelectorAll('tbody tr');
+        let found = false;
 
         rows.forEach(row => {
           const columns = row.querySelectorAll('td');
-          let found = false;
+          let rowFound = false;
 
           columns.forEach(column => {
             if (column.textContent.toLowerCase().includes(searchTerm)) {
+              rowFound = true;
               found = true;
             }
           });
 
-          if (found) {
+          if (rowFound) {
             row.style.display = '';
           } else {
             row.style.display = 'none';
           }
         });
+
+        noResultRow.style.display = found ? 'none' : '';
       });
     </script>
 </body>
@@ -139,6 +197,7 @@
       const email = modal.querySelector('#email');
       const dienthoai = modal.querySelector('#dienthoai');
       const thunhaptinhthue = modal.querySelector('#thunhaptinhthue');
+      const namkekhai = modal.querySelector('#namkekhai');
       const ghichu = modal.querySelector('#ghichu');
       const nldIdInput = modal.querySelector('#nldId');
       nldIdInput.value = id;
@@ -151,6 +210,7 @@
             modalTitle.textContent = `Duyệt khai quyêt toán thuế thu nhập cá nhân mẫu 02/QTT-TNCN - Tờ khai số:${data.excelupload.id}`;
             editUserId.value = data.excelupload.id;
             thunhaptinhthue.value = data.excelupload.thunhaptinhthue;
+            namkekhai.value = data.excelupload.namkekhai;
             ghichu.value = data.excelupload.ghichu;
             hoten.value = data.excelupload.hoten;
             masothue.value = data.excelupload.masothue;
@@ -167,6 +227,7 @@
     // Lấy dữ liệu từ các trường form
     var editUserId = document.getElementById('nldId').value;
     var thunhaptinhthue = document.getElementById('thunhaptinhthue').value;
+    var namkekhai = document.getElementById('namkekhai').value;
     var ghichu = document.getElementById('ghichu').value;
     var hoten = document.getElementById('hoten').value;
     var masothue = document.getElementById('masothue').value;
@@ -179,6 +240,7 @@
     var updateData = {
       id: editUserId,
       thunhaptinhthue: thunhaptinhthue,
+      namkekhai: namkekhai,
       ghichu: ghichu,
       hoten: hoten,
       masothue: masothue,
@@ -197,7 +259,8 @@
       })
       .then(response => response.json())
       .then(data => {
-        document.getElementById('updateMessage').style.display = 'block';
+        alert("Cập nhật thông tin thành công!");
+        window.location.href = '/tochuc/upload';
       })
       .catch(error => {
         console.error('Lỗi khi cập nhật:', error);
@@ -283,121 +346,121 @@
   });
 
   document.getElementById('fileInput').addEventListener('change', function() {
-  var fileInput = document.getElementById('fileInput');
-  var file = fileInput.files[0];
+    var fileInput = document.getElementById('fileInput');
+    var file = fileInput.files[0];
 
-  if (!file) {
+    if (!file) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi',
+        text: 'Vui lòng chọn file Excel để upload!',
+      });
+      return;
+    }
+
     Swal.fire({
-      icon: 'error',
-      title: 'Lỗi',
-      text: 'Vui lòng chọn file Excel để upload!',
+      title: 'Xác nhận',
+      text: 'Bạn có chắc chắn muốn upload file đã chọn?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Đồng ý',
+      cancelButtonText: 'Hủy bỏ'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        var formData = new FormData();
+        formData.append('file', file);
+
+        fetch('/upload', {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.message) {
+              // Success message
+              Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: data.message,
+              }).then(() => {
+                window.location.reload();
+              });
+            } else {
+              // Error message
+              Swal.fire({
+                icon: 'warning',
+                title: 'Thông báo',
+                text: data.error || 'Có lỗi xảy ra!',
+              });
+            }
+          })
+          .catch(error => {
+            console.error('Error during import:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Lỗi',
+              text: 'Vui lòng chọn file excel để upload',
+            });
+          });
+      }
     });
-    return;
+  });
+
+  function confirmDelete(id) {
+    Swal.fire({
+      title: 'Xác nhận xóa',
+      text: 'Bạn có chắc chắn muốn xóa?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Đồng ý',
+      cancelButtonText: 'Hủy bỏ'
+    }).then((result) => {
+      if (result.isConfirmed) {
+
+        // Assuming you have an API endpoint for deletion
+        fetch(`/delete-nv/${id}`, {
+            method: 'GET'
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.error && data.error === "Bạn đã quá hạn kê khai quyết toán thuế.") {
+              // If it's the specific error message, show a custom error SweetAlert
+              Swal.fire({
+                icon: 'error',
+                title: 'Thông báo',
+                text: "Thời gian chỉnh đã kết thúc."
+              });
+            } else if (data.success) {
+
+              Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: 'Đã xóa thành công!'
+              }).then(() => {
+                window.location.reload();
+              });
+            } else {
+              // If deletion fails, show an error SweetAlert
+              Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: data.error || 'Không thể xóa.'
+              });
+            }
+          })
+          .catch(error => {
+            // window.location.href = `/delete-nv/${id}`;
+            window.location.reload();
+          });
+      }
+    });
   }
-
-  Swal.fire({
-    title: 'Xác nhận',
-    text: 'Bạn có chắc chắn muốn upload file đã chọn?',
-    icon: 'question',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Đồng ý',
-    cancelButtonText: 'Hủy bỏ'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      var formData = new FormData();
-      formData.append('file', file);
-
-      fetch('/upload', {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.message) {
-          // Success message
-          Swal.fire({
-            icon: 'success',
-            title: 'Thành công!',
-            text: data.message,
-          }).then(() => {
-            window.location.reload();
-          });
-        } else {
-          // Error message
-          Swal.fire({
-            icon: 'warning',
-            title: 'Thông báo',
-            text: data.error || 'Có lỗi xảy ra!',
-          });
-        }
-      })
-      .catch(error => {
-        console.error('Error during import:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Lỗi',
-          text: 'Vui lòng chọn file excel để upload',
-        });
-      });
-    }
-  });
-});
-
-function confirmDelete(id) {
-  Swal.fire({
-    title: 'Xác nhận xóa',
-    text: 'Bạn có chắc chắn muốn xóa?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Đồng ý',
-    cancelButtonText: 'Hủy bỏ'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      
-      // Assuming you have an API endpoint for deletion
-      fetch(`/delete-nv/${id}`, {
-        method: 'GET'
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.error && data.error === "Bạn đã quá hạn kê khai quyết toán thuế.") {
-          // If it's the specific error message, show a custom error SweetAlert
-          Swal.fire({
-            icon: 'error',
-            title: 'Thông báo',
-            text: "Thời gian chỉnh đã kết thúc."
-          });
-        } else if (data.success) {
-         
-          Swal.fire({
-            icon: 'success',
-            title: 'Thành công!',
-            text: 'Đã xóa thành công!'
-          }).then(() => {
-            window.location.reload();
-          });
-        } else {
-          // If deletion fails, show an error SweetAlert
-          Swal.fire({
-            icon: 'error',
-            title: 'Lỗi',
-            text: data.error || 'Không thể xóa.'
-          });
-        }
-      })
-      .catch(error => {
-       // window.location.href = `/delete-nv/${id}`;
-        window.location.reload();
-      });
-    }
-  });
-}
-
 </script>
+
 <script src="js/index.js"></script>
 
 </html>

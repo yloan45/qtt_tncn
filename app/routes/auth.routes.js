@@ -3,6 +3,7 @@ const controller = require("../controllers/auth.controller");
 const { TCsignup } = require("../controllers/signup.controller");
 const { verifyToken } = require("../middleware/authJwt");
 const { changePassword } = require("../controllers/canhan.controller");
+const { toChucChangePassword } = require("../controllers/tochuc.controller");
 
 module.exports = function (app) {
 app.use(function (req, res, next) {
@@ -48,7 +49,7 @@ app.get("/change-password", (req, res) => {
 
 app.post("/change-password/:id", changePassword);
 
-
+app.post("/to-chuc-doi-mat-khau/:id", toChucChangePassword);
 app.get("/to-chuc-change-password", (req, res) => {
   res.render('tochuc/changePassword');
 });

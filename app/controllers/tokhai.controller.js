@@ -32,6 +32,7 @@ const createTokhai = async (req, res) => {
     tokhai: req.body.tokhai,
     stk: req.body.stk,
     nganhang: req.body.nganhang,
+    cqqtthue: req.body.cqqtthue,
     cucthue: req.body.cucthue,
     chicucthue: req.body.chicucthue,
     tuthang: req.body.tungay,
@@ -272,7 +273,7 @@ async function createPhuluc(req, res) {
     res.status(500).send(error.message);
   }
 }
-
+/*
 const tracuuTokhai = async (req, res, next) => {
   try {
     const user = req.session.user;
@@ -316,7 +317,62 @@ const tracuuTokhai = async (req, res, next) => {
     res.status(500).send('Internal Server Error');
   }
 };
+*/
 
+
+const tracuuTokhai = async (req, res, next) => {
+  try {
+    const user = req.session.user;
+
+    const { trangthaixuly, startDate, endDate } = req.body;
+    const startDatetime = new Date(startDate + 'T00:00:00Z');
+    const endDatetime = new Date(endDate + 'T23:59:59Z');
+
+    let statusCondition = {}; 
+
+    if (trangthaixuly && trangthaixuly.toLowerCase() !== 'all') {
+      statusCondition = {
+        [Op.and]: [
+          {
+            '$trang_thai_xu_li.tentrangthai$': trangthaixuly
+          }
+        ]
+      };
+    }
+
+    const searchResult = await Tokhai.findAll({
+      where: {
+        caNhanId: user.caNhanId,
+        createdAt: {
+          [Op.between]: [startDatetime, endDatetime],
+        },
+      },
+      include: [
+        {
+          model: Trangthai, as: 'trang_thai_xu_li',
+          where: statusCondition 
+        },
+        {
+          model: Loaitokhai, as: 'loai_to_khai'
+        },
+        {
+          model: Canhan, as: 'ca_nhan'
+        },
+        {
+          model: Hoantrathue, as: 'hoan_tra_thue'
+        }
+      ]
+    });
+
+    console.log('Kết quả tra cứu là: ', searchResult);
+
+    res.locals.searchResult = searchResult;
+    next();
+
+  } catch (error) {
+    res.status(500).send('Internal Server Error');
+  }
+};
 
 const hoanTraThue = async (id) => {
   try {
@@ -644,11 +700,7 @@ const deleteTokhai = async (req, res) => {
     const tokhai = await Tokhai.findOne({
       where: {
         id: id,
-      },
-      include: [{
-        model: Trangthai, 
-        as: 'trang_thai_xu_li',
-      }]
+      }
     })
 
     if(tokhai.trangThaiXuLiId === 1){
@@ -657,9 +709,9 @@ const deleteTokhai = async (req, res) => {
           id: id,
         }
       });
-      return res.send(`<script>alert('Xóa thành công!'); window.history.back();</script>`);
+      return res.redirect('back');
     } else {
-      return res.send(`<script>alert('Xóa không thành công!');  window.history.back();</script>`);
+      return res.send(`<script>alert('Xóa không thành công!');</script>`);
     }
     
   } catch (error) {

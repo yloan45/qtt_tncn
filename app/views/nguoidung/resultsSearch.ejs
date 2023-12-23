@@ -31,6 +31,8 @@
              <th>Địa chỉ liên hệ</th>
              <th>Cơ quan quyết toán thuế</th>
              <th>Trạng thái tờ khai</th>
+             <td>Thu nhập chịu thuế</td>
+             <th>Số thuế phải nộp (VNĐ)</th>
              <th>Hoàn trả thuế</th>
              <th>Ngày gửi</th>
              <th>Phụ lục</th>
@@ -48,6 +50,8 @@
                   <td><%= result.address %></td>
                   <td><%= result.ca_nhan.cqqtthue %></td>
                   <td><%= result.trang_thai_xu_li.tentrangthai %></td>
+                  <td><%= result.ct22 %></td>
+                  <td><%= result.ct44 %></td>
                   <td>
                     <a href="/thong-tin-hoan-tra-thue/<%= result.id %>">Xem</a>
                     
@@ -97,11 +101,11 @@
         }).then((result) => {
           if (result.isConfirmed) {
             window.location.href = '/delete-to-khai/' + userId;
+            history.back();
           }
         });
       });
     });
   });
-
  </script>
  </html>

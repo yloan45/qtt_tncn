@@ -53,19 +53,12 @@
       </div>
       <div class="container-fluid">
 
-        <div style="text-align: right; margin-left: -2pc; display: none;">
-          <div class="form-check form-switch">
-            <div class="input-group">
-              <label for="">Trạng thái: </label>
-              <input class="form-check-input" type="checkbox" style="margin-left: 15px; width: 40px;border-radius: 15px;" id="toggleTaxPeriod" checked onchange="toggleTaxPeriod()">
-            </div>
-          </div>
-        </div>
-
         <div style="text-align: right;">
-          <!-- Default switch -->
+          <form id="updateForm">
+            <p style="font-size: 16px;">Trạng thái hiện tại: <%= kyquyettoan.trangthai ? 'Đang mở' : 'Đã đóng' %></p>
+            <button type="button" id="updateButton" class="btn btn-warning" style="margin-bottom: 15px; font-weight: bolder;">Cập Nhật Trạng Thái</button>
+          </form>
           <div class="custom-control custom-switch">
-
             <form action="/update-qtt/<%= kyquyettoan.id %>" method="post" onsubmit="return validateDates()">
               <input type="text" value="<%= admin.id %>" name="adminId" style="display: none;">
               <table class="table">
@@ -131,7 +124,17 @@
         }
       }
     </script>
-
+ <script>
+  document.getElementById('updateButton').addEventListener('click', function() {
+    fetch('/update-status/<%= kyquyettoan.id %>', { method: 'POST' })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message);
+        location.reload();
+      })
+      .catch(error => console.error('Lỗi:', error));
+  });
+</script>
 
 </body>
 <script>

@@ -8,7 +8,7 @@ const multer = require('multer');
 const { getAllToChuc, deleteToChuc, deleteNhanVien, updateNhanvien, getTochuc, deleteMultiple, updateToChuc, getToChucTreHanData, renderToChucTreHanQTT, sendEmailTochuc, sendEmailsToChuc, forgotPasswordToChuc, forgotPasswordToChucStep2, registerTochucStep1, registerTochucStep2, registerTochucStep3, updateProfileToChuc } = require("../controllers/tochuc.controller");
 const { getAllTokhai, register, getListRegisterMST, deleteRegisterMST, capMST, createAccount, registerPage } = require("../controllers/auth.controller");
 const TochucUpload = db.tochuckekhaithue;
-const { getTokhaithue, duyettokhai, tokhaikhongduocduyet, checkTokhai, getListThuNhap, getPhuluc, downloadPhuluc, moKyQuyetToan, moKyQuyetToanTochuc, listOpenKyQuyetToan, deleteQTT, findOneQTT, updateQTT } = require("../controllers/admin.controller");
+const { getTokhaithue, duyettokhai, tokhaikhongduocduyet, checkTokhai, getListThuNhap, getPhuluc, downloadPhuluc, moKyQuyetToan, moKyQuyetToanTochuc, listOpenKyQuyetToan, deleteQTT, findOneQTT, updateQTT, statusQTT } = require("../controllers/admin.controller");
 const Tokhai = db.tokhaithue;
 const { uploadTokhai, previewFiles } = require("../controllers/upload.controller");
 const Phuluc = db.phuluc;
@@ -74,7 +74,7 @@ module.exports = function (app) {
 
   app.get('/tochuc', [authJwt.verifyTokenTochuc, authJwt.isTochuc], getTochuc)
 
-  app.get('/canhan', [authJwt.verifyTokenCanhan], (req, res) => {                       // homepage cá nhân
+  app.get('/canhan', [authJwt.verifyTokenCanhan, authJwt.isCanhan], (req, res) => {                       // homepage cá nhân
     res.render("nguoidung/index.ejs");
   })
 
@@ -174,7 +174,7 @@ module.exports = function (app) {
     }
   });
 
-
+  app.post('/update-status/:id', [authJwt.verifyToken, authJwt.isAdmin], statusQTT);
   //app.get('/admin/danh-sach-ca-nhan-tre-han-qtt',[authJwt.verifyToken, authJwt.isAdmin], renderTreHanQTT);
 
   app.get('/admin/danh-sach-ca-nhan-tre-han-qtt', [authJwt.verifyToken, authJwt.isAdmin], async (req, res) => {
@@ -183,7 +183,7 @@ module.exports = function (app) {
       if (treHanData !== null) {
         await renderTreHanQTT(res, treHanData);
       } else {
-        res.status(404).send('Data not found');
+        res.redirect('/duyet-to-khai')
       }
     } catch (error) {
       console.error('Error:', error);
@@ -210,7 +210,7 @@ module.exports = function (app) {
       if (treHanData !== null) {
         await renderToChucTreHanQTT(res, treHanData);
       } else {
-        res.status(404).send('Data not found');
+        res.redirect('/getAll')
       }
     } catch (error) {
       console.error('Error:', error);
@@ -297,24 +297,24 @@ module.exports = function (app) {
 
   app.post("/update-profile/:id", [authJwt.verifyToken], updateCanhan);             // upload profile
 
-  app.get('/tokhaithue', [authJwt.verifyTokenCanhan, isOpenCaNhan], getUser);             // tờ khai step 1  
-  app.get("/tokhai/b2", [authJwt.verifyTokenCanhan], (req, res) => {                // tờ khai step 2
+  app.get('/tokhaithue', [authJwt.verifyTokenCanhan, authJwt.isCanhan, isOpenCaNhan], getUser);             // tờ khai step 1  
+  app.get("/tokhai/b2", [authJwt.verifyTokenCanhan, authJwt.isCanhan, ], (req, res) => {                // tờ khai step 2
     res.render('nguoidung/upload_phuluc')
   });
 
-  app.get('/tokhai/b3', [authJwt.verifyTokenCanhan], (req, res) => {                // tờ khai step 3
+  app.get('/tokhai/b3', [authJwt.verifyTokenCanhan, authJwt.isCanhan ], (req, res) => {                // tờ khai step 3
     res.render('nguoidung/tokhaiB3');
   });
-  app.get('/success', [authJwt.verifyTokenCanhan], (req, res) => {                  // thông báo thành công
+  app.get('/success', [authJwt.verifyTokenCanhan, authJwt.isCanhan], (req, res) => {                  // thông báo thành công
     const tokhaiData = req.session.tokhaiData;
     res.render('nguoidung/tokhai_success', { tokhaiData });
   });
 
-  app.post('/tokhai/b1', tokhaithue.create);                                        // post step 1
-  app.post('/tokhai/b2', [authJwt.verifyTokenCanhan], async (req, res) => {         // post step 2
+  app.post('/tokhai/b1', [authJwt.verifyTokenCanhan, authJwt.isCanhan], tokhaithue.create);                                        // post step 1
+  app.post('/tokhai/b2', [authJwt.verifyTokenCanhan, authJwt.isCanhan], async (req, res) => {         // post step 2
     await tokhaithue.createTokhaiStep2(req, res);
   });
-  app.post('/tokhai/b3', [authJwt.verifyTokenCanhan], async (req, res) => {         // post step 3
+  app.post('/tokhai/b3',  [authJwt.verifyTokenCanhan, authJwt.isCanhan], async (req, res) => {         // post step 3
     const userCaptcha = req.body.captcha;
     if (userCaptcha !== req.session.captcha) {
       return res.render('nguoidung/tokhaiB3', { captchaError: true, error: 'Mã kiểm tra không chính xác!' });
@@ -325,39 +325,39 @@ module.exports = function (app) {
 
 
 
-  app.get('/tra-cuu-thu-nhap', [authJwt.verifyTokenCanhan], (req, res) => {         // form tra cứu thu nhập
+  app.get('/tra-cuu-thu-nhap',  [authJwt.verifyTokenCanhan, authJwt.isCanhan], (req, res) => {         // form tra cứu thu nhập
     res.render('nguoidung/tracuu');
   });
 
-  app.get('/tra-cuu-to-khai', [authJwt.verifyTokenCanhan], (req, res) => {          // form tra cứu tờ khai
+  app.get('/tra-cuu-to-khai',  [authJwt.verifyTokenCanhan, authJwt.isCanhan], (req, res) => {          // form tra cứu tờ khai
     res.render('nguoidung/tra-cuu-to-khai');
   });
 
-  app.get('/tra-cuu-to-khai-result', [authJwt.verifyTokenCanhan], (req, res) => {   // kết quả tra cứu tờ khai
+  app.get('/tra-cuu-to-khai-result',  [authJwt.verifyTokenCanhan, authJwt.isCanhan], (req, res) => {   // kết quả tra cứu tờ khai
     res.render('/nguoidung/resultsSearch');
   });
 
-  app.post('/tra-cuu-to-khai-qtt',[authJwt.verifyTokenCanhan], validateInput, checkDateValidity, tokhaithue.tracuuTokhai, (req, res) => {
+  app.post('/tra-cuu-to-khai-qtt', [authJwt.verifyTokenCanhan, authJwt.isCanhan], validateInput, checkDateValidity, tokhaithue.tracuuTokhai, (req, res) => {
     const { searchResult } = res.locals;
     res.render('nguoidung/resultsSearch', { searchResult });
   });
 
-  app.get('/add-phu-luc/:id', [authJwt.verifyTokenCanhan], async (req, res) => {          // form thêm phụ lục tờ khai ở phần tra cứu tờ khai
+  app.get('/add-phu-luc/:id',  [authJwt.verifyTokenCanhan, authJwt.isCanhan], async (req, res) => {          // form thêm phụ lục tờ khai ở phần tra cứu tờ khai
     const id = req.params.id;
     console.log("id là: ", id);
     res.render('nguoidung/addPhuluc', { id, error: req.flash('error') });
   });
 
-  app.post('/add-phu-luc/:id', [authJwt.verifyTokenCanhan], tokhaithue.createPhuluc);     // tạo phụ lục tờ khai
+  app.post('/add-phu-luc/:id',  [authJwt.verifyTokenCanhan, authJwt.isCanhan], tokhaithue.createPhuluc);     // tạo phụ lục tờ khai
 
-  app.get('/thong-tin-hoan-tra-thue/:id', tokhaithue.hoanthueResult);                     // thông tin hoàn trả thuế
+  app.get('/thong-tin-hoan-tra-thue/:id', [authJwt.verifyTokenCanhan, authJwt.isCanhan], tokhaithue.hoanthueResult);                     // thông tin hoàn trả thuế
 
-  app.get('/list-thu-nhap', [authJwt.verifyTokenCanhan], (req, res) => {
+  app.get('/list-thu-nhap',  [authJwt.verifyTokenCanhan, authJwt.isCanhan], (req, res) => {
     const data = req.session.tochuckekhaithue || [];
     res.render('nguoidung/tong-thu-nhap', { tochuckekhaithue: data });
   });
 
-  app.post('/tra-cuu-thu-nhap', [authJwt.verifyTokenCanhan], async (req, res) => {        // tìm kiếm thông tin thu nhập
+  app.post('/tra-cuu-thu-nhap',  [authJwt.verifyTokenCanhan, authJwt.isCanhan], async (req, res) => {        // tìm kiếm thông tin thu nhập
     try {
       // kiểm tra mã captcha
       const userCaptcha = req.body.captcha;
@@ -385,12 +385,12 @@ module.exports = function (app) {
     }
   });
 
-  app.post('/update-bank/:id', [authJwt.verifyTokenCanhan],tokhaithue.updateBank);                                    // thêm thông tin tài khoản ngân hàng
+  app.post('/update-bank/:id',  [authJwt.verifyTokenCanhan, authJwt.isCanhan], tokhaithue.updateBank);                                    // thêm thông tin tài khoản ngân hàng
 
-  app.get('/delete-to-khai/:id',[authJwt.verifyTokenCanhan], tokhaithue.deleteTokhai);
+  app.get('/delete-to-khai/:id', [authJwt.verifyTokenCanhan, authJwt.isCanhan], tokhaithue.deleteTokhai);
 
-  app.get('/phu-luc/:id', [authJwt.verifyTokenCanhan], findPhuluc);
-  app.get('/delete-phu-luc/:id', [authJwt.verifyTokenCanhan], deleteFile);
+  app.get('/phu-luc/:id',  [authJwt.verifyTokenCanhan, authJwt.isCanhan], findPhuluc);
+  app.get('/delete-phu-luc/:id',  [authJwt.verifyTokenCanhan, authJwt.isCanhan], deleteFile);
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -42,7 +42,7 @@
               <!--CỤC THUẾ - CHI CỤC THUẾ-->
               <div class="input-group" style="margin-top: 15px">
                 <span class="thongtintokhai">Cơ quan thuế Tỉnh/TP:</span>
-                <select class="" style="margin-right: 240px; width: 600px;" name="cucthue" id="">
+                <select class="" style="margin-right: 240px; width: 600px;" name="cqqtthue" id="">
                   <option value="<%= user.ca_nhan.cqqtthue %>"><%= user.ca_nhan.cqqtthue %></option>
                 </select>
               </div>
@@ -66,7 +66,9 @@
               <%# NAME KÊ KHAI - NAME="year" %>
               <div class="input-group" style="margin-top: 15px; ">
                 <span class="thongtintokhai">Năm kê khai</span>
-                <select name="year" id="yearInput" oninput="updateMonths()"></select>
+                <select name="year" id="yearInput" oninput="updateMonths()">
+                <option value=""></option>
+                </select>
                 <div id="yearError" style="margin-left: 15px; color: red;"></div>
               </div>
 
